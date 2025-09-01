@@ -59,20 +59,15 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             {/* Logo + Mobile Toggle */}
-            <div className="flex items-center">
-              {/* Mobile toggle button (left side) */}
-              <button
-                onClick={toggleSidebar}
-                className="mr-3 flex items-center justify-center w-10 h-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition lg:hidden"
-              >
-                {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
-
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <ShoppingCart className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="ml-3 text-xl font-bold text-gray-900">Inventory</h1>
-            </div>
+            <div 
+  className="flex items-center cursor-pointer"
+  onClick={() => window.location.reload()}
+>
+  <div className="bg-blue-600 p-2 rounded-lg">
+    <ShoppingCart className="h-6 w-6 text-white" />
+  </div>
+  <h1 className="ml-3 text-xl font-bold text-gray-900">Inventory</h1>
+</div>
 
             {/* Desktop Menu (top nav) */}
             <div className="hidden lg:flex items-center space-x-1">
