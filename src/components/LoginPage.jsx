@@ -19,12 +19,14 @@ const LoginPage = () => {
     setError('');
     setLoading(true);
 
+    // The login function comes from AuthContext
+    // On success, it will redirect to /main-dashboard
     const result = await login(email, password);
-    
+
     if (!result.success) {
       setError(result.error);
     }
-    
+
     setLoading(false);
   };
 
@@ -51,7 +53,7 @@ const LoginPage = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -67,7 +69,7 @@ const LoginPage = () => {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
@@ -83,7 +85,7 @@ const LoginPage = () => {
                 />
               </div>
             </div>
-            
+
             <Button 
               type="submit" 
               className="w-full" 
@@ -92,7 +94,7 @@ const LoginPage = () => {
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
-          
+
           <div className="mt-6 text-center text-sm text-gray-600">
             <p>Demo Credentials:</p>
             <p>Email: admin@inventory.com</p>
@@ -105,4 +107,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -13,28 +13,29 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state is important
 
   useEffect(() => {
-    // Check if user is already logged in (from localStorage)
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
+    // Reading from localStorage is synchronous, but we handle it
+    // as if it's an async operation (like a real API call).
+    try {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error("Failed to parse user from localStorage", error);
+      localStorage.removeItem('user');
+    } finally {
+      // Once verification is done, set loading to false
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = async (email, password) => {
-    // Simple authentication logic - in real app, this would call an API
     if (email === 'admin@inventory.com' && password === 'admin123') {
-      const userData = {
-        id: 1,
-        email: email,
-        name: 'Admin User',
-        role: 'admin'
-      };
-      
+      const userData = { id: 1, email, name: 'Admin User', role: 'admin' };
       setUser(userData);
       setIsAuthenticated(true);
       localStorage.setItem('user', JSON.stringify(userData));
@@ -48,6 +49,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('user');
+    window.location.href = '/login';
   };
 
   const value = {
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     user,
     login,
     logout,
-    loading
+    loading // Pass loading state through context
   };
 
   return (
@@ -64,4 +66,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
