@@ -11,6 +11,7 @@ import Returns from './pages/Returns';
 import Reports from './pages/Reports';
 import MainDashboard from './pages/MainDashboard'; 
 import './App.css';
+import CreateCategory from './pages/CreateCategory';
 
 function App() {
   
@@ -46,6 +47,8 @@ function App() {
           return <Returns />;
         case 'reports':
           return <Reports />;
+        case 'createCategory':
+          return <CreateCategory />;
         default:
           
           return <Dashboard />;

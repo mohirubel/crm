@@ -61,6 +61,14 @@ export const menuConfig = [
     color: "bg-teal-100 text-teal-800",
     section: "Core Applications"
   },
+  {
+    id: 'createCategory',
+    name: 'Create Category',
+    icon: FileText,
+    component: 'CreateCategory',
+    color: "bg-teal-100 text-teal-800",
+    section: "Create Component"
+  },
   // You can easily add new menus here
   // Example:
   // {

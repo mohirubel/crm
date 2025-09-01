@@ -40,6 +40,7 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
     { id: 'purchase', label: 'Purchase', icon: ShoppingCart },
     { id: 'returns', label: 'Returns', icon: RotateCcw },
     { id: 'reports', label: 'Reports', icon: FileText },
+    { id: 'createCategory', label: 'CreateCategory', icon: FileText },
   ];
 
   const handleLogout = () => logout();
