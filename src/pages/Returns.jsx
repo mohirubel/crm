@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Plus, 
@@ -16,7 +17,9 @@ import {
   Smartphone,
   FileText,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Eye,
+  DollarSign
 } from 'lucide-react';
 
 const Returns = () => {
@@ -26,8 +29,23 @@ const Returns = () => {
   const [dateFilter, setDateFilter] = useState('');
   const [stockUpdateFilter, setStockUpdateFilter] = useState('all');
   
-  // Sample returns data
-  const returnsData = [
+  // Modal states
+  const [isNewReturnModalOpen, setIsNewReturnModalOpen] = useState(false);
+  const [isViewDetailsModalOpen, setIsViewDetailsModalOpen] = useState(false);
+  const [selectedReturn, setSelectedReturn] = useState(null);
+  
+  // Form states
+  const [returnFormData, setReturnFormData] = useState({
+    originalInvoice: '',
+    productName: '',
+    quantity: 1,
+    reason: '',
+    refundMethod: '',
+    refundAmount: 0
+  });
+  
+  // Sample returns data with state management
+  const [returnsData, setReturnsData] = useState([
     {
       id: 1,
       returnInvoice: 'RET-001',
@@ -39,7 +57,11 @@ const Returns = () => {
       refundAmount: 999,
       status: 'Processed',
       date: '2024-08-28',
-      stockUpdated: true
+      stockUpdated: true,
+      customerName: 'John Doe',
+      customerEmail: 'john@example.com',
+      processedBy: 'Admin',
+      notes: 'Screen flickering issue reported by customer'
     },
     {
       id: 2,
@@ -52,7 +74,11 @@ const Returns = () => {
       refundAmount: 899,
       status: 'Pending',
       date: '2024-08-28',
-      stockUpdated: false
+      stockUpdated: false,
+      customerName: 'Jane Smith',
+      customerEmail: 'jane@example.com',
+      processedBy: '',
+      notes: 'Customer requested return within 7 days'
     },
     {
       id: 3,
@@ -65,7 +91,11 @@ const Returns = () => {
       refundAmount: 498,
       status: 'Processed',
       date: '2024-08-27',
-      stockUpdated: true
+      stockUpdated: true,
+      customerName: 'Mike Johnson',
+      customerEmail: 'mike@example.com',
+      processedBy: 'Admin',
+      notes: 'Customer ordered AirPods Max but received Pro'
     },
     {
       id: 4,
@@ -78,7 +108,11 @@ const Returns = () => {
       refundAmount: 1199,
       status: 'Rejected',
       date: '2024-08-26',
-      stockUpdated: false
+      stockUpdated: false,
+      customerName: 'Sarah Wilson',
+      customerEmail: 'sarah@example.com',
+      processedBy: 'Manager',
+      notes: 'Damage appears to be user-caused, not manufacturing defect'
     },
     {
       id: 5,
@@ -91,8 +125,21 @@ const Returns = () => {
       refundAmount: 1099,
       status: 'Pending',
       date: '2024-08-25',
-      stockUpdated: false
+      stockUpdated: false,
+      customerName: 'David Brown',
+      customerEmail: 'david@example.com',
+      processedBy: '',
+      notes: 'Customer expected different storage capacity'
     }
+  ]);
+
+  // Sample products for dropdown
+  const products = [
+    { name: 'iPhone 14 Pro', price: 999 },
+    { name: 'Samsung Galaxy S23', price: 899 },
+    { name: 'MacBook Air M2', price: 1199 },
+    { name: 'AirPods Pro', price: 249 },
+    { name: 'iPad Pro', price: 1099 }
   ];
 
   // Filter and search logic
@@ -119,6 +166,102 @@ const Returns = () => {
       return matchesSearch && matchesStatus && matchesRefundMethod && matchesDate && matchesStockUpdate;
     });
   }, [returnsData, searchTerm, statusFilter, refundMethodFilter, dateFilter, stockUpdateFilter]);
+
+  // Handle form changes
+  const handleFormChange = (field, value) => {
+    setReturnFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    
+    // Auto-calculate refund amount when product is selected
+    if (field === 'productName') {
+      const product = products.find(p => p.name === value);
+      if (product) {
+        setReturnFormData(prev => ({
+          ...prev,
+          refundAmount: product.price * prev.quantity
+        }));
+      }
+    }
+    
+    // Recalculate refund amount when quantity changes
+    if (field === 'quantity') {
+      const product = products.find(p => p.name === returnFormData.productName);
+      if (product) {
+        setReturnFormData(prev => ({
+          ...prev,
+          refundAmount: product.price * parseInt(value)
+        }));
+      }
+    }
+  };
+
+  // Generate return invoice number
+  const generateReturnInvoice = () => {
+    const maxReturn = Math.max(...returnsData.map(ret => parseInt(ret.returnInvoice.split('-')[1])));
+    return `RET-${String(maxReturn + 1).padStart(3, '0')}`;
+  };
+
+  // Process new return
+  const handleProcessReturn = () => {
+    if (!returnFormData.originalInvoice || !returnFormData.productName || !returnFormData.reason || !returnFormData.refundMethod) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const newReturn = {
+      id: Math.max(...returnsData.map(ret => ret.id)) + 1,
+      returnInvoice: generateReturnInvoice(),
+      originalInvoice: returnFormData.originalInvoice,
+      productName: returnFormData.productName,
+      quantity: parseInt(returnFormData.quantity),
+      reason: returnFormData.reason,
+      refundMethod: returnFormData.refundMethod,
+      refundAmount: returnFormData.refundAmount,
+      status: 'Pending',
+      date: new Date().toISOString().split('T')[0],
+      stockUpdated: false,
+      customerName: 'New Customer',
+      customerEmail: 'customer@example.com',
+      processedBy: '',
+      notes: returnFormData.reason
+    };
+
+    setReturnsData(prev => [newReturn, ...prev]);
+    resetReturnForm();
+    alert(`Return ${newReturn.returnInvoice} created successfully!`);
+  };
+
+  // Handle new return modal
+  const handleNewReturn = () => {
+    resetReturnForm();
+    setIsNewReturnModalOpen(true);
+  };
+
+  // Process return from modal
+  const handleProcessFromModal = () => {
+    handleProcessReturn();
+    setIsNewReturnModalOpen(false);
+  };
+
+  // Reset return form
+  const resetReturnForm = () => {
+    setReturnFormData({
+      originalInvoice: '',
+      productName: '',
+      quantity: 1,
+      reason: '',
+      refundMethod: '',
+      refundAmount: 0
+    });
+  };
+
+  // View return details
+  const handleViewDetails = (returnItem) => {
+    setSelectedReturn(returnItem);
+    setIsViewDetailsModalOpen(true);
+  };
 
   const getRefundMethodIcon = (method) => {
     switch (method) {
@@ -180,13 +323,101 @@ const Returns = () => {
             Manage product returns and process refunds
           </p>
         </div>
-        <Button className="flex items-center space-x-2">
-          <Plus className="h-4 w-4" />
-          <span>New Return</span>
-        </Button>
+        <Dialog open={isNewReturnModalOpen} onOpenChange={setIsNewReturnModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="flex items-center space-x-2" onClick={handleNewReturn}>
+              <Plus className="h-4 w-4" />
+              <span>New Return</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Process New Return</DialogTitle>
+              <DialogDescription>
+                Create a new return request and process refund
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="modalOriginalInvoice">Original Invoice Number</Label>
+                  <Input
+                    id="modalOriginalInvoice"
+                    placeholder="INV-1234"
+                    value={returnFormData.originalInvoice}
+                    onChange={(e) => handleFormChange('originalInvoice', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="modalProductName">Product Name</Label>
+                  <Select value={returnFormData.productName} onValueChange={(value) => handleFormChange('productName', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select product" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {products.map(product => (
+                        <SelectItem key={product.name} value={product.name}>
+                          {product.name} - ${product.price}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="modalQuantity">Return Quantity</Label>
+                  <Input
+                    id="modalQuantity"
+                    type="number"
+                    min="1"
+                    value={returnFormData.quantity}
+                    onChange={(e) => handleFormChange('quantity', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="modalRefundMethod">Refund Method</Label>
+                  <Select value={returnFormData.refundMethod} onValueChange={(value) => handleFormChange('refundMethod', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select method" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Cash">Cash</SelectItem>
+                      <SelectItem value="Card">Card</SelectItem>
+                      <SelectItem value="MFS">MFS</SelectItem>
+                      <SelectItem value="Store Credit">Store Credit</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="modalReason">Return Reason</Label>
+                <Textarea
+                  id="modalReason"
+                  placeholder="Describe the reason for return..."
+                  value={returnFormData.reason}
+                  onChange={(e) => handleFormChange('reason', e.target.value)}
+                  rows={3}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Refund Amount</Label>
+                <div className="text-2xl font-bold text-green-600">${returnFormData.refundAmount}</div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsNewReturnModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleProcessFromModal}>
+                Process Return
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* New Return Form */}
+      {/* Process New Return Form */}
       <Card>
         <CardHeader>
           <CardTitle>Process New Return</CardTitle>
@@ -201,19 +432,22 @@ const Returns = () => {
               <Input
                 id="originalInvoice"
                 placeholder="INV-1234"
+                value={returnFormData.originalInvoice}
+                onChange={(e) => handleFormChange('originalInvoice', e.target.value)}
               />
             </div>
             <div>
               <Label htmlFor="productName">Product Name</Label>
-              <Select>
+              <Select value={returnFormData.productName} onValueChange={(value) => handleFormChange('productName', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select product" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="iphone14pro">iPhone 14 Pro</SelectItem>
-                  <SelectItem value="galaxys23">Samsung Galaxy S23</SelectItem>
-                  <SelectItem value="macbook">MacBook Air M2</SelectItem>
-                  <SelectItem value="airpods">AirPods Pro</SelectItem>
+                  {products.map(product => (
+                    <SelectItem key={product.name} value={product.name}>
+                      {product.name} - ${product.price}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -222,8 +456,9 @@ const Returns = () => {
               <Input
                 id="quantity"
                 type="number"
-                placeholder="1"
                 min="1"
+                value={returnFormData.quantity}
+                onChange={(e) => handleFormChange('quantity', e.target.value)}
               />
             </div>
             <div className="md:col-span-2">
@@ -232,26 +467,33 @@ const Returns = () => {
                 id="reason"
                 placeholder="Describe the reason for return..."
                 className="min-h-[80px]"
+                value={returnFormData.reason}
+                onChange={(e) => handleFormChange('reason', e.target.value)}
               />
             </div>
             <div>
               <Label htmlFor="refundMethod">Refund Method</Label>
-              <Select>
+              <Select value={returnFormData.refundMethod} onValueChange={(value) => handleFormChange('refundMethod', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select method" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cash">Cash</SelectItem>
-                  <SelectItem value="card">Card</SelectItem>
-                  <SelectItem value="mfs">MFS</SelectItem>
-                  <SelectItem value="store-credit">Store Credit</SelectItem>
+                  <SelectItem value="Cash">Cash</SelectItem>
+                  <SelectItem value="Card">Card</SelectItem>
+                  <SelectItem value="MFS">MFS</SelectItem>
+                  <SelectItem value="Store Credit">Store Credit</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-          <div className="flex justify-end mt-4 space-x-2">
-            <Button variant="outline">Cancel</Button>
-            <Button>Process Return</Button>
+          <div className="flex justify-between items-center mt-4">
+            <div className="text-lg font-medium">
+              Refund Amount: <span className="text-green-600">${returnFormData.refundAmount}</span>
+            </div>
+            <div className="space-x-2">
+              <Button variant="outline" onClick={resetReturnForm}>Reset</Button>
+              <Button onClick={handleProcessReturn}>Process Return</Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -407,11 +649,11 @@ const Returns = () => {
                   <TableCell>{returnItem.date}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
-                        <RotateCcw className="h-3 w-3" />
+                      <Button variant="outline" size="sm" onClick={() => handleViewDetails(returnItem)}>
+                        <Eye className="h-3 w-3" />
                       </Button>
                       <Button variant="outline" size="sm">
-                        <FileText className="h-3 w-3" />
+                        <RotateCcw className="h-3 w-3" />
                       </Button>
                     </div>
                   </TableCell>
@@ -426,6 +668,116 @@ const Returns = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* View Details Modal */}
+      <Dialog open={isViewDetailsModalOpen} onOpenChange={setIsViewDetailsModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Return Details</DialogTitle>
+            <DialogDescription>
+              Complete information about this return request
+            </DialogDescription>
+          </DialogHeader>
+          {selectedReturn && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Return Invoice</Label>
+                  <div className="text-lg font-semibold">{selectedReturn.returnInvoice}</div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Original Invoice</Label>
+                  <div className="text-lg font-semibold">{selectedReturn.originalInvoice}</div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Product</Label>
+                  <div className="text-lg">{selectedReturn.productName}</div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Quantity</Label>
+                  <div className="text-lg">{selectedReturn.quantity} units</div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Customer</Label>
+                  <div className="text-lg">{selectedReturn.customerName}</div>
+                  <div className="text-sm text-gray-500">{selectedReturn.customerEmail}</div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Return Date</Label>
+                  <div className="text-lg">{selectedReturn.date}</div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Refund Method</Label>
+                  <div className="flex items-center space-x-2 text-lg">
+                    {getRefundMethodIcon(selectedReturn.refundMethod)}
+                    <span>{selectedReturn.refundMethod}</span>
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Refund Amount</Label>
+                  <div className="text-lg font-semibold text-green-600">${selectedReturn.refundAmount}</div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Status</Label>
+                  <div className="mt-1">{getStatusBadge(selectedReturn.status)}</div>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Stock Update</Label>
+                  <div className="mt-1">
+                    {selectedReturn.stockUpdated ? (
+                      <Badge variant="default" className="bg-green-100 text-green-800">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Updated
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="bg-gray-100 text-gray-800">
+                        <AlertCircle className="h-3 w-3 mr-1" />
+                        Pending
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium text-gray-500">Return Reason</Label>
+                <div className="text-lg mt-1">{selectedReturn.reason}</div>
+              </div>
+
+              {selectedReturn.notes && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Additional Notes</Label>
+                  <div className="text-lg mt-1">{selectedReturn.notes}</div>
+                </div>
+              )}
+
+              {selectedReturn.processedBy && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Processed By</Label>
+                  <div className="text-lg mt-1">{selectedReturn.processedBy}</div>
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsViewDetailsModalOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-4">
@@ -445,11 +797,11 @@ const Returns = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Refund Amount</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${filteredReturns.reduce((sum, item) => sum + item.refundAmount, 0).toLocaleString()}
+              ${filteredReturns.reduce((sum, ret) => sum + ret.refundAmount, 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               Total refunded
@@ -464,25 +816,25 @@ const Returns = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {filteredReturns.filter(item => item.status === 'Pending').length}
+              {filteredReturns.filter(ret => ret.status === 'Pending').length}
             </div>
             <p className="text-xs text-muted-foreground">
-              Requires attention
+              Awaiting processing
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Stock Updates Pending</CardTitle>
-            <AlertCircle className="h-4 w-4 text-red-500" />
+            <CardTitle className="text-sm font-medium">Stock Updates</CardTitle>
+            <CheckCircle className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {filteredReturns.filter(item => !item.stockUpdated).length}
+              {filteredReturns.filter(ret => ret.stockUpdated).length}
             </div>
             <p className="text-xs text-muted-foreground">
-              Need stock update
+              Stock updated
             </p>
           </CardContent>
         </Card>

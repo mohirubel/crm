@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   Plus, 
   Minus, 
@@ -26,8 +27,20 @@ const Inventory = () => {
   const [damageTypeFilter, setDamageTypeFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('');
   
-  // Sample current stock data
-  const currentStock = [
+  // Modal states
+  const [isStockInModalOpen, setIsStockInModalOpen] = useState(false);
+  const [isStockOutModalOpen, setIsStockOutModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  
+  // Form states
+  const [stockFormData, setStockFormData] = useState({
+    productId: '',
+    quantity: 1,
+    reason: ''
+  });
+
+  // Sample current stock data with state management
+  const [currentStock, setCurrentStock] = useState([
     {
       id: 1,
       name: 'iPhone 14 Pro',
@@ -73,10 +86,10 @@ const Inventory = () => {
       lastUpdated: '2024-08-26',
       status: 'Low Stock'
     }
-  ];
+  ]);
 
-  // Sample stock movements
-  const stockMovements = [
+  // Sample stock movements with state management
+  const [stockMovements, setStockMovements] = useState([
     {
       id: 1,
       productName: 'iPhone 14 Pro',
@@ -122,7 +135,7 @@ const Inventory = () => {
       date: '2024-08-25',
       time: '03:30 PM'
     }
-  ];
+  ]);
 
   // Sample expiry/damage data
   const expiryDamage = [
@@ -213,6 +226,88 @@ const Inventory = () => {
     });
   }, [expiryDamage, searchTerm, damageTypeFilter, dateFilter]);
 
+  // Handle stock form changes
+  const handleStockFormChange = (field, value) => {
+    setStockFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Handle stock in
+  const handleStockIn = () => {
+    const product = currentStock.find(p => p.id === parseInt(stockFormData.productId));
+    if (!product) return;
+
+    const updatedStock = currentStock.map(p => 
+      p.id === product.id ? { ...p, currentStock: p.currentStock + parseInt(stockFormData.quantity) } : p
+    );
+    setCurrentStock(updatedStock);
+
+    const newMovement = {
+      id: stockMovements.length + 1,
+      productName: product.name,
+      type: 'IN',
+      quantity: parseInt(stockFormData.quantity),
+      reason: stockFormData.reason || 'Manual Stock In',
+      date: new Date().toISOString().split('T')[0],
+      time: new Date().toLocaleTimeString()
+    };
+    setStockMovements(prev => [newMovement, ...prev]);
+
+    setIsStockInModalOpen(false);
+    resetStockForm();
+  };
+
+  // Handle stock out
+  const handleStockOut = () => {
+    const product = currentStock.find(p => p.id === parseInt(stockFormData.productId));
+    if (!product) return;
+
+    const updatedStock = currentStock.map(p => 
+      p.id === product.id ? { ...p, currentStock: p.currentStock - parseInt(stockFormData.quantity) } : p
+    );
+    setCurrentStock(updatedStock);
+
+    const newMovement = {
+      id: stockMovements.length + 1,
+      productName: product.name,
+      type: 'OUT',
+      quantity: parseInt(stockFormData.quantity),
+      reason: stockFormData.reason || 'Manual Stock Out',
+      date: new Date().toISOString().split('T')[0],
+      time: new Date().toLocaleTimeString()
+    };
+    setStockMovements(prev => [newMovement, ...prev]);
+
+    setIsStockOutModalOpen(false);
+    resetStockForm();
+  };
+
+  // Reset stock form
+  const resetStockForm = () => {
+    setStockFormData({ productId: '', quantity: 1, reason: '' });
+    setSelectedProduct(null);
+  };
+
+  // Open stock in modal
+  const openStockInModal = (product = null) => {
+    if (product) {
+      setSelectedProduct(product);
+      setStockFormData({ ...stockFormData, productId: product.id });
+    }
+    setIsStockInModalOpen(true);
+  };
+
+  // Open stock out modal
+  const openStockOutModal = (product = null) => {
+    if (product) {
+      setSelectedProduct(product);
+      setStockFormData({ ...stockFormData, productId: product.id });
+    }
+    setIsStockOutModalOpen(true);
+  };
+
   const getStatusBadge = (item) => {
     if (item.currentStock <= item.reorderLevel) {
       return <Badge variant="destructive">Low Stock</Badge>;
@@ -251,11 +346,11 @@ const Inventory = () => {
           </p>
         </div>
         <div className="flex space-x-2">
-          <Button variant="outline" className="flex items-center space-x-2">
+          <Button variant="outline" className="flex items-center space-x-2" onClick={() => openStockInModal()}>
             <Plus className="h-4 w-4" />
             <span>Stock In</span>
           </Button>
-          <Button variant="outline" className="flex items-center space-x-2">
+          <Button variant="outline" className="flex items-center space-x-2" onClick={() => openStockOutModal()}>
             <Minus className="h-4 w-4" />
             <span>Stock Out</span>
           </Button>
@@ -372,10 +467,10 @@ const Inventory = () => {
                       <TableCell>{getStatusBadge(item)}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" onClick={() => openStockInModal(item)}>
                             <Plus className="h-3 w-3" />
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" onClick={() => openStockOutModal(item)}>
                             <Minus className="h-3 w-3" />
                           </Button>
                         </div>
@@ -477,7 +572,7 @@ const Inventory = () => {
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           {getMovementIcon(movement.type)}
-                          <span>{movement.type === 'IN' ? 'Stock In' : 'Stock Out'}</span>
+                          <span>{movement.type}</span>
                         </div>
                       </TableCell>
                       <TableCell>{movement.quantity} units</TableCell>
@@ -490,7 +585,7 @@ const Inventory = () => {
               </Table>
               {filteredStockMovements.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No stock movements found matching your criteria
+                  No movements found matching your criteria
                 </div>
               )}
             </CardContent>
@@ -503,7 +598,7 @@ const Inventory = () => {
             <CardHeader>
               <CardTitle>Search & Filter Expiry/Damage</CardTitle>
               <CardDescription>
-                Search by product name or damage reason
+                Search by product name or reason
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -514,7 +609,7 @@ const Inventory = () => {
                     <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="search-damage"
-                      placeholder="Search damage/expiry..."
+                      placeholder="Search items..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10"
@@ -557,9 +652,9 @@ const Inventory = () => {
           {/* Expiry/Damage Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Expiry & Damage Report</CardTitle>
+              <CardTitle>Expiry & Damage</CardTitle>
               <CardDescription>
-                Track expired and damaged inventory
+                Track expired or damaged products
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -571,7 +666,7 @@ const Inventory = () => {
                     <TableHead>Quantity</TableHead>
                     <TableHead>Reason</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead>Cost Impact</TableHead>
+                    <TableHead>Cost</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -586,14 +681,14 @@ const Inventory = () => {
                       <TableCell>{item.quantity} units</TableCell>
                       <TableCell>{item.reason}</TableCell>
                       <TableCell>{item.date}</TableCell>
-                      <TableCell className="font-medium text-red-600">${item.cost}</TableCell>
+                      <TableCell>${item.cost}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
               {filteredExpiryDamage.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No expiry/damage records found matching your criteria
+                  No expiry or damage items found
                 </div>
               )}
             </CardContent>
@@ -601,12 +696,11 @@ const Inventory = () => {
         </TabsContent>
 
         <TabsContent value="reports" className="space-y-4">
-          {/* Low Stock Report */}
           <Card>
             <CardHeader>
               <CardTitle>Low Stock Report</CardTitle>
               <CardDescription>
-                Products that need immediate attention
+                Products that need reordering
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -617,30 +711,17 @@ const Inventory = () => {
                     <TableHead>Category</TableHead>
                     <TableHead>Current Stock</TableHead>
                     <TableHead>Reorder Level</TableHead>
-                    <TableHead>Shortage</TableHead>
-                    <TableHead>Priority</TableHead>
+                    <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentStock
-                    .filter(item => item.currentStock <= item.reorderLevel)
-                    .map((item) => (
+                  {currentStock.filter(item => item.currentStock <= item.reorderLevel).map(item => (
                     <TableRow key={item.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center space-x-2">
-                          <AlertTriangle className="h-4 w-4 text-orange-500" />
-                          <span>{item.name}</span>
-                        </div>
-                      </TableCell>
+                      <TableCell className="font-medium">{item.name}</TableCell>
                       <TableCell>{item.category}</TableCell>
                       <TableCell>{item.currentStock} units</TableCell>
                       <TableCell>{item.reorderLevel} units</TableCell>
-                      <TableCell className="text-red-600 font-medium">
-                        {item.reorderLevel - item.currentStock} units
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="destructive">High</Badge>
-                      </TableCell>
+                      <TableCell>{getStatusBadge(item)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -649,6 +730,112 @@ const Inventory = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Stock In Modal */}
+      <Dialog open={isStockInModalOpen} onOpenChange={setIsStockInModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Stock In</DialogTitle>
+            <DialogDescription>Add new stock to your inventory.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="product">Product</Label>
+              <Select 
+                value={stockFormData.productId}
+                onValueChange={(value) => handleStockFormChange('productId', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a product" />
+                </SelectTrigger>
+                <SelectContent>
+                  {currentStock.map(product => (
+                    <SelectItem key={product.id} value={product.id.toString()}>
+                      {product.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="quantity">Quantity</Label>
+              <Input 
+                id="quantity" 
+                type="number" 
+                min="1" 
+                value={stockFormData.quantity}
+                onChange={(e) => handleStockFormChange('quantity', e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="reason">Reason (Optional)</Label>
+              <Input 
+                id="reason" 
+                value={stockFormData.reason}
+                onChange={(e) => handleStockFormChange('reason', e.target.value)}
+                placeholder="e.g., Purchase Order #PO-003"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsStockInModalOpen(false)}>Cancel</Button>
+            <Button onClick={handleStockIn}>Add Stock</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Stock Out Modal */}
+      <Dialog open={isStockOutModalOpen} onOpenChange={setIsStockOutModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Stock Out</DialogTitle>
+            <DialogDescription>Remove stock from your inventory.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="product-out">Product</Label>
+              <Select 
+                value={stockFormData.productId}
+                onValueChange={(value) => handleStockFormChange('productId', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a product" />
+                </SelectTrigger>
+                <SelectContent>
+                  {currentStock.map(product => (
+                    <SelectItem key={product.id} value={product.id.toString()}>
+                      {product.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="quantity-out">Quantity</Label>
+              <Input 
+                id="quantity-out" 
+                type="number" 
+                min="1" 
+                value={stockFormData.quantity}
+                onChange={(e) => handleStockFormChange('quantity', e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="reason-out">Reason (Optional)</Label>
+              <Input 
+                id="reason-out" 
+                value={stockFormData.reason}
+                onChange={(e) => handleStockFormChange('reason', e.target.value)}
+                placeholder="e.g., Sales Transaction, Damage"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsStockOutModalOpen(false)}>Cancel</Button>
+            <Button onClick={handleStockOut}>Remove Stock</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

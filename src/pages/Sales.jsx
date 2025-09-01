@@ -6,7 +6,20 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, Printer, CreditCard, Banknote, Smartphone, Eye, Edit } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  Plus, 
+  Search, 
+  ShoppingCart, 
+  CreditCard, 
+  Banknote, 
+  Smartphone,
+  Printer,
+  Eye,
+  Edit,
+  X
+} from 'lucide-react';
 
 const Sales = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,79 +27,101 @@ const Sales = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('');
   
-  // Sample sales data
-  const salesData = [
+  // Modal states
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedSale, setSelectedSale] = useState(null);
+  
+  // Form states
+  const [formData, setFormData] = useState({
+    productName: '',
+    quantity: 1,
+    unitPrice: 0,
+    discount: 0,
+    paymentMethod: '',
+    customer: '',
+    notes: ''
+  });
+  
+  // Sample sales data with state management
+  const [salesData, setSalesData] = useState([
     {
       id: 1,
       invoiceNumber: 'INV-1001',
       productName: 'iPhone 14 Pro',
-      image: '/api/placeholder/50/50',
+      productImage: 'IMG',
       quantity: 2,
       unitPrice: 999,
       discount: 50,
-      paymentMethod: 'Card',
       total: 1948,
+      paymentMethod: 'Card',
       status: 'Completed',
+      date: '2024-08-28',
       customer: 'John Doe',
-      date: '2024-08-28'
+      notes: 'Customer requested express delivery'
     },
     {
       id: 2,
       invoiceNumber: 'INV-1002',
       productName: 'Samsung Galaxy S23',
-      image: '/api/placeholder/50/50',
+      productImage: 'IMG',
       quantity: 1,
       unitPrice: 899,
       discount: 0,
-      paymentMethod: 'Cash',
       total: 899,
+      paymentMethod: 'Cash',
       status: 'Completed',
+      date: '2024-08-28',
       customer: 'Jane Smith',
-      date: '2024-08-28'
+      notes: 'Regular customer'
     },
     {
       id: 3,
       invoiceNumber: 'INV-1003',
       productName: 'MacBook Air M2',
-      image: '/api/placeholder/50/50',
+      productImage: 'IMG',
       quantity: 1,
-      unitPrice: 1199,
+      unitPrice: 1299,
       discount: 100,
+      total: 1199,
       paymentMethod: 'MFS',
-      total: 1099,
       status: 'Pending',
+      date: '2024-08-27',
       customer: 'Mike Johnson',
-      date: '2024-08-27'
+      notes: 'Waiting for payment confirmation'
     },
     {
       id: 4,
       invoiceNumber: 'INV-1004',
       productName: 'AirPods Pro',
-      image: '/api/placeholder/50/50',
+      productImage: 'IMG',
       quantity: 3,
       unitPrice: 249,
       discount: 25,
-      paymentMethod: 'Card',
       total: 722,
+      paymentMethod: 'Card',
       status: 'Completed',
+      date: '2024-08-27',
       customer: 'Sarah Wilson',
-      date: '2024-08-27'
+      notes: 'Bulk purchase discount applied'
     },
     {
       id: 5,
       invoiceNumber: 'INV-1005',
       productName: 'iPad Pro',
-      image: '/api/placeholder/50/50',
+      productImage: 'IMG',
       quantity: 1,
       unitPrice: 1099,
       discount: 0,
-      paymentMethod: 'Cash',
       total: 1099,
+      paymentMethod: 'Cash',
       status: 'Refunded',
+      date: '2024-08-26',
       customer: 'David Brown',
-      date: '2024-08-26'
+      notes: 'Product returned due to defect'
     }
-  ];
+  ]);
 
   // Filter and search logic
   const filteredSales = useMemo(() => {
@@ -108,7 +143,178 @@ const Sales = () => {
     });
   }, [salesData, searchTerm, paymentFilter, statusFilter, dateFilter]);
 
-  const getPaymentIcon = (method) => {
+  // Generate new invoice number
+  const generateInvoiceNumber = () => {
+    const maxId = Math.max(...salesData.map(sale => sale.id));
+    return `INV-${(1000 + maxId + 1)}`;
+  };
+
+  // Handle form input changes
+  const handleFormChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Calculate total
+  const calculateTotal = () => {
+    const subtotal = formData.quantity * formData.unitPrice;
+    return subtotal - formData.discount;
+  };
+
+  // Add new sale
+  const handleAddSale = () => {
+    const newSale = {
+      id: Math.max(...salesData.map(sale => sale.id)) + 1,
+      invoiceNumber: generateInvoiceNumber(),
+      productName: formData.productName,
+      productImage: 'IMG',
+      quantity: parseInt(formData.quantity),
+      unitPrice: parseFloat(formData.unitPrice),
+      discount: parseFloat(formData.discount),
+      total: calculateTotal(),
+      paymentMethod: formData.paymentMethod,
+      status: 'Completed',
+      date: new Date().toISOString().split('T')[0],
+      customer: formData.customer,
+      notes: formData.notes
+    };
+
+    setSalesData(prev => [newSale, ...prev]);
+    setIsAddModalOpen(false);
+    resetForm();
+  };
+
+  // Edit sale
+  const handleEditSale = () => {
+    const updatedSale = {
+      ...selectedSale,
+      productName: formData.productName,
+      quantity: parseInt(formData.quantity),
+      unitPrice: parseFloat(formData.unitPrice),
+      discount: parseFloat(formData.discount),
+      total: calculateTotal(),
+      paymentMethod: formData.paymentMethod,
+      customer: formData.customer,
+      notes: formData.notes
+    };
+
+    setSalesData(prev => prev.map(sale => 
+      sale.id === selectedSale.id ? updatedSale : sale
+    ));
+    setIsEditModalOpen(false);
+    resetForm();
+    setSelectedSale(null);
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setFormData({
+      productName: '',
+      quantity: 1,
+      unitPrice: 0,
+      discount: 0,
+      paymentMethod: '',
+      customer: '',
+      notes: ''
+    });
+  };
+
+  // Open edit modal
+  const openEditModal = (sale) => {
+    setSelectedSale(sale);
+    setFormData({
+      productName: sale.productName,
+      quantity: sale.quantity,
+      unitPrice: sale.unitPrice,
+      discount: sale.discount,
+      paymentMethod: sale.paymentMethod,
+      customer: sale.customer,
+      notes: sale.notes
+    });
+    setIsEditModalOpen(true);
+  };
+
+  // Open view modal
+  const openViewModal = (sale) => {
+    setSelectedSale(sale);
+    setIsViewModalOpen(true);
+  };
+
+  // Print functionality
+  const handlePrint = (sale) => {
+    const printWindow = window.open('', '_blank');
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Invoice ${sale.invoiceNumber}</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .header { text-align: center; margin-bottom: 30px; }
+            .invoice-details { margin-bottom: 20px; }
+            .table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            .table th { background-color: #f2f2f2; }
+            .total { font-weight: bold; font-size: 18px; }
+            .footer { margin-top: 30px; text-align: center; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Sales Invoice</h1>
+            <h2>${sale.invoiceNumber}</h2>
+          </div>
+          
+          <div class="invoice-details">
+            <p><strong>Date:</strong> ${sale.date}</p>
+            <p><strong>Customer:</strong> ${sale.customer}</p>
+            <p><strong>Payment Method:</strong> ${sale.paymentMethod}</p>
+            <p><strong>Status:</strong> ${sale.status}</p>
+          </div>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Discount</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${sale.productName}</td>
+                <td>${sale.quantity}</td>
+                <td>$${sale.unitPrice}</td>
+                <td>$${sale.discount}</td>
+                <td>$${sale.total}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="total">
+            <p>Total Amount: $${sale.total}</p>
+          </div>
+
+          ${sale.notes ? `<div><p><strong>Notes:</strong> ${sale.notes}</p></div>` : ''}
+
+          <div class="footer">
+            <p>Thank you for your business!</p>
+            <p>Generated on ${new Date().toLocaleDateString()}</p>
+          </div>
+        </body>
+      </html>
+    `;
+    
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  const getPaymentMethodIcon = (method) => {
     switch (method) {
       case 'Card':
         return <CreditCard className="h-4 w-4" />;
@@ -150,10 +356,118 @@ const Sales = () => {
             Manage your sales transactions and generate invoices
           </p>
         </div>
-        <Button className="flex items-center space-x-2">
-          <Plus className="h-4 w-4" />
-          <span>New Sale</span>
-        </Button>
+        <div className='flex gap-x-2'>
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+          <DialogTrigger asChild>
+            <Button className="flex items-center space-x-2">
+              <Plus className="h-4 w-4" />
+              <span>New Sale</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Sale</DialogTitle>
+              <DialogDescription>
+                Create a new sales transaction
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="productName">Product Name</Label>
+                <Input
+                  id="productName"
+                  value={formData.productName}
+                  onChange={(e) => handleFormChange('productName', e.target.value)}
+                  placeholder="Enter product name"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <Label htmlFor="quantity">Quantity</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    value={formData.quantity}
+                    onChange={(e) => handleFormChange('quantity', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="unitPrice">Unit Price</Label>
+                  <Input
+                    id="unitPrice"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={formData.unitPrice}
+                    onChange={(e) => handleFormChange('unitPrice', e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="discount">Discount</Label>
+                <Input
+                  id="discount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formData.discount}
+                  onChange={(e) => handleFormChange('discount', e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="paymentMethod">Payment Method</Label>
+                <Select value={formData.paymentMethod} onValueChange={(value) => handleFormChange('paymentMethod', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select payment method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Cash">Cash</SelectItem>
+                    <SelectItem value="Card">Card</SelectItem>
+                    <SelectItem value="MFS">MFS</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="customer">Customer Name</Label>
+                <Input
+                  id="customer"
+                  value={formData.customer}
+                  onChange={(e) => handleFormChange('customer', e.target.value)}
+                  placeholder="Enter customer name"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="notes">Notes (Optional)</Label>
+                <Textarea
+                  id="notes"
+                  value={formData.notes}
+                  onChange={(e) => handleFormChange('notes', e.target.value)}
+                  placeholder="Additional notes..."
+                  rows={3}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Total Amount</Label>
+                <div className="text-lg font-bold">${calculateTotal().toFixed(2)}</div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleAddSale} disabled={!formData.productName || !formData.customer || !formData.paymentMethod}>
+                Add Sale
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+         </Dialog>
+         <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear Filters
+              </Button>
+          </div>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -215,11 +529,11 @@ const Sales = () => {
                 onChange={(e) => setDateFilter(e.target.value)}
               />
             </div>
-            <div className="flex items-end">
+            {/* <div className="flex items-end">
               <Button variant="outline" onClick={clearFilters}>
                 Clear Filters
               </Button>
-            </div>
+            </div> */}
           </div>
           <div className="mt-4 text-sm text-muted-foreground">
             Showing {filteredSales.length} of {salesData.length} sales
@@ -244,8 +558,8 @@ const Sales = () => {
                 <TableHead>Qty</TableHead>
                 <TableHead>Unit Price</TableHead>
                 <TableHead>Discount</TableHead>
-                <TableHead>Payment</TableHead>
                 <TableHead>Total</TableHead>
+                <TableHead>Payment</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Customer</TableHead>
                 <TableHead>Date</TableHead>
@@ -258,10 +572,10 @@ const Sales = () => {
                   <TableCell className="font-medium">{sale.invoiceNumber}</TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <span className="text-xs font-medium">IMG</span>
+                      <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center text-xs">
+                        {sale.productImage}
                       </div>
-                      <span className="font-medium">{sale.productName}</span>
+                      <span>{sale.productName}</span>
                     </div>
                   </TableCell>
                   <TableCell>{sale.quantity}</TableCell>
@@ -273,25 +587,37 @@ const Sales = () => {
                       <span className="text-gray-400">-</span>
                     )}
                   </TableCell>
+                  <TableCell className="font-medium">${sale.total}</TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      {getPaymentIcon(sale.paymentMethod)}
+                      {getPaymentMethodIcon(sale.paymentMethod)}
                       <span>{sale.paymentMethod}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="font-medium">${sale.total}</TableCell>
                   <TableCell>{getStatusBadge(sale.status)}</TableCell>
                   <TableCell>{sale.customer}</TableCell>
                   <TableCell>{sale.date}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => openViewModal(sale)}
+                      >
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handlePrint(sale)}
+                      >
                         <Printer className="h-3 w-3" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => openEditModal(sale)}
+                      >
                         <Edit className="h-3 w-3" />
                       </Button>
                     </div>
@@ -307,6 +633,237 @@ const Sales = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Sale</DialogTitle>
+            <DialogDescription>
+              Update sales transaction details
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="editProductName">Product Name</Label>
+              <Input
+                id="editProductName"
+                value={formData.productName}
+                onChange={(e) => handleFormChange('productName', e.target.value)}
+                placeholder="Enter product name"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="editQuantity">Quantity</Label>
+                <Input
+                  id="editQuantity"
+                  type="number"
+                  min="1"
+                  value={formData.quantity}
+                  onChange={(e) => handleFormChange('quantity', e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="editUnitPrice">Unit Price</Label>
+                <Input
+                  id="editUnitPrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formData.unitPrice}
+                  onChange={(e) => handleFormChange('unitPrice', e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="editDiscount">Discount</Label>
+              <Input
+                id="editDiscount"
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.discount}
+                onChange={(e) => handleFormChange('discount', e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="editPaymentMethod">Payment Method</Label>
+              <Select value={formData.paymentMethod} onValueChange={(value) => handleFormChange('paymentMethod', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select payment method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Cash">Cash</SelectItem>
+                  <SelectItem value="Card">Card</SelectItem>
+                  <SelectItem value="MFS">MFS</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="editCustomer">Customer Name</Label>
+              <Input
+                id="editCustomer"
+                value={formData.customer}
+                onChange={(e) => handleFormChange('customer', e.target.value)}
+                placeholder="Enter customer name"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="editNotes">Notes (Optional)</Label>
+              <Textarea
+                id="editNotes"
+                value={formData.notes}
+                onChange={(e) => handleFormChange('notes', e.target.value)}
+                placeholder="Additional notes..."
+                rows={3}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Total Amount</Label>
+              <div className="text-lg font-bold">${calculateTotal().toFixed(2)}</div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEditSale}>
+              Update Sale
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Modal */}
+      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Sale Details</DialogTitle>
+            <DialogDescription>
+              View complete sales transaction information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedSale && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Invoice Number</Label>
+                  <p className="text-lg font-semibold">{selectedSale.invoiceNumber}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Date</Label>
+                  <p className="text-lg">{selectedSale.date}</p>
+                </div>
+              </div>
+              
+              <div className="border-t pt-4">
+                <Label className="text-sm font-medium text-gray-500">Product Information</Label>
+                <div className="mt-2 space-y-2">
+                  <p><span className="font-medium">Product:</span> {selectedSale.productName}</p>
+                  <p><span className="font-medium">Quantity:</span> {selectedSale.quantity}</p>
+                  <p><span className="font-medium">Unit Price:</span> ${selectedSale.unitPrice}</p>
+                  <p><span className="font-medium">Discount:</span> ${selectedSale.discount}</p>
+                  <p><span className="font-medium text-lg">Total:</span> <span className="text-lg font-bold">${selectedSale.total}</span></p>
+                </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <Label className="text-sm font-medium text-gray-500">Payment & Customer</Label>
+                <div className="mt-2 space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-medium">Payment Method:</span>
+                    {getPaymentMethodIcon(selectedSale.paymentMethod)}
+                    <span>{selectedSale.paymentMethod}</span>
+                  </div>
+                  <p><span className="font-medium">Customer:</span> {selectedSale.customer}</p>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-medium">Status:</span>
+                    {getStatusBadge(selectedSale.status)}
+                  </div>
+                </div>
+              </div>
+
+              {selectedSale.notes && (
+                <div className="border-t pt-4">
+                  <Label className="text-sm font-medium text-gray-500">Notes</Label>
+                  <p className="mt-2 text-sm bg-gray-50 p-3 rounded">{selectedSale.notes}</p>
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsViewModalOpen(false)}>
+              Close
+            </Button>
+            <Button onClick={() => selectedSale && handlePrint(selectedSale)}>
+              <Printer className="h-4 w-4 mr-2" />
+              Print Invoice
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Summary Cards */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Sales Today</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{filteredSales.length}</div>
+            <p className="text-xs text-muted-foreground">
+              Filtered results
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              ${filteredSales.reduce((sum, sale) => sum + sale.total, 0).toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              From filtered sales
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg. Transaction</CardTitle>
+            <Banknote className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              ${filteredSales.length > 0 ? Math.round(filteredSales.reduce((sum, sale) => sum + sale.total, 0) / filteredSales.length) : 0}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Average value
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
+            <Smartphone className="h-4 w-4 text-orange-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {filteredSales.filter(sale => sale.status === 'Pending').length}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Requires attention
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
