@@ -20,7 +20,7 @@ import {
   Trash2
 } from 'lucide-react';
 
-const Products = () => {
+const Products = ({ products, setProducts, onNavigateToCreate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [brandFilter, setBrandFilter] = useState('all');
@@ -42,102 +42,14 @@ const Products = () => {
     reorderLevel: 0,
     description: ''
   });
-  
-  // Sample products data with state management
-  const [productsData, setProductsData] = useState([
-    {
-      id: 1,
-      name: 'iPhone 14 Pro',
-      category: 'Smartphones',
-      brand: 'Apple',
-      purchasePrice: 850,
-      sellingPrice: 999,
-      stock: 25,
-      reorderLevel: 10,
-      status: 'In Stock',
-      description: 'Latest iPhone with Pro camera system'
-    },
-    {
-      id: 2,
-      name: 'Samsung Galaxy S23',
-      category: 'Smartphones',
-      brand: 'Samsung',
-      purchasePrice: 750,
-      sellingPrice: 899,
-      stock: 15,
-      reorderLevel: 12,
-      status: 'In Stock',
-      description: 'Premium Android smartphone'
-    },
-    {
-      id: 3,
-      name: 'MacBook Air M2',
-      category: 'Laptops',
-      brand: 'Apple',
-      purchasePrice: 1000,
-      sellingPrice: 1199,
-      stock: 8,
-      reorderLevel: 5,
-      status: 'In Stock',
-      description: 'Lightweight laptop with M2 chip'
-    },
-    {
-      id: 4,
-      name: 'AirPods Pro',
-      category: 'Accessories',
-      brand: 'Apple',
-      purchasePrice: 200,
-      sellingPrice: 249,
-      stock: 3,
-      reorderLevel: 15,
-      status: 'Low Stock',
-      description: 'Wireless earbuds with noise cancellation'
-    },
-    {
-      id: 5,
-      name: 'iPad Pro',
-      category: 'Tablets',
-      brand: 'Apple',
-      purchasePrice: 900,
-      sellingPrice: 1099,
-      stock: 12,
-      reorderLevel: 8,
-      status: 'In Stock',
-      description: 'Professional tablet for creative work'
-    },
-    {
-      id: 6,
-      name: 'Google Pixel 7',
-      category: 'Smartphones',
-      brand: 'Google',
-      purchasePrice: 550,
-      sellingPrice: 699,
-      stock: 0,
-      reorderLevel: 10,
-      status: 'Out of Stock',
-      description: 'Google flagship smartphone'
-    },
-    {
-      id: 7,
-      name: 'Dell XPS 13',
-      category: 'Laptops',
-      brand: 'Dell',
-      purchasePrice: 800,
-      sellingPrice: 999,
-      stock: 6,
-      reorderLevel: 5,
-      status: 'In Stock',
-      description: 'Compact Windows laptop'
-    }
-  ]);
 
   // Get unique categories and brands for filters
-  const categories = [...new Set(productsData.map(product => product.category))];
-  const brands = [...new Set(productsData.map(product => product.brand))];
+  const categories = [...new Set(products.map(product => product.category))];
+  const brands = [...new Set(products.map(product => product.brand))];
 
   // Filter and search logic
   const filteredProducts = useMemo(() => {
-    return productsData.filter(product => {
+    return products.filter(product => {
       const matchesSearch = searchTerm === '' || 
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -154,7 +66,7 @@ const Products = () => {
       
       return matchesSearch && matchesCategory && matchesBrand && matchesStock;
     });
-  }, [productsData, searchTerm, categoryFilter, brandFilter, stockFilter]);
+  }, [products, searchTerm, categoryFilter, brandFilter, stockFilter]);
 
   // Handle form input changes
   const handleFormChange = (field, value) => {
@@ -177,10 +89,10 @@ const Products = () => {
     return 'In Stock';
   };
 
-  // Add new product
+  // Add new product (via modal)
   const handleAddProduct = () => {
     const newProduct = {
-      id: Math.max(...productsData.map(product => product.id)) + 1,
+      id: Math.max(...products.map(product => product.id)) + 1,
       name: formData.name,
       category: formData.category,
       brand: formData.brand,
@@ -192,7 +104,7 @@ const Products = () => {
       description: formData.description
     };
 
-    setProductsData(prev => [newProduct, ...prev]);
+    setProducts(prev => [newProduct, ...prev]);
     setIsAddModalOpen(false);
     resetForm();
   };
@@ -212,7 +124,7 @@ const Products = () => {
       description: formData.description
     };
 
-    setProductsData(prev => prev.map(product => 
+    setProducts(prev => prev.map(product => 
       product.id === selectedProduct.id ? updatedProduct : product
     ));
     setIsEditModalOpen(false);
@@ -222,7 +134,7 @@ const Products = () => {
 
   // Delete product
   const handleDeleteProduct = (productId) => {
-    setProductsData(prev => prev.filter(product => product.id !== productId));
+    setProducts(prev => prev.filter(product => product.id !== productId));
   };
 
   // Reset form
@@ -291,133 +203,199 @@ const Products = () => {
           </p>
         </div>
         <div className='flex gap-x-2'>
-          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="flex items-center space-x-2">
+          {/* <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button className="flex items-center space-x-2">
+                <Plus className="h-4 w-4" />
+                <span>Add Product</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add New Product</DialogTitle>
+                <DialogDescription>
+                  Add a new product to your inventory
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="productName">Product Name</Label>
+                  <Input
+                    id="productName"
+                    value={formData.name}
+                    onChange={(e) => handleFormChange('name', e.target.value)}
+                    placeholder="Enter product name"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label htmlFor="category">Category</Label>
+                    <Select value={formData.category} onValueChange={(value) => handleFormChange('category', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Smartphones">Smartphones</SelectItem>
+                        <SelectItem value="Laptops">Laptops</SelectItem>
+                        <SelectItem value="Tablets">Tablets</SelectItem>
+                        <SelectItem value="Accessories">Accessories</SelectItem>
+                        <SelectItem value="Wearables">Wearables</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="brand">Brand</Label>
+                    <Input
+                      id="brand"
+                      value={formData.brand}
+                      onChange={(e) => handleFormChange('brand', e.target.value)}
+                      placeholder="Enter brand"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label htmlFor="purchasePrice">Purchase Price (BDT)</Label>
+                    <Input
+                      id="purchasePrice"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.purchasePrice}
+                      onChange={(e) => handleFormChange('purchasePrice', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="sellingPrice">Selling Price (BDT)</Label>
+                    <Input
+                      id="sellingPrice"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formData.sellingPrice}
+                      onChange={(e) => handleFormChange('sellingPrice', e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label htmlFor="stock">Stock Quantity</Label>
+                    <Input
+                      id="stock"
+                      type="number"
+                      min="0"
+                      value={formData.stock}
+                      onChange={(e) => handleFormChange('stock', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="reorderLevel">Reorder Level</Label>
+                    <Input
+                      id="reorderLevel"
+                      type="number"
+                      min="0"
+                      value={formData.reorderLevel}
+                      onChange={(e) => handleFormChange('reorderLevel', e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="description">Description (Optional)</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => handleFormChange('description', e.target.value)}
+                    placeholder="Product description..."
+                    rows={3}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Profit Margin</Label>
+                  <div className="text-lg font-bold text-green-600">{calculateProfitMargin()}%</div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddProduct} disabled={!formData.name || !formData.category || !formData.brand}>
+                  Add Product
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog> */}
+          
+          {/* Create Product Page Navigation Button */}
+          {onNavigateToCreate && (
+            <Button 
+              variant="outline"
+              onClick={onNavigateToCreate}
+              className="flex items-center space-x-2 bg-black text-white"
+            >
               <Plus className="h-4 w-4" />
-              <span>Add Product</span>
+              <span>Create Product Page</span>
             </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add New Product</DialogTitle>
-              <DialogDescription>
-                Add a new product to your inventory
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="productName">Product Name</Label>
-                <Input
-                  id="productName"
-                  value={formData.name}
-                  onChange={(e) => handleFormChange('name', e.target.value)}
-                  placeholder="Enter product name"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label htmlFor="category">Category</Label>
-                  <Select value={formData.category} onValueChange={(value) => handleFormChange('category', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Smartphones">Smartphones</SelectItem>
-                      <SelectItem value="Laptops">Laptops</SelectItem>
-                      <SelectItem value="Tablets">Tablets</SelectItem>
-                      <SelectItem value="Accessories">Accessories</SelectItem>
-                      <SelectItem value="Wearables">Wearables</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="brand">Brand</Label>
-                  <Input
-                    id="brand"
-                    value={formData.brand}
-                    onChange={(e) => handleFormChange('brand', e.target.value)}
-                    placeholder="Enter brand"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label htmlFor="purchasePrice">Purchase Price</Label>
-                  <Input
-                    id="purchasePrice"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={formData.purchasePrice}
-                    onChange={(e) => handleFormChange('purchasePrice', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="sellingPrice">Selling Price</Label>
-                  <Input
-                    id="sellingPrice"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={formData.sellingPrice}
-                    onChange={(e) => handleFormChange('sellingPrice', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label htmlFor="stock">Stock Quantity</Label>
-                  <Input
-                    id="stock"
-                    type="number"
-                    min="0"
-                    value={formData.stock}
-                    onChange={(e) => handleFormChange('stock', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="reorderLevel">Reorder Level</Label>
-                  <Input
-                    id="reorderLevel"
-                    type="number"
-                    min="0"
-                    value={formData.reorderLevel}
-                    onChange={(e) => handleFormChange('reorderLevel', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="description">Description (Optional)</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleFormChange('description', e.target.value)}
-                  placeholder="Product description..."
-                  rows={3}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Profit Margin</Label>
-                <div className="text-lg font-bold text-green-600">{calculateProfitMargin()}%</div>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddProduct} disabled={!formData.name || !formData.category || !formData.brand}>
-                Add Product
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Filters
-              </Button>
-            </div>
+          )}
+          
+          <Button variant="outline" onClick={clearFilters}>
+            Clear Filters
+          </Button>
         </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalProducts}</div>
+            <p className="text-xs text-muted-foreground">
+              Filtered results
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-orange-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{lowStockItems}</div>
+            <p className="text-xs text-muted-foreground">
+              Need reordering
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Out of Stock</CardTitle>
+            <TrendingUp className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{outOfStockItems}</div>
+            <p className="text-xs text-muted-foreground">
+              Urgent attention
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">৳{totalValue.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              Inventory value
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Search and Filters */}
@@ -485,14 +463,14 @@ const Products = () => {
                 </SelectContent>
               </Select>
             </div>
-            {/* <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
+            <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters} className="w-full">
                 Clear Filters
               </Button>
-            </div> */}
+            </div>
           </div>
           <div className="mt-4 text-sm text-muted-foreground">
-            Showing {filteredProducts.length} of {productsData.length} products
+            Showing {filteredProducts.length} of {products.length} products
           </div>
         </CardContent>
       </Card>
@@ -537,8 +515,8 @@ const Products = () => {
                   </TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell>{product.brand}</TableCell>
-                  <TableCell>${product.purchasePrice}</TableCell>
-                  <TableCell>${product.sellingPrice}</TableCell>
+                  <TableCell>৳{product.purchasePrice.toLocaleString()}</TableCell>
+                  <TableCell>৳{product.sellingPrice.toLocaleString()}</TableCell>
                   <TableCell>
                     <div>
                       <div className="font-medium">{product.stock} units</div>
@@ -640,7 +618,7 @@ const Products = () => {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label htmlFor="editPurchasePrice">Purchase Price</Label>
+                <Label htmlFor="editPurchasePrice">Purchase Price (BDT)</Label>
                 <Input
                   id="editPurchasePrice"
                   type="number"
@@ -651,7 +629,7 @@ const Products = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="editSellingPrice">Selling Price</Label>
+                <Label htmlFor="editSellingPrice">Selling Price (BDT)</Label>
                 <Input
                   id="editSellingPrice"
                   type="number"
@@ -709,64 +687,8 @@ const Products = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalProducts}</div>
-            <p className="text-xs text-muted-foreground">
-              Filtered results
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{lowStockItems}</div>
-            <p className="text-xs text-muted-foreground">
-              Need reordering
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Out of Stock</CardTitle>
-            <TrendingUp className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{outOfStockItems}</div>
-            <p className="text-xs text-muted-foreground">
-              Urgent attention
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Value</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${totalValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Inventory value
-            </p>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 };
 
 export default Products;
-

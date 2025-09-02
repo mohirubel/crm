@@ -1,6 +1,9 @@
 import {
   LayoutDashboard, ShoppingCart, Package, Warehouse, RotateCcw, FileText,
-  BarChart3, Users, ClipboardList, Activity, Edit, ImageIcon, Box, Trash2
+  BarChart3, Users, ClipboardList, Activity, Edit, ImageIcon, Box, Trash2,
+  UserCog,
+  UsersIcon,
+  FileEditIcon
 } from 'lucide-react';
 
 // This file manages all application menus
@@ -18,7 +21,7 @@ export const menuConfig = [
     name: 'Purchase',
     icon: ShoppingCart,
     component: 'Purchase',
-    color: "bg-green-100 text-green-800",
+    color: "bg-purple-100 text-purple-800",
     section: "Core Applications"
   },
   {
@@ -42,32 +45,65 @@ export const menuConfig = [
     name: 'Inventory',
     icon: Warehouse,
     component: 'Inventory',
-    color: "bg-yellow-100 text-yellow-800",
+    color: "bg-indigo-100 text-indigo-800",
     section: "Core Applications"
+  },
+
+  {
+    id: 'CreateBrand',
+    name: 'New Brand',
+    icon: FileEditIcon,
+    component: 'CreateBrand',
+    color: "bg-teal-100 text-teal-800",
+    section: "Create Component"
+  },
+  {
+    id: 'createCategory',
+    name: 'Create Category',
+    icon: FileEditIcon,
+    component: 'CreateCategory',
+    color: "bg-teal-100 text-teal-800",
+    section: "Create Component"
+  },
+  {
+    id: 'CreateProductsPage',
+    name: 'Add Products',
+    icon: FileEditIcon,
+    component: 'CreateProductsPage',
+    color: "bg-teal-100 text-teal-800",
+    section: "Create Component"
+  },
+  {
+    id: 'UserProfile',
+    name: 'User Profile',
+    icon: UserCog,
+    component: 'UserProfile',
+    color: "bg-green-100 text-green-800",
+    section: "Access Management"
+  },
+  {
+    id: 'AllUser',
+    name: 'All User',
+    icon: UsersIcon,
+    component: 'AllUser',
+    color: "bg-green-100 text-green-800",
+    section: "Access Management"
   },
   {
     id: 'returns',
     name: 'Returns',
     icon: RotateCcw,
     component: 'Returns',
-    color: "bg-red-100 text-red-800",
-    section: "Core Applications"
+    color: "bg-green-100 text-green-800",
+    section: "Access Management"
   },
   {
     id: 'reports',
     name: 'Reports',
     icon: FileText,
     component: 'Reports',
-    color: "bg-teal-100 text-teal-800",
-    section: "Core Applications"
-  },
-  {
-    id: 'createCategory',
-    name: 'Create Category',
-    icon: FileText,
-    component: 'CreateCategory',
-    color: "bg-teal-100 text-teal-800",
-    section: "Create Component"
+    color: "bg-green-100 text-green-800",
+    section: "Access Management"
   },
   // You can easily add new menus here
   // Example:

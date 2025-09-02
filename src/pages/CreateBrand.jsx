@@ -3,107 +3,81 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { 
   Plus, 
   Search, 
-  FolderPlus, 
+  Award, 
   Edit,
   Trash2,
-  Package,
-  Tag,
   ArrowLeft
 } from 'lucide-react';
 
-const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCategoryCreate }) => {
+const CreateBrand = ({ brands = [], setBrands, onNavigateBack }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  
-  // Form state
-  const [categoryForm, setCategoryForm] = useState({ 
-    name: '', 
-    description: '' 
-  });
+  const [selectedBrand, setSelectedBrand] = useState(null);
 
-  // Filter categories based on search
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    category.description.toLowerCase().includes(searchTerm.toLowerCase())
+  // Form state
+  const [brandForm, setBrandForm] = useState({ name: '' });
+
+  // Filter brands based on search
+  const filteredBrands = brands.filter(brand =>
+    brand.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handle form input changes
-  const handleFormChange = (field, value) => {
-    setCategoryForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleFormChange = (value) => {
+    setBrandForm({ name: value });
   };
 
-  // Add new category
-  const handleAddCategory = () => {
-    const newCategory = {
-      id: Math.max(...categories.map(category => category.id), 0) + 1,
-      name: categoryForm.name,
-      description: categoryForm.description,
+  // Add new brand
+  const handleAddBrand = () => {
+    const newBrand = {
+      id: Math.max(...brands.map(brand => brand.id), 0) + 1,
+      name: brandForm.name,
       productCount: 0,
       createdDate: new Date().toISOString().split('T')[0]
     };
-    
-    
-    
-    // Call the callback if provided
-    if (onCategoryCreate) {
-      onCategoryCreate(newCategory);
-    }
-    
-    setCategoryForm({ name: '', description: '' });
+
+    // ✅ Only setBrands used (no duplicate add)
+    setBrands(prev => [newBrand, ...prev]);
+
+    setBrandForm({ name: '' });
     setIsAddModalOpen(false);
   };
 
-  // Edit category
-  const handleEditCategory = () => {
-    const updatedCategory = { 
-      ...selectedCategory, 
-      name: categoryForm.name,
-      description: categoryForm.description 
-    };
+  // Edit brand
+  const handleEditBrand = () => {
+    const updatedBrand = { ...selectedBrand, name: brandForm.name };
 
-    if (setCategories) {
-      setCategories(prev => prev.map(category => 
-        category.id === selectedCategory.id ? updatedCategory : category
-      ));
-    }
+    setBrands(prev => prev.map(brand => 
+      brand.id === selectedBrand.id ? updatedBrand : brand
+    ));
     
     setIsEditModalOpen(false);
-    setCategoryForm({ name: '', description: '' });
-    setSelectedCategory(null);
+    setBrandForm({ name: '' });
+    setSelectedBrand(null);
   };
 
-  // Delete category
-  const handleDeleteCategory = (categoryId) => {
-    if (setCategories) {
-      setCategories(prev => prev.filter(category => category.id !== categoryId));
-    }
+  // Delete brand
+  const handleDeleteBrand = (brandId) => {
+    setBrands(prev => prev.filter(brand => brand.id !== brandId));
   };
 
   // Open edit modal
-  const openEditModal = (category) => {
-    setSelectedCategory(category);
-    setCategoryForm({ 
-      name: category.name,
-      description: category.description || ''
-    });
+  const openEditModal = (brand) => {
+    setSelectedBrand(brand);
+    setBrandForm({ name: brand.name });
     setIsEditModalOpen(true);
   };
 
   // Reset form
   const resetForm = () => {
-    setCategoryForm({ name: '', description: '' });
+    setBrandForm({ name: '' });
   };
 
   return (
@@ -125,48 +99,38 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
             )}
             <div>
               <h1 className="text-3xl font-bold tracking-tight flex items-center">
-                <FolderPlus className="h-8 w-8 mr-3 text-indigo-600" />
-                Create Category
+                <Award className="h-8 w-8 mr-3 text-blue-600" />
+                Create Brand
               </h1>
               <p className="text-muted-foreground mt-2">
-                Organize and manage your product categories
+                Manage and organize your product brands
               </p>
             </div>
           </div>
           
-          {/* Add Category Button */}
+          {/* Add Brand Button */}
           <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700">
+              <Button className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4" />
-                <span>Add New Category</span>
+                <span>Add New Brand</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
               <DialogHeader>
-                <DialogTitle>Add New Category</DialogTitle>
+                <DialogTitle>Add New Brand</DialogTitle>
                 <DialogDescription>
-                  Create a new category for better product organization
+                  Create a new brand for better product organization
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="categoryName">Category Name *</Label>
+                  <Label htmlFor="brandName">Brand Name *</Label>
                   <Input
-                    id="categoryName"
-                    value={categoryForm.name}
-                    onChange={(e) => handleFormChange('name', e.target.value)}
-                    placeholder="e.g., Smartphones, Laptops"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="categoryDescription">Description</Label>
-                  <Textarea
-                    id="categoryDescription"
-                    value={categoryForm.description}
-                    onChange={(e) => handleFormChange('description', e.target.value)}
-                    placeholder="Describe what products belong to this category..."
-                    rows={3}
+                    id="brandName"
+                    value={brandForm.name}
+                    onChange={(e) => handleFormChange(e.target.value)}
+                    placeholder="e.g., Apple, Samsung"
                   />
                 </div>
               </div>
@@ -178,11 +142,11 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
                   Cancel
                 </Button>
                 <Button 
-                  onClick={handleAddCategory} 
-                  disabled={!categoryForm.name.trim()}
-                  className="bg-indigo-600 hover:bg-indigo-700"
+                  onClick={handleAddBrand} 
+                  disabled={!brandForm.name.trim()}
+                  className="bg-blue-600 hover:bg-blue-700"
                 >
-                  Create Category
+                  Create Brand
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -194,82 +158,76 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
           <CardHeader>
             <CardTitle className="flex items-center">
               <Search className="h-5 w-5 mr-2" />
-              Search Categories
+              Search Brands
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search by name or description..."
+                placeholder="Search by name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
             <div className="mt-2 text-sm text-muted-foreground">
-              Showing {filteredCategories.length} of {categories.length} categories
+              Showing {filteredBrands.length} of {brands.length} brands
             </div>
           </CardContent>
         </Card>
 
-        {/* Categories Table */}
+        {/* Brands Table */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <FolderPlus className="h-5 w-5 mr-2" />
-              Categories List
+              <Award className="h-5 w-5 mr-2" />
+              Brands List
             </CardTitle>
             <CardDescription>
-              Manage your product categories
+              Manage your product brands
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <div className="min-w-full bg-white rounded-lg border">
-                <div className="grid grid-cols-5 gap-4 p-4 bg-gray-50 border-b font-medium text-sm text-gray-700">
-                  <div>Category Name</div>
-                  <div>Description</div>
+                <div className="grid grid-cols-4 gap-4 p-4 bg-gray-50 border-b font-medium text-sm text-gray-700">
+                  <div>Brand Name</div>
                   <div>Products</div>
                   <div>Status</div>
                   <div>Actions</div>
                 </div>
                 <div className="divide-y">
-                  {filteredCategories.map((category) => (
-                    <div key={category.id} className="grid grid-cols-5 gap-4 p-4 hover:bg-gray-50">
+                  {filteredBrands.map((brand) => (
+                    <div key={brand.id} className="grid grid-cols-4 gap-4 p-4 hover:bg-gray-50">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                          <FolderPlus className="h-5 w-5 text-indigo-600" />
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Award className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">{category.name}</div>
-                          <div className="text-xs text-gray-500">ID: {category.id}</div>
+                          <div className="font-medium text-gray-900">{brand.name}</div>
+                          <div className="text-xs text-gray-500">ID: {brand.id}</div>
                         </div>
-                      </div>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray-600 truncate max-w-xs">
-                          {category.description || 'No description'}
-                        </p>
                       </div>
                       <div className="flex items-center">
                         <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
-                          {category.productCount} items
+                          {brand.productCount} items
                         </Badge>
                       </div>
                       <div className="flex items-center">
                         <Badge 
-                          variant={category.productCount > 0 ? "default" : "secondary"}
-                          className={category.productCount > 0 ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}
+                          variant={brand.productCount > 0 ? "default" : "secondary"}
+                          className={brand.productCount > 0 ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}
                         >
-                          {category.productCount > 0 ? 'Active' : 'Empty'}
+                          {brand.productCount > 0 ? 'Active' : 'Empty'}
                         </Badge>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => openEditModal(category)}
-                          className="hover:bg-indigo-50"
+                          onClick={() => openEditModal(brand)}
+                          className="hover:bg-blue-50"
                         >
                           <Edit className="h-3 w-3" />
                         </Button>
@@ -285,12 +243,12 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Category</AlertDialogTitle>
+                              <AlertDialogTitle>Delete Brand</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete "{category.name}"? 
-                                {category.productCount > 0 && (
+                                Are you sure you want to delete "{brand.name}"? 
+                                {brand.productCount > 0 && (
                                   <span className="text-red-600 font-medium">
-                                    {" "}This category has {category.productCount} products.
+                                    {" "}This brand has {brand.productCount} products.
                                   </span>
                                 )}
                                 {" "}This action cannot be undone.
@@ -299,10 +257,10 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction 
-                                onClick={() => handleDeleteCategory(category.id)}
+                                onClick={() => handleDeleteBrand(brand.id)}
                                 className="bg-red-600 hover:bg-red-700"
                               >
-                                Delete Category
+                                Delete Brand
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -312,17 +270,17 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
                   ))}
                 </div>
               </div>
-              {filteredCategories.length === 0 && (
+              {filteredBrands.length === 0 && (
                 <div className="text-center py-12">
-                  <FolderPlus className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
+                  <Award className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No brands found</h3>
                   <p className="text-gray-500 mb-4">
-                    {searchTerm ? 'No categories match your search criteria.' : 'Get started by creating your first category.'}
+                    {searchTerm ? 'No brands match your search criteria.' : 'Get started by creating your first brand.'}
                   </p>
                   {!searchTerm && (
-                    <Button onClick={() => setIsAddModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700">
+                    <Button onClick={() => setIsAddModalOpen(true)} className="bg-blue-600 hover:bg-blue-700">
                       <Plus className="h-4 w-4 mr-2" />
-                      Create Your First Category
+                      Create Your First Brand
                     </Button>
                   )}
                 </div>
@@ -335,37 +293,27 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Edit Category</DialogTitle>
+              <DialogTitle>Edit Brand</DialogTitle>
               <DialogDescription>
-                Update category information
+                Update brand information
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="editCategoryName">Category Name *</Label>
+                <Label htmlFor="editBrandName">Brand Name *</Label>
                 <Input
-                  id="editCategoryName"
-                  value={categoryForm.name}
-                  onChange={(e) => handleFormChange('name', e.target.value)}
-                  placeholder="Enter category name"
+                  id="editBrandName"
+                  value={brandForm.name}
+                  onChange={(e) => handleFormChange(e.target.value)}
+                  placeholder="Enter brand name"
                 />
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="editCategoryDescription">Description</Label>
-                <Textarea
-                  id="editCategoryDescription"
-                  value={categoryForm.description}
-                  onChange={(e) => handleFormChange('description', e.target.value)}
-                  placeholder="Describe what products belong to this category..."
-                  rows={3}
-                />
-              </div>
-              {selectedCategory && (
+              {selectedBrand && (
                 <div className="grid gap-2">
-                  <Label>Category Info</Label>
+                  <Label>Brand Info</Label>
                   <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded">
-                    <div>Products: {selectedCategory.productCount} items</div>
-                    <div>Created: {new Date(selectedCategory.createdDate).toLocaleDateString()}</div>
+                    <div>Products: {selectedBrand.productCount} items</div>
+                    <div>Created: {new Date(selectedBrand.createdDate).toLocaleDateString()}</div>
                   </div>
                 </div>
               )}
@@ -374,16 +322,16 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
               <Button variant="outline" onClick={() => {
                 setIsEditModalOpen(false);
                 resetForm();
-                setSelectedCategory(null);
+                setSelectedBrand(null);
               }}>
                 Cancel
               </Button>
               <Button 
-                onClick={handleEditCategory}
-                disabled={!categoryForm.name.trim()}
-                className="bg-indigo-600 hover:bg-indigo-700"
+                onClick={handleEditBrand}
+                disabled={!brandForm.name.trim()}
+                className="bg-blue-600 hover:bg-blue-700"
               >
-                Update Category
+                Update Brand
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -393,5 +341,4 @@ const CreateCategory = ({ categories = [], setCategories, onNavigateBack, onCate
   );
 };
 
-export default CreateCategory;
-
+export default CreateBrand;
