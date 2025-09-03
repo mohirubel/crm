@@ -190,7 +190,7 @@ const CreateBrand = ({ brands = [], setBrands, onNavigateBack }) => {
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <div className="min-w-full bg-white rounded-lg border">
+              <div className="min-w-full bg-white  border">
                 <div className="grid grid-cols-4 gap-4 p-4 bg-gray-50 border-b font-medium text-sm text-gray-700">
                   <div>Brand Name</div>
                   <div>Products</div>
@@ -201,7 +201,7 @@ const CreateBrand = ({ brands = [], setBrands, onNavigateBack }) => {
                   {filteredBrands.map((brand) => (
                     <div key={brand.id} className="grid grid-cols-4 gap-4 p-4 hover:bg-gray-50">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-blue-100  flex items-center justify-center">
                           <Award className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>

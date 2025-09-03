@@ -13,7 +13,7 @@ export const menuConfig = [
     name: 'Dashboard',
     icon: LayoutDashboard,
     component: 'Dashboard', // Component to render
-    color: "bg-blue-100 text-blue-800",
+    color: "bg-white text-black-800",
     section: "Core Applications"
   },
   {
@@ -21,7 +21,7 @@ export const menuConfig = [
     name: 'Purchase',
     icon: ShoppingCart,
     component: 'Purchase',
-    color: "bg-purple-100 text-purple-800",
+    color: "bg-white text-black-800",
     section: "Core Applications"
   },
   {
@@ -29,7 +29,7 @@ export const menuConfig = [
     name: 'Sales',
     icon: ShoppingCart,
     component: 'Sales',
-    color: "bg-indigo-100 text-indigo-800",
+    color: "bg-white text-black-800",
     section: "Core Applications"
   },
   {
@@ -37,48 +37,48 @@ export const menuConfig = [
     name: 'Products',
     icon: Package,
     component: 'Products',
-    color: "bg-purple-100 text-purple-800",
+    color: "bg-white text-black-800",
     section: "Core Applications"
   },
-  {
-    id: 'inventory',
-    name: 'Inventory',
-    icon: Warehouse,
-    component: 'Inventory',
-    color: "bg-indigo-100 text-indigo-800",
-    section: "Core Applications"
-  },
+  // {
+  //   id: 'inventory',
+  //   name: 'Inventory',
+  //   icon: Warehouse,
+  //   component: 'Inventory',
+  //   color: "bg-white text-black-800",
+  //   section: "Core Applications"
+  // },
 
   {
     id: 'CreateBrand',
-    name: 'New Brand',
+    name: 'Create Brands',
     icon: FileEditIcon,
     component: 'CreateBrand',
-    color: "bg-teal-100 text-teal-800",
-    section: "Create Component"
+    color: "bg-white text-black-800",
+    section: "Create"
   },
   {
     id: 'createCategory',
     name: 'Create Category',
     icon: FileEditIcon,
     component: 'CreateCategory',
-    color: "bg-teal-100 text-teal-800",
-    section: "Create Component"
+    color: "bg-white text-black-800",
+    section: "Create"
   },
   {
     id: 'CreateProductsPage',
-    name: 'Add Products',
+    name: 'Create Products',
     icon: FileEditIcon,
     component: 'CreateProductsPage',
-    color: "bg-teal-100 text-teal-800",
-    section: "Create Component"
+    color: "bg-white text-black-800",
+    section: "Create"
   },
   {
     id: 'UserProfile',
     name: 'User Profile',
     icon: UserCog,
     component: 'UserProfile',
-    color: "bg-green-100 text-green-800",
+    color: "bg-white text-black-800",
     section: "Access Management"
   },
   {
@@ -86,7 +86,7 @@ export const menuConfig = [
     name: 'All User',
     icon: UsersIcon,
     component: 'AllUser',
-    color: "bg-green-100 text-green-800",
+    color: "bg-white text-black-800",
     section: "Access Management"
   },
   {
@@ -94,15 +94,15 @@ export const menuConfig = [
     name: 'Returns',
     icon: RotateCcw,
     component: 'Returns',
-    color: "bg-green-100 text-green-800",
+    color: "bg-white text-black-800",
     section: "Access Management"
   },
   {
-    id: 'reports',
+    id: 'SalesReports',
     name: 'Reports',
     icon: FileText,
-    component: 'Reports',
-    color: "bg-green-100 text-green-800",
+    component: 'SalesReports',
+    color: "bg-white text-black-800",
     section: "Access Management"
   },
   // You can easily add new menus here

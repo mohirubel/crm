@@ -432,7 +432,7 @@ const CreateProductsPage = ({ onProductCreate, onNavigateBack, categories = [], 
                 </div>
 
                 {profitMargin > 0 && (
-                  <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="p-3 bg-green-50  border border-green-200">
                     <Label className="text-xs text-green-600">Profit Margin</Label>
                     <p className="text-sm font-medium text-green-700">
                       {profitMargin}% (৳{(parseFloat(formData.sellingPrice || 0) - parseFloat(formData.purchasePrice || 0)).toFixed(2)})
@@ -452,7 +452,7 @@ const CreateProductsPage = ({ onProductCreate, onNavigateBack, categories = [], 
                 </div>
 
                 {formData.stock && formData.reorderLevel && (
-                  <div className="p-3 rounded-lg border">
+                  <div className="p-3  border">
                     <Label className="text-xs text-muted-foreground">Stock Status</Label>
                     <Badge 
                       variant={

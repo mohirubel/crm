@@ -60,7 +60,7 @@ const MainDashboard = ({ onMenuClick }) => {
         onClick={() => onMenuClick(app.id)}
         className={`${app.color} p-4 cursor-pointer hover:shadow-md transition-shadow duration-200 min-h-[80px] flex flex-row gap-3 justify-start items-center`}
       >
-        <div className="bg-white/20 p-2 rounded">
+        <div className="bg-green-100 p-4 rounded">
           <Icon size={20} />
         </div>
         <div className="text-sm font-medium">{app.name}</div>
