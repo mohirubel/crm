@@ -527,6 +527,7 @@ const Products = ({ products, setProducts, onNavigateToCreate }) => {
                   <TableCell>
                     <div className="flex space-x-2">
                       <Button 
+                      className="text-blue-600 hover:text-blue-700"
                         variant="outline" 
                         size="sm"
                         onClick={() => openEditModal(product)}

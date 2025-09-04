@@ -649,10 +649,10 @@ const Returns = () => {
                   <TableCell>{returnItem.date}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleViewDetails(returnItem)}>
+                      <Button className="text-teal-600 hover:text-teal-700" variant="outline" size="sm" onClick={() => handleViewDetails(returnItem)}>
                         <Eye className="h-3 w-3" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button className="text-blue-600 hover:text-blue-700" variant="outline" size="sm">
                         <RotateCcw className="h-3 w-3" />
                       </Button>
                     </div>

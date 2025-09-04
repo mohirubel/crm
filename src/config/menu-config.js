@@ -43,19 +43,19 @@ export const menuConfig = [
     section: "Core Applications"
   },
   {
-    id: 'inventory',
+    id: 'currentStock',
     name: 'Inventory',
     icon: Warehouse,
-    component: 'Inventory',
+    component: 'currentStock',
     color: "bg-white text-black-800",
     section: "Core Applications"
   },
 
   {
-    id: 'HR',
+    id: 'EmployeeList',
     name: 'HR',
     icon: UserCog,
-    component: 'HR',
+    component: 'EmployeeList',
     color: "bg-white text-black-800",
     section: "Core Applications"
   },
@@ -68,10 +68,10 @@ export const menuConfig = [
     section: "Core Applications"
   },
   {
-    id: 'Security',
+    id: 'MyProfile',
     name: 'Security',
     icon: SettingsIcon,
-    component: 'security',
+    component: 'MyProfile',
     color: "bg-white text-black-800",
     section: "Core Applications"
   },

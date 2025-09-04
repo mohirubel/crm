@@ -715,10 +715,10 @@ const Purchase = () => {
                   <TableCell>{order.deliveryDate}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button className="text-blue-600 hover:text-blue-700" variant="outline" size="sm">
                         <Edit className="h-3 w-3" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button className="text-gray-600 hover:text-gray-700" variant="outline" size="sm">
                         <FileText className="h-3 w-3" />
                       </Button>
                     </div>

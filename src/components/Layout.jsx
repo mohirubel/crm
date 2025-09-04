@@ -323,9 +323,7 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
               {renderTopMenuItem('products', true)}
               {renderTopMenuItem('inventory', true)}
               {renderTopMenuItem('purchase')}
-              {renderTopMenuItem('returns')}
               {renderTopMenuItem('reports', true)}
-              {renderTopMenuItem('create', true)}
               {renderTopMenuItem('hr', true)}
               {renderTopMenuItem('security', true)}
             </div>

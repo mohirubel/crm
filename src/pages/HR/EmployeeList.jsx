@@ -135,7 +135,7 @@ const EmployeeList = () => {
           />
           <label
             htmlFor="image-upload"
-            className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
           >
             <Upload className="w-4 h-4 mr-2" />
             Choose Photo
@@ -158,7 +158,7 @@ const EmployeeList = () => {
             </div>
             <button
               onClick={() => setShowAddForm(true)}
-              className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-gray-800 transition-colors"
             >
               <Plus className="w-4 h-4" />
               New Employee
@@ -167,7 +167,7 @@ const EmployeeList = () => {
         </div>
 
         {/* Search & Filter Section */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Search & Filter Employees</h2>
           <p className="text-gray-600 text-sm mb-4">Search by employee name or position</p>
           
@@ -179,7 +179,7 @@ const EmployeeList = () => {
                 <input
                   type="text"
                   placeholder="Search employees..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -193,7 +193,7 @@ const EmployeeList = () => {
         </div>
 
         {/* Employee List */}
-        <div className="bg-white rounded-lg shadow-sm border">
+        <div className="bg-white rounded-xl shadow-sm border">
           <div className="p-6 border-b">
             <h2 className="text-lg font-semibold text-gray-900">Employee List</h2>
             <p className="text-gray-600 text-sm">View and manage your employee records</p>
@@ -235,28 +235,31 @@ const EmployeeList = () => {
                     </td>
                     <td className="px-6 py-1 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => handleViewEmployee(employee)}
-                          className="p-2 text-gray-400 hover:text-blue-500 transition-colors"
-                          title="View Details"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleEditClick(employee)}
-                          className="p-2 text-gray-400 hover:text-green-500 transition-colors"
-                          title="Edit Employee"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteEmployee(employee.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                          title="Delete Employee"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+  <button
+    onClick={() => handleViewEmployee(employee)}
+    className="p-2 border rounded-md hover:bg-gray-100"
+    title="View Details"
+  >
+    <Eye className="w-4 h-4 text-green-600" />
+  </button>
+
+  <button
+    onClick={() => handleEditClick(employee)}
+    className="p-2 border rounded-md hover:bg-gray-100"
+    title="Edit Employee"
+  >
+    <Edit className="w-4 h-4 text-blue-600" />
+  </button>
+
+  <button
+    onClick={() => handleDeleteEmployee(employee.id)}
+    className="p-2 border rounded-md hover:bg-gray-100"
+    title="Delete Employee"
+  >
+    <Trash2 className="w-4 h-4 text-red-600" />
+  </button>
+</div>
+
                     </td>
                   </tr>
                 ))}
@@ -268,7 +271,7 @@ const EmployeeList = () => {
         {/* Add Employee Modal */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Add New Employee</h3>
                 <button 
@@ -289,7 +292,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={newEmployee.name}
                     onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -300,7 +303,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Position</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={newEmployee.position}
                     onChange={(e) => setNewEmployee({...newEmployee, position: e.target.value})}
                     placeholder="Enter position"
@@ -311,7 +314,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Join Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={newEmployee.joinDate}
                     onChange={(e) => setNewEmployee({...newEmployee, joinDate: e.target.value})}
                   />
@@ -321,7 +324,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={newEmployee.salary}
                     onChange={(e) => setNewEmployee({...newEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -332,13 +335,13 @@ const EmployeeList = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleAddEmployee}
-                  className="flex-1 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors"
                 >
                   Add Employee
                 </button>
                 <button
                   onClick={() => setShowAddForm(false)}
-                  className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                  className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-xl hover:bg-gray-300 transition-colors"
                 >
                   Cancel
                 </button>
@@ -350,7 +353,7 @@ const EmployeeList = () => {
         {/* Edit Employee Modal */}
         {showEditForm && selectedEmployee && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Edit Employee</h3>
                 <button 
@@ -371,7 +374,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={selectedEmployee.name}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -382,7 +385,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Position</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={selectedEmployee.position}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, position: e.target.value})}
                     placeholder="Enter position"
@@ -393,7 +396,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Join Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={selectedEmployee.joinDate}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, joinDate: e.target.value})}
                   />
@@ -403,7 +406,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={selectedEmployee.salary}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -414,13 +417,13 @@ const EmployeeList = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleEditEmployee}
-                  className="flex-1 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors"
                 >
                   Save Changes
                 </button>
                 <button
                   onClick={() => setShowEditForm(false)}
-                  className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                  className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-xl hover:bg-gray-300 transition-colors"
                 >
                   Cancel
                 </button>
@@ -432,7 +435,7 @@ const EmployeeList = () => {
         {/* View Employee Modal */}
         {showViewModal && selectedEmployee && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Employee Details</h3>
                 <button 
@@ -471,7 +474,7 @@ const EmployeeList = () => {
               <div className="mt-6">
                 <button
                   onClick={() => setShowViewModal(false)}
-                  className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                  className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-xl hover:bg-gray-300 transition-colors"
                 >
                   Close
                 </button>

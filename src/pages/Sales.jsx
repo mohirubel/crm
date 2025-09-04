@@ -599,7 +599,8 @@ const Sales = () => {
                   <TableCell>{sale.date}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button 
+                      <Button
+                      className="text-teal-600 hover:text-teal-700"                       
                         variant="outline" 
                         size="sm"
                         onClick={() => openViewModal(sale)}
@@ -607,6 +608,7 @@ const Sales = () => {
                         <Eye className="h-3 w-3" />
                       </Button>
                       <Button 
+                      className="text-opal-600 hover:text-opal-700"
                         variant="outline" 
                         size="sm"
                         onClick={() => handlePrint(sale)}
@@ -614,6 +616,7 @@ const Sales = () => {
                         <Printer className="h-3 w-3" />
                       </Button>
                       <Button 
+                      className="text-blue-600 hover:text-blue-700"
                         variant="outline" 
                         size="sm"
                         onClick={() => openEditModal(sale)}

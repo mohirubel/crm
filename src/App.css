@@ -123,4 +123,7 @@
   .text-sm {
   font-size: 13px !important;
 }
+ .gap-6 {
+    gap: calc(var(--spacing) * 1) !important;
+}
 }
