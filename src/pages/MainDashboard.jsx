@@ -80,7 +80,7 @@ const MainDashboard = ({ onMenuClick }) => {
                   <div className="absolute inset-0 bg-red-600 rounded-full transform rotate-45 scale-75"></div>
                 </div>
               </div>
-              <span className="text-gray-600 text-sm font-medium">
+              <span className="text-gray-600 text-2xl font-medium">
                 bhsale
               </span>
             </div>
@@ -179,54 +179,57 @@ const MainDashboard = ({ onMenuClick }) => {
       </ResponsiveContainer>
     </CardContent>
 
-    {/* Top Products */}
-    <Card className="mb-4 bg-[oklch(0.91_0_0/0)] shadow-none rounded-lg">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center">
-          <Package className="h-4 w-4 mr-2" />
-          Top Products
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          {topProducts.slice(0, 5).map((product, index) => (
-            <div key={index} className="flex items-center justify-between text-xs">
-              <div>
-                <p className="font-medium">{product.name}</p>
-                <p className="text-gray-500">{product.sales} units</p>
-              </div>
-              <p className="font-medium">${product.revenue.toLocaleString()}</p>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-
-    {/* Low Stock Alerts */}
-    <Card className="mb-4 bg-[oklch(0.91_0_0/0)] shadow-none rounded-lg">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center">
-          <AlertTriangle className="h-4 w-4 mr-2 text-orange-500" />
-          Low Stock Alerts
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          {lowStockAlerts.slice(0, 5).map((product, index) => (
-            <div key={index} className="flex items-center justify-between text-xs">
-              <div>
-                <p className="font-medium">{product.name}</p>
-                <p className="text-gray-500">Reorder: {product.reorderLevel}</p>
-              </div>
-              <Badge variant="destructive" className="text-xs px-2 py-1">
-                {product.stock} left
-              </Badge>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+    
   </div>
+</div>
+<div className="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-6 px-20">
+  {/* Top Products */}
+  <Card className="bg-[oklch(0.91_0_0/0)] shadow-none rounded-lg">
+    <CardHeader className="pb-2">
+      <CardTitle className="text-sm flex items-center">
+        <Package className="h-4 w-4 mr-2" />
+        Top Products
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-2">
+        {topProducts.slice(0, 5).map((product, index) => (
+          <div key={index} className="flex items-center justify-between text-xs">
+            <div>
+              <p className="font-medium">{product.name}</p>
+              <p className="text-gray-500">{product.sales} units</p>
+            </div>
+            <p className="font-medium">${product.revenue.toLocaleString()}</p>
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Low Stock Alerts */}
+  <Card className="bg-[oklch(0.91_0_0/0)] shadow-none rounded-lg">
+    <CardHeader className="pb-2">
+      <CardTitle className="text-sm flex items-center">
+        <AlertTriangle className="h-4 w-4 mr-2 text-orange-500" />
+        Low Stock Alerts
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-2">
+        {lowStockAlerts.slice(0, 5).map((product, index) => (
+          <div key={index} className="flex items-center justify-between text-xs">
+            <div>
+              <p className="font-medium">{product.name}</p>
+              <p className="text-gray-500">Reorder: {product.reorderLevel}</p>
+            </div>
+            <Badge variant="destructive" className="text-xs px-2 py-1">
+              {product.stock} left
+            </Badge>
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
 </div>
 
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, MapPin, Calendar, Settings, Camera, Save, Edit3, Shield, Bell } from 'lucide-react';
 
-const UserProfile = () => {
+const MyProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
     name: 'John Doe',
@@ -185,4 +185,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default MyProfile;

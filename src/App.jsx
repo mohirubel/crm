@@ -11,8 +11,8 @@ import Reports from './pages/Reports';
 import MainDashboard from './pages/MainDashboard'; 
 import './App.css';
 import CreateCategory from './pages/CreateCategory';
-import UserProfile from './pages/UserProfile';
-import AllUser from './pages/AllUser';
+import UserProfile from './pages/MyProfile';
+import AllUser from './pages/UserList';
 import CreateProductsPage from './pages/CreateProductsPage';
 import CreateBrand from './pages/CreateBrand';
 import CurrentStock from './pages/CurrentStock';
@@ -25,6 +25,9 @@ import LowQuantity from './pages/Reports/LowQuantity';
 import ProfitLoss from './pages/Reports/ProfitLoss';
 import SalesReports from './pages/Reports/SalesReports';
 import Templates from './pages/Reports/templates';
+import MyProfile from './pages/MyProfile';
+import UserList from './pages/UserList';
+import EmployeeList from './pages/HR/EmployeeList';
 
 // Inventory sub pages
 
@@ -106,6 +109,8 @@ function App() {
           return <Dashboard />;
         case 'sales':
           return <Sales />;
+        case 'EmployeeList':
+          return <EmployeeList />;
         case 'products':
           return (
             <Products 
@@ -174,10 +179,10 @@ function App() {
               brands={brands}
             />
           );
-        case 'UserProfile':
-          return <UserProfile />;
-        case 'AllUser':
-          return <AllUser />;
+        case 'MyProfile':
+          return <MyProfile />;
+        case 'UserList':
+          return <UserList />;
         default:
           return <Dashboard />;
       }

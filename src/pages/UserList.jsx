@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, Plus, Eye, Edit3, Trash2, X, Save, UserPlus, Lock } from 'lucide-react';
 
-const AllUser = () => {
+const UserList = () => {
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -512,4 +512,4 @@ const AllUser = () => {
 
 
 
-export default AllUser;
+export default UserList;

@@ -3,7 +3,9 @@ import {
   BarChart3, Users, ClipboardList, Activity, Edit, ImageIcon, Box, Trash2,
   UserCog,
   UsersIcon,
-  FileEditIcon
+  FileEditIcon,
+  SettingsIcon,
+  User2Icon
 } from 'lucide-react';
 
 // This file manages all application menus
@@ -40,62 +42,22 @@ export const menuConfig = [
     color: "bg-white text-black-800",
     section: "Core Applications"
   },
-  // {
-  //   id: 'inventory',
-  //   name: 'Inventory',
-  //   icon: Warehouse,
-  //   component: 'Inventory',
-  //   color: "bg-white text-black-800",
-  //   section: "Core Applications"
-  // },
+  {
+    id: 'inventory',
+    name: 'Inventory',
+    icon: Warehouse,
+    component: 'Inventory',
+    color: "bg-white text-black-800",
+    section: "Core Applications"
+  },
 
   {
-    id: 'CreateBrand',
-    name: 'Create Brands',
-    icon: FileEditIcon,
-    component: 'CreateBrand',
-    color: "bg-white text-black-800",
-    section: "Create"
-  },
-  {
-    id: 'createCategory',
-    name: 'Create Category',
-    icon: FileEditIcon,
-    component: 'CreateCategory',
-    color: "bg-white text-black-800",
-    section: "Create"
-  },
-  {
-    id: 'CreateProductsPage',
-    name: 'Create Products',
-    icon: FileEditIcon,
-    component: 'CreateProductsPage',
-    color: "bg-white text-black-800",
-    section: "Create"
-  },
-  {
-    id: 'UserProfile',
-    name: 'User Profile',
+    id: 'HR',
+    name: 'HR',
     icon: UserCog,
-    component: 'UserProfile',
+    component: 'HR',
     color: "bg-white text-black-800",
-    section: "Access Management"
-  },
-  {
-    id: 'AllUser',
-    name: 'All User',
-    icon: UsersIcon,
-    component: 'AllUser',
-    color: "bg-white text-black-800",
-    section: "Access Management"
-  },
-  {
-    id: 'returns',
-    name: 'Returns',
-    icon: RotateCcw,
-    component: 'Returns',
-    color: "bg-white text-black-800",
-    section: "Access Management"
+    section: "Core Applications"
   },
   {
     id: 'SalesReports',
@@ -103,8 +65,17 @@ export const menuConfig = [
     icon: FileText,
     component: 'SalesReports',
     color: "bg-white text-black-800",
-    section: "Access Management"
+    section: "Core Applications"
   },
+  {
+    id: 'Security',
+    name: 'Security',
+    icon: SettingsIcon,
+    component: 'security',
+    color: "bg-white text-black-800",
+    section: "Core Applications"
+  },
+
   // You can easily add new menus here
   // Example:
   // {
