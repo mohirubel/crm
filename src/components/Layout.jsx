@@ -124,7 +124,7 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
       submenus: [
         { id: 'EmployeeList', label: 'Employee List' },
         { id: 'attendance', label: 'Attendance' },
-        { id: 'leave', label: 'Leave' },
+        // { id: 'leave', label: 'Leave' },
       ]
     },
     security: { 
@@ -174,7 +174,7 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
               handleTopMenuClick(menuKey);
               setOpen(!isOpen);
             }}
-            className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${
+            className={`px-3 py-2 rounded-md text-base font-medium flex items-center ${
               isMenuActive(menuKey) ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
@@ -207,7 +207,7 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
           handleTopMenuClick(menuKey);
           handleMenuClick(menuKey);
         }}
-        className={`px-3 py-2 rounded-md text-sm font-medium ${
+        className={`px-3 py-2 rounded-md text-base font-medium ${
           isMenuActive(menuKey) ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
         }`}
       >

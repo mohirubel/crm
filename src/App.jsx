@@ -7,7 +7,6 @@ import Sales from './pages/Sales';
 import Products from './pages/Products';
 import Purchase from './pages/Purchase';
 import Returns from './pages/Returns';
-import Reports from './pages/Reports';
 import MainDashboard from './pages/MainDashboard'; 
 import './App.css';
 import CreateCategory from './pages/CreateCategory';
@@ -28,6 +27,7 @@ import Templates from './pages/Reports/templates';
 import MyProfile from './pages/MyProfile';
 import UserList from './pages/UserList';
 import EmployeeList from './pages/HR/EmployeeList';
+import Attendance from './pages/HR/attendance';
 
 // Inventory sub pages
 
@@ -111,6 +111,8 @@ function App() {
           return <Sales />;
         case 'EmployeeList':
           return <EmployeeList />;
+        case 'attendance':
+          return <Attendance />;
         case 'products':
           return (
             <Products 
