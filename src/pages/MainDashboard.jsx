@@ -6,10 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../contexts/AuthContext';
 import { menuConfig } from '../config/menu-config';
+import { useNavigate } from 'react-router-dom';
 
-const MainDashboard = ({ onMenuClick }) => {
+const MainDashboard = () => {
   const { logout } = useAuth();
-
+const navigate = useNavigate();
   // Sample data from Dashboard component
   const todaysSales = 15420;
   const totalSales = 245680;
@@ -42,6 +43,10 @@ const MainDashboard = ({ onMenuClick }) => {
     { name: 'Samsung Galaxy S23', stock: 4, reorderLevel: 8 },
     { name: 'MacBook Air M2', stock: 6, reorderLevel: 10 }
   ];
+
+  const onMenuClick =(id)=> {
+    navigate(`/${id}`)
+  }
 
   // Group menus by section from menuConfig
   const applicationSections = menuConfig.reduce((acc, app) => {

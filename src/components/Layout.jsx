@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,246 +9,218 @@ import {
   FileText,
   LogOut,
   User,
-  RotateCcw,
   Menu,
   X,
-  FileEditIcon,
   ChevronDown,
   Users,
   Shield,
 } from 'lucide-react';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 
-const Layout = ({ children, activeMenu, setActiveMenu }) => {
+const Layout = () => {
   const { logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedTopMenu, setSelectedTopMenu] = useState('dashboard'); // Track which top menu is selected
-  
-  // Separate state for top menu dropdowns
-  const [topProductsOpen, setTopProductsOpen] = useState(false);
-  const [topInventoryOpen, setTopInventoryOpen] = useState(false);
-  const [topReportsOpen, setTopReportsOpen] = useState(false);
-  const [topCreateOpen, setTopCreateOpen] = useState(false);
-  const [topHROpen, setTopHROpen] = useState(false);
-  const [topSecurityOpen, setTopSecurityOpen] = useState(false);
-  
-  // Separate state for sidebar dropdowns
-  const [sidebarProductsOpen, setSidebarProductsOpen] = useState(false);
-  const [sidebarInventoryOpen, setSidebarInventoryOpen] = useState(false);
-  const [sidebarReportsOpen, setSidebarReportsOpen] = useState(false);
-  const [sidebarCreateOpen, setSidebarCreateOpen] = useState(false);
-  const [sidebarHROpen, setSidebarHROpen] = useState(false);
-  const [sidebarSecurityOpen, setSidebarSecurityOpen] = useState(false);
 
-  // detect screen size
+  // Separate states
+  const [openTopMenus, setOpenTopMenus] = useState({}); // controls top dropdowns
+  const [openSidebarMenus, setOpenSidebarMenus] = useState({}); // controls sidebar groups (open/closed)
+  const topMenuRef = useRef(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Detect screen size
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1024) {
-        setSidebarOpen(false);
-      } else {
-        setSidebarOpen(true);
-      }
+      if (window.innerWidth < 1024) setSidebarOpen(false);
+      else setSidebarOpen(true);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Close TOP dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (topMenuRef.current && !topMenuRef.current.contains(event.target)) {
+        setOpenTopMenus({});
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleLogout = () => logout();
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  const handleMenuClick = (id) => {
-    setActiveMenu(id);
-    if (window.innerWidth < 1024) {
-      setSidebarOpen(false);
-    }
-    // Close all top dropdowns when a menu item is clicked
-    setTopProductsOpen(false);
-    setTopInventoryOpen(false);
-    setTopReportsOpen(false);
-    setTopCreateOpen(false);
-    setTopHROpen(false);
-    setTopSecurityOpen(false);
-  };
-
-  const handleTopMenuClick = (menuName) => {
-    setSelectedTopMenu(menuName);
-    // Open the corresponding sidebar dropdown
-    setSidebarProductsOpen(menuName === 'products');
-    setSidebarInventoryOpen(menuName === 'inventory');
-    setSidebarReportsOpen(menuName === 'reports');
-    setSidebarHROpen(menuName === 'hr');
-    setSidebarSecurityOpen(menuName === 'security');
-  };
-
-  // Define menu structure for easier management
+  // Menu structure
   const menuStructure = {
-    dashboard: { icon: LayoutDashboard, label: 'Dashboard' },
-    sales: { icon: ShoppingCart, label: 'Sales' },
-    products: { 
-      icon: Package, 
+    dashboard: { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    sales: { path: '/sales', icon: ShoppingCart, label: 'Sales' },
+    products: {
+      icon: Package,
       label: 'Products',
+      rootPath: '/products',
       submenus: [
-        { id: 'products', label: 'All Products' },
-        { id: 'CreateProductsPage', label: 'Create Products' },
-        { id: 'CreateBrand', label: 'Create Brand' },
-        { id: 'createCategory', label: 'Create Category' },
-        { id: 'returns', label: 'Return' },
-      ]
+        { path: '/products', label: 'All Products' },
+        { path: '/create-product', label: 'Create Products' },
+        { path: '/create-brand', label: 'Create Brand' },
+        { path: '/create-category', label: 'Create Category' },
+        { path: '/returns', label: 'Return' },
+      ],
     },
-    inventory: { 
-      icon: Warehouse, 
+    inventory: {
+      icon: Warehouse,
       label: 'Inventory',
+      rootPath: '/current-stock',
       submenus: [
-        { id: 'currentStock', label: 'Current Stock' },
-        { id: 'expiryDamage', label: 'Expiry & Damage' },
-      ]
+        { path: '/current-stock', label: 'Current Stock' },
+        { path: '/expiry-damage', label: 'Expiry & Damage' },
+        { path: '/stock-movements', label: 'Stock Movements' },
+        { path: '/stock-report', label: 'Stock Report' },
+      ],
     },
-    purchase: { icon: ShoppingCart, label: 'Purchase' },
-    reports: { 
-      icon: FileText, 
+    purchase: { path: '/purchase', icon: ShoppingCart, label: 'Purchase' },
+    reports: {
+      icon: FileText,
       label: 'Reports',
+      rootPath: '/reports/sales-reports',
       submenus: [
-        { id: 'SalesReports', label: 'Sales Reports' },
-        { id: 'ProfitLoss', label: 'Profit & Loss' },
-        { id: 'BestProducts', label: 'Best Products' },
-        { id: 'LowQuantity', label: 'Low Quantity' },
-        { id: 'DateOver', label: 'Date Over' },
-        { id: 'stockReport', label: 'Stock Report' },
-        { id: 'stockMovements', label: 'Stock Movements' },
-        { id: 'Templates', label: 'Templates' },
-      ]
+        { path: '/reports/sales-reports', label: 'Sales Reports' },
+        { path: '/reports/profit-loss', label: 'Profit & Loss' },
+        { path: '/reports/best-products', label: 'Best Products' },
+        { path: '/reports/low-quantity', label: 'Low Quantity' },
+        { path: '/reports/date-over', label: 'Date Over' },
+        { path: '/reports/templates', label: 'Templates' },
+      ],
     },
-    hr: { 
-      icon: Users, 
+    hr: {
+      icon: Users,
       label: 'HR',
+      rootPath: '/employee-list',
       submenus: [
-        { id: 'EmployeeList', label: 'Employee List' },
-        { id: 'attendance', label: 'Attendance' },
-        // { id: 'leave', label: 'Leave' },
-      ]
+        { path: '/employee-list', label: 'Employee List' },
+        { path: '/attendance', label: 'Attendance' }
+      ],
     },
-    security: { 
-      icon: Shield, 
+    security: {
+      icon: Shield,
       label: 'Security',
+      rootPath: '/my-profile',
       submenus: [
-        { id: 'MyProfile', label: 'My Profile' },
-        { id: 'UserList', label: 'User List' },
-      ]
+        { path: '/my-profile', label: 'My Profile' },
+        { path: '/user-list', label: 'User List' },
+      ],
     },
   };
 
-  const isMenuActive = (menuKey) => {
-    if (menuKey === selectedTopMenu) return true;
-    const menu = menuStructure[menuKey];
-    if (menu?.submenus) {
-      return menu.submenus.some(submenu => submenu.id === activeMenu);
+  const currentPath = location.pathname;
+
+  // Get current top-level menu key for sidebar
+  const getCurrentMenuKey = () => {
+    for (const [key, menu] of Object.entries(menuStructure)) {
+      if (menu.path && menu.path === currentPath) return key;
+      if (menu.submenus) {
+        const match = menu.submenus.find((submenu) => submenu.path === currentPath);
+        if (match) return key;
+      }
     }
-    return activeMenu === menuKey;
+    return null;
+  };
+  const currentMenuKey = getCurrentMenuKey();
+
+  const isActivePath = (path) => location.pathname === path;
+
+  // ---------- Fix: ensure top menus close correctly ----------
+  const handleTopMenuClick = (menuKey, menu) => {
+    // if it has submenus -> toggle it but ensure only one top menu open at a time
+    if (menu.submenus) {
+      setOpenTopMenus((prev) => {
+        const currentlyOpen = !!prev[menuKey];
+        // if currently open -> close all; otherwise open only this
+        return currentlyOpen ? {} : { [menuKey]: true };
+      });
+      if (menu.rootPath) {
+        navigate(menu.rootPath);
+      }
+    } else if (menu.path) {
+      // If it's a direct link (no submenu), close any open top dropdowns and navigate
+      setOpenTopMenus({});
+      navigate(menu.path);
+    }
   };
 
-  const renderTopMenuItem = (menuKey, hasDropdown = false) => {
+  // Helper to navigate and also close top dropdowns
+  const navigateAndCloseTop = (path) => {
+    setOpenTopMenus({});
+    navigate(path);
+  };
+
+  // Render top menu
+  const renderTopMenuItem = (menuKey) => {
     const menu = menuStructure[menuKey];
     if (!menu) return null;
 
-    if (hasDropdown) {
-      const isOpen = {
-        products: topProductsOpen,
-        inventory: topInventoryOpen,
-        reports: topReportsOpen,
-        hr: topHROpen,
-        security: topSecurityOpen,
-      }[menuKey];
-
-      const setOpen = {
-        products: setTopProductsOpen,
-        inventory: setTopInventoryOpen,
-        reports: setTopReportsOpen,
-        hr: setTopHROpen,
-        security: setTopSecurityOpen,
-      }[menuKey];
-
-      return (
-        <div className="relative" key={menuKey}>
-          <button
-            onClick={() => {
-              handleTopMenuClick(menuKey);
-              setOpen(!isOpen);
-            }}
-            className={`px-3 py-2 rounded-md text-base font-medium flex items-center ${
-              isMenuActive(menuKey) ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            {menu.label}
-            <ChevronDown className={`ml-1 h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-          </button>
-          {isOpen && menu.submenus && (
-            <div className="absolute mt-2 w-44 bg-white shadow-lg border rounded-md z-50">
-              {menu.submenus.map((submenu) => (
-                <button
-                  key={submenu.id}
-                  onClick={() => handleMenuClick(submenu.id)}
-                  className={`block w-full text-left px-4 py-2 text-sm ${
-                    activeMenu === submenu.id ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {submenu.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      );
-    }
+    const hasDropdown = !!menu.submenus;
 
     return (
-      <button
-        key={menuKey}
-        onClick={() => {
-          handleTopMenuClick(menuKey);
-          handleMenuClick(menuKey);
-        }}
-        className={`px-3 py-2 rounded-md text-base font-medium ${
-          isMenuActive(menuKey) ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
-        }`}
-      >
-        {menu.label}
-      </button>
+      <div className="relative" key={menuKey}>
+        <button
+          onClick={() => handleTopMenuClick(menuKey, menu)}
+          className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${
+            isActivePath(menu.path) ? 'bg-blue-100 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+          }`}
+        >
+          {menu.label}
+          {hasDropdown && (
+            <ChevronDown
+              className={`ml-1 h-4 w-4 transition-transform ${
+                openTopMenus[menuKey] ? 'rotate-180' : ''
+              }`}
+            />
+          )}
+        </button>
+
+        {openTopMenus[menuKey] && hasDropdown && (
+          <div className="absolute mt-2 w-44 bg-white shadow-lg border rounded-md z-50">
+            {menu.submenus.map((submenu) => (
+              <button
+                key={submenu.path}
+                onClick={() => navigateAndCloseTop(submenu.path)}
+                className={`block w-full text-left px-4 py-2 text-sm ${
+                  isActivePath(submenu.path) ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {submenu.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     );
   };
 
+  // Render sidebar menu (current group only)
   const renderSidebarMenuItem = (menuKey) => {
     const menu = menuStructure[menuKey];
     if (!menu) return null;
 
-    // Only show the menu if it's the selected top menu
-    if (selectedTopMenu !== menuKey) return null;
-
     const Icon = menu.icon;
-    const hasSubmenus = menu.submenus && menu.submenus.length > 0;
-    
-    const isOpen = {
-      products: sidebarProductsOpen,
-      inventory: sidebarInventoryOpen,
-      reports: sidebarReportsOpen,
-      create: sidebarCreateOpen,
-      hr: sidebarHROpen,
-      security: sidebarSecurityOpen,
-    }[menuKey] || false;
+    const hasSubmenus = !!menu.submenus;
+
+    // sidebar menus open by default unless user toggled
+    const isOpen = openSidebarMenus[menuKey] ?? true;
+
+    const toggleMenu = () => {
+      setOpenSidebarMenus((prev) => ({ ...prev, [menuKey]: !isOpen }));
+    };
 
     if (hasSubmenus) {
       return (
         <div key={menuKey}>
           <button
-            onClick={() => {
-              const setOpen = {
-                products: setSidebarProductsOpen,
-                inventory: setSidebarInventoryOpen,
-                reports: setSidebarReportsOpen,
-                hr: setSidebarHROpen,
-                security: setSidebarSecurityOpen,
-              }[menuKey];
-              setOpen(!isOpen);
-            }}
+            onClick={toggleMenu}
             className={`w-full flex items-center justify-between rounded-lg py-3 px-1 transition-colors ${
               isOpen ? 'bg-gray-100 text-gray-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             }`}
@@ -264,13 +236,15 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
           {isOpen && sidebarOpen && menu.submenus && (
             <ul className="ml-8 mt-1 space-y-1">
               {menu.submenus.map((submenu) => (
-                <li key={submenu.id}>
+                <li key={submenu.path}>
                   <button
-                    onClick={() => handleMenuClick(submenu.id)}
+                    onClick={() => {
+                      // navigate; top menus should close when navigating via sidebar too
+                      setOpenTopMenus({});
+                      navigate(submenu.path);
+                    }}
                     className={`w-full text-left py-2 px-2 rounded-md text-sm ${
-                      activeMenu === submenu.id
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      isActivePath(submenu.path) ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
                     {submenu.label}
@@ -286,11 +260,12 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
     return (
       <button
         key={menuKey}
-        onClick={() => handleMenuClick(menuKey)}
+        onClick={() => {
+          setOpenTopMenus({}); // close any top dropdowns
+          navigate(menu.path);
+        }}
         className={`w-full flex items-center rounded-lg py-3 pl-1 ${
-          activeMenu === menuKey
-            ? 'bg-blue-100 text-blue-700'
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+          isActivePath(menu.path) ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
         }`}
       >
         <Icon className="h-5 w-5" />
@@ -306,10 +281,7 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
-            <div 
-              className="flex items-center cursor-pointer"
-              onClick={() => window.location.reload()}
-            >
+            <div className="flex items-center cursor-pointer" onClick={() => { setOpenTopMenus({}); navigate('/'); }}>
               <div className="bg-blue-600 p-2 rounded-lg">
                 <ShoppingCart className="h-6 w-6 text-white" />
               </div>
@@ -317,15 +289,8 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
             </div>
 
             {/* Top Menu Items */}
-            <div className="hidden lg:flex space-x-4">
-              {renderTopMenuItem('dashboard')}
-              {renderTopMenuItem('sales')}
-              {renderTopMenuItem('products', true)}
-              {renderTopMenuItem('inventory', true)}
-              {renderTopMenuItem('purchase')}
-              {renderTopMenuItem('reports', true)}
-              {renderTopMenuItem('hr', true)}
-              {renderTopMenuItem('security', true)}
+            <div className="hidden lg:flex space-x-4" ref={topMenuRef}>
+              {Object.keys(menuStructure).map(renderTopMenuItem)}
             </div>
 
             {/* User Menu */}
@@ -334,12 +299,7 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
                 <User className="h-4 w-4" />
                 <span className="hidden sm:inline">{user?.name}</span>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-                className="flex items-center space-x-2"
-              >
+              <Button variant="outline" size="sm" onClick={handleLogout} className="flex items-center space-x-2">
                 <LogOut className="h-4 w-4" />
                 <span className="hidden sm:inline">Logout</span>
               </Button>
@@ -360,11 +320,8 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
 
       {/* Sidebar */}
       <div
-        className={`
-          fixed top-16 bottom-0 left-0 bg-white shadow-lg border-r z-40 transition-all duration-300
-    ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-16'}
-    lg:translate-x-0
-        `}
+        className={`fixed top-16 bottom-0 left-0 bg-white shadow-lg border-r z-40 transition-all duration-300
+        ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-16'} lg:translate-x-0`}
       >
         <div className="p-4 flex flex-col h-full overflow-y-auto">
           {/* Sidebar Header */}
@@ -378,28 +335,19 @@ const Layout = ({ children, activeMenu, setActiveMenu }) => {
             </button>
           </div>
 
-          {/* Menu Items */}
+          {/* Sidebar Items */}
           <nav className="space-y-2 flex-1">
-            {Object.keys(menuStructure).map(menuKey => renderSidebarMenuItem(menuKey))}
+            {currentMenuKey && renderSidebarMenuItem(currentMenuKey)}
           </nav>
         </div>
       </div>
 
       {/* Overlay for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-30 lg:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
+      {sidebarOpen && <div className="fixed inset-0 z-30 lg:hidden" onClick={toggleSidebar} />}
 
       {/* Main Content */}
-      <main
-        className={`pt-16 transition-all duration-300 ${
-          sidebarOpen ? 'lg:ml-64' : 'lg:ml-16'
-        } ml-0`}
-      >
-        <div className="mx-auto py-6 px-4 sm:px-6 lg:px-8">{children}</div>
+      <main className={`pt-20 p-6 transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-16'} ml-0`}>
+        <Outlet />
       </main>
     </div>
   );

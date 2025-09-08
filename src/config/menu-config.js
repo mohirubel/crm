@@ -43,7 +43,7 @@ export const menuConfig = [
     section: "Core Applications"
   },
   {
-    id: 'currentStock',
+    id: 'current-stock',
     name: 'Inventory',
     icon: Warehouse,
     component: 'currentStock',
@@ -52,7 +52,7 @@ export const menuConfig = [
   },
 
   {
-    id: 'EmployeeList',
+    id: 'employee-list',
     name: 'HR',
     icon: UserCog,
     component: 'EmployeeList',
@@ -60,7 +60,7 @@ export const menuConfig = [
     section: "Core Applications"
   },
   {
-    id: 'SalesReports',
+    id: 'reports/sales-reports',
     name: 'Reports',
     icon: FileText,
     component: 'SalesReports',
@@ -68,7 +68,7 @@ export const menuConfig = [
     section: "Core Applications"
   },
   {
-    id: 'MyProfile',
+    id: 'my-profile',
     name: 'Security',
     icon: SettingsIcon,
     component: 'MyProfile',
