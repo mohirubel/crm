@@ -24,7 +24,7 @@ export const menuConfig = [
     icon: LayoutDashboard,
     component: 'Dashboard', // Component to render
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: " "
   },
   {
     id: 'purchase',
@@ -32,7 +32,7 @@ export const menuConfig = [
     icon: ShoppingCart,
     component: 'Purchase',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
   {
     id: 'chart-of-accounts',
@@ -40,7 +40,7 @@ export const menuConfig = [
     icon: BadgePoundSterling,
     component: 'Account',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
   {
     id: 'sales',
@@ -48,7 +48,7 @@ export const menuConfig = [
     icon: ShoppingCart,
     component: 'Sales',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
   {
     id: 'products',
@@ -56,7 +56,7 @@ export const menuConfig = [
     icon: PackageCheckIcon,
     component: 'Products',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
   {
     id: 'current-stock',
@@ -64,7 +64,7 @@ export const menuConfig = [
     icon: Warehouse,
     component: 'currentStock',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
 
   {
@@ -73,7 +73,7 @@ export const menuConfig = [
     icon: UserCog,
     component: 'EmployeeList',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
   {
     id: 'Leads',
@@ -81,7 +81,7 @@ export const menuConfig = [
     icon: BrickWallFire,
     component: 'CRM',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
   {
     id: 'Projects',
@@ -89,7 +89,7 @@ export const menuConfig = [
     icon: TrelloIcon,
     component: 'Projects',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "  "
   },
   {
     id: 'reports/sales-reports',
@@ -97,7 +97,7 @@ export const menuConfig = [
     icon: FileText,
     component: 'SalesReports',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "   "
   },
   {
     id: 'my-profile',
@@ -105,7 +105,7 @@ export const menuConfig = [
     icon: LucideShieldCheck,
     component: 'MyProfile',
     color: "bg-white text-black-800",
-    section: "Core Applications"
+    section: "   "
   },
 
   // You can easily add new menus here
