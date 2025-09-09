@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit2, Plus, Trash2, Save, X, Users, Shield, FileText, Settings, CreditCard, BarChart3, Bell } from 'lucide-react';
+import { Edit, Plus, Trash2, Save, X, Users, Shield, FileText, Settings, CreditCard, BarChart3, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
@@ -175,8 +175,8 @@ const RolesPermissions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-6">
+      <div className="mx-auto ">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -299,7 +299,7 @@ const RolesPermissions = () => {
                             className="text-blue-600 hover:text-blue-700"
                             onClick={() => handleEditRole(role)}
                           >
-                            <Edit2 className="h-3 w-3" />
+                            <Edit className="h-3 w-3" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
@@ -357,7 +357,7 @@ const RolesPermissions = () => {
                       className="text-blue-600 hover:text-blue-700"
                       onClick={() => handleEditRole(role)}
                     >
-                      <Edit2 className="h-3 w-3" />
+                      <Edit className="h-3 w-3" />
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
@@ -461,7 +461,7 @@ const RolesPermissions = () => {
                         setErrors(prev => ({ ...prev, name: undefined }));
                       }
                     }}
-                    className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none  ${
                       errors.name ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="Enter role name (e.g., Manager, Admin, Editor)"

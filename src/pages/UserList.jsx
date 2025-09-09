@@ -117,7 +117,7 @@ const UserList = () => {
   };
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen">
       <div className="mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">

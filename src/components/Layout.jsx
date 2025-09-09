@@ -149,9 +149,11 @@ const Layout = () => {
         { path: "/reports/sales-reports", label: "Sales Reports" },
         { path: "/reports/profit-loss", label: "Profit & Loss" },
         { path: "/reports/best-products", label: "Best Products" },
-        { path: "/reports/low-quantity", label: "Low Quantity" },
+        { path: "/reports/InventoryReports", label: "Inventory Reports" },
         { path: "/reports/date-over", label: "Date Over" },
         { path: "/reports/templates", label: "Templates" },
+        { path: "/reports/HRReports", label: "HR Reports" },
+        { path: "/reports/FinanceReports", label: "Finance Reports" },
       ],
     },
     hr: {

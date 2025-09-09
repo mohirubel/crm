@@ -25,7 +25,7 @@ import StockReport from "./pages/Inventory/StockReport";
 // Reports Subpages
 import BestProducts from "./pages/Reports/BestProducts";
 import DateOver from "./pages/Reports/DateOver";
-import LowQuantity from "./pages/Reports/LowQuantity";
+import LowQuantity from "./pages/Reports/InventoryReports";
 import ProfitLoss from "./pages/Reports/ProfitLoss";
 import SalesReports from "./pages/Reports/SalesReports";
 import Templates from "./pages/Reports/templates";
@@ -55,6 +55,9 @@ import EmployeeAttendance from "./pages/HR/Attendance";
 import LeaveManagement from "./pages/HR/LeaveManagement";
 import RolesPermissions from "./pages/Security/RolesPermissions";
 import AuditLogs from "./pages/Security/AuditLogs";
+import InventoryReports from "./pages/Reports/InventoryReports";
+import HRReports from "./pages/Reports/HRReports";
+import FinanceReports from "./pages/Reports/FinanceReports";
 
 function App() {
   // State management (still kept here)
@@ -206,10 +209,12 @@ function App() {
             <Route path="/reports" element={<Reports />} />
             <Route path="/reports/best-products" element={<BestProducts />} />
             <Route path="/reports/date-over" element={<DateOver />} />
-            <Route path="/reports/low-quantity" element={<LowQuantity />} />
+            <Route path="/reports/InventoryReports" element={<InventoryReports />} />
             <Route path="/reports/profit-loss" element={<ProfitLoss />} />
             <Route path="/reports/sales-reports" element={<SalesReports />} />
             <Route path="/reports/templates" element={<Templates />} />
+            <Route path="/reports/HRReports" element={<HRReports />} />
+            <Route path="/reports/FinanceReports" element={<FinanceReports />} />
 
             {/* Create Pages */}
             <Route

@@ -298,7 +298,7 @@ const EmployeeAttendance = () => {
   const stats = getAttendanceStats();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm mb-6">
@@ -313,7 +313,7 @@ const EmployeeAttendance = () => {
                   type="date"
                   value={currentDate}
                   onChange={(e) => setCurrentDate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
                 />
                 <button
                   onClick={() => setSelectedView('mark')}
@@ -378,7 +378,7 @@ const EmployeeAttendance = () => {
                   <h2 className="text-lg font-semibold text-gray-900 mb-1">Mark Attendance</h2>
                   <p className="text-gray-600 text-sm">Mark attendance for {new Date(currentDate).toLocaleDateString()}</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-4 py-2">
                   <div className="flex relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input
@@ -386,13 +386,13 @@ const EmployeeAttendance = () => {
                       placeholder="Search employees..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm"
                     />
                   </div>
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="px-3 py-2 border border-gray-300 rounded-md text-sm"
                   >
                     <option value="all">All Status</option>
                     <option value="present">Present</option>
@@ -567,7 +567,7 @@ const EmployeeAttendance = () => {
                       type="month"
                       value={selectedMonth}
                       onChange={(e) => setSelectedMonth(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
                     />
                     <button
                       onClick={downloadMonthlyReport}
@@ -638,7 +638,7 @@ const EmployeeAttendance = () => {
                     <select
                       value={selectedYear}
                       onChange={(e) => setSelectedYear(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
                     >
                       <option value="2024">2024</option>
                       <option value="2023">2023</option>
@@ -739,7 +739,7 @@ const EmployeeAttendance = () => {
                       max={editingEmployee.totalDays}
                       value={editPresentDays}
                       onChange={(e) => setEditPresentDays(parseInt(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     />
                   </div>
                   

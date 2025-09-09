@@ -189,7 +189,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -221,7 +221,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <input
                   type="text"
                   placeholder="Search employees..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl "
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -357,7 +357,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.name}
                     onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -368,7 +368,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.email}
                     onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
                     placeholder="Enter email address"
@@ -379,7 +379,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.phone}
                     onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})}
                     placeholder="Enter phone number"
@@ -389,7 +389,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.department}
                     onChange={(e) => setNewEmployee({...newEmployee, department: e.target.value})}
                   >
@@ -407,7 +407,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.designation}
                     onChange={(e) => setNewEmployee({...newEmployee, designation: e.target.value})}
                     placeholder="Enter designation"
@@ -418,7 +418,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.joiningDate}
                     onChange={(e) => setNewEmployee({...newEmployee, joiningDate: e.target.value})}
                   />
@@ -428,7 +428,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.salary}
                     onChange={(e) => setNewEmployee({...newEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -438,7 +438,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={newEmployee.status}
                     onChange={(e) => setNewEmployee({...newEmployee, status: e.target.value})}
                   >
@@ -490,7 +490,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.name}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -501,7 +501,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.email}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, email: e.target.value})}
                     placeholder="Enter email address"
@@ -512,7 +512,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.phone}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, phone: e.target.value})}
                     placeholder="Enter phone number"
@@ -522,7 +522,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.department}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, department: e.target.value})}
                   >
@@ -540,7 +540,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.designation}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, designation: e.target.value})}
                     placeholder="Enter designation"
@@ -551,7 +551,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.joiningDate}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, joiningDate: e.target.value})}
                   />
@@ -561,7 +561,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.salary}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -571,7 +571,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
                     value={selectedEmployee.status}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, status: e.target.value})}
                   >

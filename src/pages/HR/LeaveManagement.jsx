@@ -215,7 +215,7 @@ const LeaveManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm mb-6">
@@ -316,13 +316,13 @@ const LeaveManagement = () => {
                       placeholder="Search applications..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm "
                     />
                   </div>
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="px-3 py-2 border border-gray-300 rounded-md text-sm "
                   >
                     <option value="all">All Status</option>
                     <option value="Pending">Pending</option>
@@ -332,7 +332,7 @@ const LeaveManagement = () => {
                   <select
                     value={filterLeaveType}
                     onChange={(e) => setFilterLeaveType(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="px-3 py-2 border border-gray-300 rounded-md text-sm "
                   >
                     <option value="all">All Types</option>
                     {leaveTypes.map(type => (
@@ -460,7 +460,7 @@ const LeaveManagement = () => {
                     value={formData.employeeId}
                     onChange={(e) => setFormData({...formData, employeeId: e.target.value})}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md "
                   >
                     <option value="">Select Employee</option>
                     {employees.map(employee => (
@@ -480,7 +480,7 @@ const LeaveManagement = () => {
                     value={formData.leaveType}
                     onChange={(e) => setFormData({...formData, leaveType: e.target.value})}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md "
                   >
                     <option value="">Select Leave Type</option>
                     {leaveTypes.map(type => (
@@ -499,7 +499,7 @@ const LeaveManagement = () => {
                     value={formData.startDate}
                     onChange={(e) => setFormData({...formData, startDate: e.target.value})}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md "
                   />
                 </div>
 
@@ -514,7 +514,7 @@ const LeaveManagement = () => {
                     onChange={(e) => setFormData({...formData, endDate: e.target.value})}
                     required
                     min={formData.startDate}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md "
                   />
                 </div>
 
@@ -526,7 +526,7 @@ const LeaveManagement = () => {
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({...formData, status: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md "
                   >
                     <option value="Pending">Pending</option>
                     <option value="Approved">Approved</option>
@@ -558,7 +558,7 @@ const LeaveManagement = () => {
                   required
                   rows={4}
                   placeholder="Please provide the reason for leave..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md "
                 />
               </div>
 
