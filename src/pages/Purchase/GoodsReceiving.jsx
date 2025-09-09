@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -17,9 +17,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, PackageCheck } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Pencil, Trash2, PackageCheck, Search } from "lucide-react";
 
-// Initial form structure
 const INITIAL_FORM = {
   supplier: "",
   date: "",
@@ -63,6 +69,10 @@ const GoodsReceiving = () => {
   const [selectedGRN, setSelectedGRN] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
 
+  // 🔍 Search & Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
   // Reset form
   const resetForm = () => {
     setFormData(INITIAL_FORM);
@@ -73,27 +83,27 @@ const GoodsReceiving = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Add GRN
+  // ➕ Add GRN
   const handleAddGRN = () => {
     if (!formData.supplier || !formData.date || !formData.receivedItems) return;
     const newId = grns.length + 1;
     const newGRN = {
-  id: newId,
-  grnNo: `GRN-${String(newId).padStart(3, "0")}`,
-  supplier: formData.supplier,
-  date: formData.date,
-  linkedPO: formData.linkedPO,
-  items: formData.receivedItems, // 👈 FIX
-  qty: formData.qty,
-  notes: formData.notes,
-  status: formData.status,
-};
+      id: newId,
+      grnNo: `GRN-${String(newId).padStart(3, "0")}`,
+      supplier: formData.supplier,
+      date: formData.date,
+      linkedPO: formData.linkedPO,
+      items: formData.receivedItems,
+      qty: formData.qty,
+      notes: formData.notes,
+      status: formData.status,
+    };
     setGrns((prev) => [...prev, newGRN]);
     setIsAddModalOpen(false);
     resetForm();
   };
 
-  // Edit GRN
+  // ✏️ Edit GRN
   const openEditModal = (grn) => {
     setSelectedGRN(grn);
     setIsEditModalOpen(true);
@@ -119,7 +129,7 @@ const GoodsReceiving = () => {
     resetForm();
   };
 
-  // Delete GRN
+  // 🗑️ Delete GRN
   const openDeleteModal = (grn) => {
     setSelectedGRN(grn);
     setIsDeleteModalOpen(true);
@@ -130,6 +140,29 @@ const GoodsReceiving = () => {
     setGrns((prev) => prev.filter((g) => g.id !== selectedGRN.id));
     setIsDeleteModalOpen(false);
     resetForm();
+  };
+
+  // ✅ Filtering logic
+  const filteredGRNs = useMemo(() => {
+    return grns.filter((grn) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        grn.grnNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        grn.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        grn.date.includes(searchTerm) ||
+        grn.items.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        grn.status.toLowerCase() === statusFilter.toLowerCase();
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [grns, searchTerm, statusFilter]);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
   };
 
   return (
@@ -147,21 +180,48 @@ const GoodsReceiving = () => {
         </Button>
       </div>
 
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total GRNs</CardTitle>
-            <PackageCheck className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{grns.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Recorded goods receipts
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* 🔍 Search & Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Search & Filter GRNs</CardTitle>
+          <CardDescription>Search by GRN No, Supplier, Date, or Items</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="search"
+                  placeholder="Search GRNs..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Status</Label>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear Filters
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Table */}
       <Card>
@@ -183,7 +243,7 @@ const GoodsReceiving = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {grns.map((grn) => (
+                {filteredGRNs.map((grn) => (
                   <tr key={grn.id}>
                     <td className="px-6 py-4">{grn.grnNo}</td>
                     <td className="px-6 py-4">{grn.supplier}</td>
@@ -220,6 +280,13 @@ const GoodsReceiving = () => {
                     </td>
                   </tr>
                 ))}
+                {filteredGRNs.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                      No GRNs found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -316,9 +383,7 @@ const GoodsReceiving = () => {
             >
               Cancel
             </Button>
-            <Button
-              onClick={isEditModalOpen ? handleEditGRN : handleAddGRN}
-            >
+            <Button onClick={isEditModalOpen ? handleEditGRN : handleAddGRN}>
               {isEditModalOpen ? "Save Changes" : "Add GRN"}
             </Button>
           </DialogFooter>

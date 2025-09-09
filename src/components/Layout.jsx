@@ -95,8 +95,8 @@ const Layout = () => {
         { path: "/current-stock", label: "Products Stock" },
         { path: "/stock-transactions", label: "Stock Transactions" },
         { path: "/warehouses", label: "Warehouses" },
-        { path: "/expiry-damage", label: "Expiry & Damage" },
-        { path: "/stock-report", label: "Stock Report" },
+        // { path: "/expiry-damage", label: "Expiry & Damage" },
+        // { path: "/stock-report", label: "Stock Report" },
       ],
     },
     purchase: {

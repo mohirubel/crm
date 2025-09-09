@@ -75,7 +75,7 @@ export const menuConfig = [
     section: "  "
   },
   {
-    id: 'Leads',
+    id: 'leads',
     name: 'CRM',
     icon: BrickWallFire,
     component: 'CRM',
@@ -83,7 +83,7 @@ export const menuConfig = [
     section: "  "
   },
   {
-    id: 'Projects',
+    id: 'projects',
     name: 'Projects',
     icon: TrelloIcon,
     component: 'Projects',

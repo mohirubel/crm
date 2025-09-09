@@ -1,17 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Card, CardContent, CardDescription, CardHeader, CardTitle
+  Card, CardContent, CardDescription, CardHeader, CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle
+  Dialog, DialogContent, DialogDescription, DialogFooter,
+  DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import { Plus } from 'lucide-react';
+import { Plus, Edit, Trash } from 'lucide-react';
 
 const Projects = () => {
   const [projects, setProjects] = useState([
@@ -37,7 +38,8 @@ const Projects = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState(null);
 
   const [newProject, setNewProject] = useState({
     name: '',
@@ -63,14 +65,34 @@ const Projects = () => {
     });
   }, [projects, searchTerm, statusFilter]);
 
-  const handleAddProject = () => {
+  const resetFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('all');
+  };
+
+  const handleSaveProject = () => {
     if (!newProject.name || !newProject.client) return;
-    const newId = projects.length + 1;
-    setProjects((prev) => [
-      ...prev,
-      { id: newId, ...newProject, budget: parseFloat(newProject.budget) || 0 },
-    ]);
-    setIsAddProjectModalOpen(false);
+
+    if (editingProjectId) {
+      // Update existing project
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.id === editingProjectId
+            ? { ...p, ...newProject, budget: parseFloat(newProject.budget) || 0 }
+            : p
+        )
+      );
+    } else {
+      // Add new project
+      const newId = projects.length ? Math.max(...projects.map((p) => p.id)) + 1 : 1;
+      setProjects((prev) => [
+        ...prev,
+        { id: newId, ...newProject, budget: parseFloat(newProject.budget) || 0 },
+      ]);
+    }
+
+    setIsModalOpen(false);
+    setEditingProjectId(null);
     setNewProject({
       name: '',
       client: '',
@@ -81,6 +103,16 @@ const Projects = () => {
     });
   };
 
+  const handleEdit = (project) => {
+    setEditingProjectId(project.id);
+    setNewProject({ ...project, budget: project.budget.toString() });
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    setProjects((prev) => prev.filter((p) => p.id !== id));
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -89,7 +121,17 @@ const Projects = () => {
           <h2 className="text-3xl font-bold">Projects</h2>
           <p className="text-muted-foreground">Manage and track your projects</p>
         </div>
-        <Button onClick={() => setIsAddProjectModalOpen(true)}>
+        <Button onClick={() => {
+          setNewProject({
+      name: '',
+      client: '',
+      startDate: '',
+      endDate: '',
+      budget: '',
+      status: 'Planning',
+    });
+          setIsModalOpen(true)
+        }}>
           <Plus className="h-4 w-4 mr-1" /> Add Project
         </Button>
       </div>
@@ -100,7 +142,7 @@ const Projects = () => {
           <CardTitle>Search & Filter Projects</CardTitle>
           <CardDescription>Filter by name, client or status</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <Label>Search</Label>
             <Input
@@ -123,6 +165,11 @@ const Projects = () => {
               </SelectContent>
             </Select>
           </div>
+          <div className="flex items-end">
+            <Button variant="outline" onClick={resetFilters} className="w-full">
+              Clear Filters
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -142,6 +189,7 @@ const Projects = () => {
                   <th className="px-4 py-2 text-left">Status</th>
                   <th className="px-4 py-2 text-left">Start - End</th>
                   <th className="px-4 py-2 text-left">Budget</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,6 +203,22 @@ const Projects = () => {
                       {p.startDate} → {p.endDate}
                     </td>
                     <td className="px-4 py-2">${p.budget}</td>
+                    <td className="px-4 py-2 flex space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEdit(p)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(p.id)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -163,37 +227,72 @@ const Projects = () => {
         </CardContent>
       </Card>
 
-      {/* Add Project Modal */}
-      <Dialog open={isAddProjectModalOpen} onOpenChange={setIsAddProjectModalOpen}>
+      {/* Add/Edit Project Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Project</DialogTitle>
-            <DialogDescription>Create a new project</DialogDescription>
+            <DialogTitle>
+              {editingProjectId ? 'Edit Project' : 'Add Project'}
+            </DialogTitle>
+            <DialogDescription>
+              {editingProjectId ? 'Update the project details' : 'Create a new project'}
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div>
               <Label>Name</Label>
-              <Input value={newProject.name} onChange={(e) => setNewProject({ ...newProject, name: e.target.value })} />
+              <Input
+                value={newProject.name}
+                onChange={(e) =>
+                  setNewProject({ ...newProject, name: e.target.value })
+                }
+              />
             </div>
             <div>
               <Label>Client</Label>
-              <Input value={newProject.client} onChange={(e) => setNewProject({ ...newProject, client: e.target.value })} />
+              <Input
+                value={newProject.client}
+                onChange={(e) =>
+                  setNewProject({ ...newProject, client: e.target.value })
+                }
+              />
             </div>
             <div>
               <Label>Start Date</Label>
-              <Input type="date" value={newProject.startDate} onChange={(e) => setNewProject({ ...newProject, startDate: e.target.value })} />
+              <Input
+                type="date"
+                value={newProject.startDate}
+                onChange={(e) =>
+                  setNewProject({ ...newProject, startDate: e.target.value })
+                }
+              />
             </div>
             <div>
               <Label>End Date</Label>
-              <Input type="date" value={newProject.endDate} onChange={(e) => setNewProject({ ...newProject, endDate: e.target.value })} />
+              <Input
+                type="date"
+                value={newProject.endDate}
+                onChange={(e) =>
+                  setNewProject({ ...newProject, endDate: e.target.value })
+                }
+              />
             </div>
             <div>
               <Label>Budget</Label>
-              <Input type="number" value={newProject.budget} onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })} />
+              <Input
+                type="number"
+                value={newProject.budget}
+                onChange={(e) =>
+                  setNewProject({ ...newProject, budget: e.target.value })
+                }
+              />
             </div>
             <div>
               <Label>Status</Label>
-              <Select value={newProject.status} onValueChange={(v) => setNewProject({ ...newProject, status: v })}>
+              <Select
+                value={newProject.status}
+                onValueChange={(v) => setNewProject({ ...newProject, status: v })}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -206,8 +305,12 @@ const Projects = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddProjectModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleAddProject}>Add</Button>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveProject}>
+              {editingProjectId ? 'Update' : 'Add'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

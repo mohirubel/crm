@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Warehouse, Plus, Pencil, Trash2 } from "lucide-react";
+import { Warehouse, Plus, Pencil, Trash2, Search } from "lucide-react";
 
 const Warehouses = () => {
   const [warehouses, setWarehouses] = useState([
@@ -35,6 +35,10 @@ const Warehouses = () => {
     },
   ]);
 
+  // 🔎 Search state
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -111,6 +115,21 @@ const Warehouses = () => {
     setSelectedWarehouse(null);
   };
 
+  // 🧹 Clear search
+  const clearFilters = () => {
+    setSearchTerm("");
+  };
+
+  // 📌 Apply search filter
+  const filteredWarehouses = useMemo(() => {
+    return warehouses.filter(
+      (wh) =>
+        wh.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wh.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        wh.contact.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [warehouses, searchTerm]);
+
   const totalWarehouses = warehouses.length;
 
   return (
@@ -123,38 +142,55 @@ const Warehouses = () => {
             Manage your warehouse locations and details
           </p>
         </div>
-        <Button variant="outline" onClick={() => {
-          resetForm();
-          setIsAddModalOpen(true);
-        }}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            resetForm();
+            setIsAddModalOpen(true);
+          }}
+        >
           <Plus className="h-4 w-4" />
           <span>Add Warehouse</span>
         </Button>
       </div>
 
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Warehouses
-            </CardTitle>
-            <Warehouse className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalWarehouses}</div>
-            <p className="text-xs text-muted-foreground">
-              Registered locations
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* 🔎 Search & Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Search Warehouses</CardTitle>
+          <CardDescription>Search by name, address, or contact</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="search"
+                  placeholder="Search warehouses..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear Search
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Table */}
       <Card>
         <CardHeader>
           <CardTitle>Warehouse List</CardTitle>
-          <CardDescription>All warehouse locations and contacts</CardDescription>
+          <CardDescription>
+            All warehouse locations and contacts
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -179,7 +215,7 @@ const Warehouses = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {warehouses.map((wh) => (
+                {filteredWarehouses.map((wh) => (
                   <tr key={wh.id}>
                     <td className="px-6 py-4">{wh.id}</td>
                     <td className="px-6 py-4 font-medium">{wh.name}</td>
@@ -207,10 +243,14 @@ const Warehouses = () => {
                 ))}
               </tbody>
             </table>
+            {filteredWarehouses.length === 0 && (
+              <p className="text-center text-gray-500 py-4">
+                No warehouses found.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
-
       {/* Add Modal */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent>

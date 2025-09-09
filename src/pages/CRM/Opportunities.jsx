@@ -31,7 +31,10 @@ const Opportunities = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState("All");
 
-  const resetForm = () => { setFormData(INITIAL_FORM); setSelected(null); };
+  const resetForm = () => { 
+    setFormData(INITIAL_FORM); 
+    setSelected(null); 
+  };
 
   const handleSave = () => {
     if (!formData.customer || !formData.value) return;
@@ -41,10 +44,15 @@ const Opportunities = () => {
       const newId = opps.length + 1;
       setOpps(prev => [...prev, { id: newId, ...formData }]);
     }
-    setIsModalOpen(false); resetForm();
+    setIsModalOpen(false); 
+    resetForm();
   };
 
-  const openEdit = (opp) => { setSelected(opp); setFormData(opp); setIsModalOpen(true); };
+  const openEdit = (opp) => { 
+    setSelected(opp); 
+    setFormData(opp); 
+    setIsModalOpen(true); 
+  };
   const handleDelete = (id) => setOpps(prev => prev.filter(o => o.id !== id));
 
   // 📌 Apply search & filter
@@ -75,8 +83,11 @@ const Opportunities = () => {
           <h2 className="text-3xl font-bold">Opportunities</h2>
           <p className="text-muted-foreground">Track business opportunities</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
-          <Plus className="h-4 w-4 mr-1"/> Add Opportunity
+        <Button onClick={() => {
+          resetForm();
+          setIsModalOpen(true)
+        }}>
+          <Plus className="h-4 w-4 mr-1" /> Add Opportunity
         </Button>
       </div>
 
@@ -87,7 +98,7 @@ const Opportunities = () => {
           <CardDescription>Find opportunities quickly</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label htmlFor="search">Search</Label>
               <Input
@@ -114,7 +125,21 @@ const Opportunities = () => {
                 <option>Closed Lost</option>
               </select>
             </div>
+            {/* Clear Filters button */}
+          <div className="flex justify-start items-end">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery("");
+                setStageFilter("All");
+              }}
+            >
+              Clear Filters
+            </Button>
           </div>
+          </div>
+
+          
         </CardContent>
       </Card>
 
@@ -144,8 +169,12 @@ const Opportunities = () => {
                     <td className="p-2">${o.value}</td>
                     <td className="p-2">{o.stage}</td>
                     <td className="p-2 flex gap-2 justify-center">
-                      <Button size="sm" variant="outline" onClick={()=>openEdit(o)}><Pencil className="h-4 w-4"/></Button>
-                      <Button size="sm" variant="destructive" onClick={()=>handleDelete(o.id)}><Trash2 className="h-4 w-4"/></Button>
+                      <Button size="sm" variant="outline" onClick={()=>openEdit(o)}>
+                        <Pencil className="h-4 w-4"/>
+                      </Button>
+                      <Button size="sm" variant="destructive" onClick={()=>handleDelete(o.id)}>
+                        <Trash2 className="h-4 w-4"/>
+                      </Button>
                     </td>
                   </tr>
                 ))
@@ -170,21 +199,44 @@ const Opportunities = () => {
           </DialogHeader>
           <div className="grid gap-3 py-2">
             <Label>Customer</Label>
-            <Input value={formData.customer} onChange={(e)=>setFormData({...formData, customer: e.target.value})}/>
+            <Input 
+              value={formData.customer} 
+              onChange={(e)=>setFormData({...formData, customer: e.target.value})}
+            />
             <Label>Expected Value</Label>
-            <Input type="number" value={formData.value} onChange={(e)=>setFormData({...formData, value: e.target.value})}/>
+            <Input 
+              type="number" 
+              value={formData.value} 
+              onChange={(e)=>setFormData({...formData, value: e.target.value})}
+            />
             <Label>Stage</Label>
-            <select className="border p-2 rounded" value={formData.stage} onChange={(e)=>setFormData({...formData, stage: e.target.value})}>
-              <option>Prospecting</option><option>Qualified</option><option>Proposal</option><option>Negotiation</option><option>Closed Won</option><option>Closed Lost</option>
+            <select 
+              className="border p-2 rounded" 
+              value={formData.stage} 
+              onChange={(e)=>setFormData({...formData, stage: e.target.value})}
+            >
+              <option>Prospecting</option>
+              <option>Qualified</option>
+              <option>Proposal</option>
+              <option>Negotiation</option>
+              <option>Closed Won</option>
+              <option>Closed Lost</option>
             </select>
             <Label>Closing Date</Label>
-            <Input type="date" value={formData.closingDate} onChange={(e)=>setFormData({...formData, closingDate: e.target.value})}/>
+            <Input 
+              type="date" 
+              value={formData.closingDate} 
+              onChange={(e)=>setFormData({...formData, closingDate: e.target.value})}
+            />
             <Label>Notes</Label>
-            <Input value={formData.notes} onChange={(e)=>setFormData({...formData, notes: e.target.value})}/>
+            <Input 
+              value={formData.notes} 
+              onChange={(e)=>setFormData({...formData, notes: e.target.value})}
+            />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={()=>setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave}>{selected?"Save":"Add"}</Button>
+            <Button onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Building2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Building2, Search } from "lucide-react";
 
 const INITIAL_FORM = {
   name: "",
@@ -47,6 +47,10 @@ const Suppliers = () => {
     },
   ]);
 
+  // 🔎 Search state
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -120,38 +124,66 @@ const Suppliers = () => {
     setIsAddModalOpen(true);
   };
 
+  // 🧹 Clear search
+  const clearFilters = () => {
+    setSearchTerm("");
+  };
+
+  // 📌 Apply search filter
+  const filteredSuppliers = useMemo(() => {
+    return suppliers.filter(
+      (s) =>
+        s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.address.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [suppliers, searchTerm]);
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Suppliers</h2>
-          <p className="text-muted-foreground">
-            Manage supplier information
-          </p>
+          <p className="text-muted-foreground">Manage supplier information</p>
         </div>
         <Button variant="outline" onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Supplier</span>
         </Button>
       </div>
 
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Suppliers
-            </CardTitle>
-            <Building2 className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{suppliers.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Registered suppliers
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* 🔎 Search & Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Search Suppliers</CardTitle>
+          <CardDescription>
+            Search by name, phone, email, or address
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="search"
+                  placeholder="Search suppliers..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear Search
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Suppliers Table */}
       <Card>
@@ -182,7 +214,7 @@ const Suppliers = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {suppliers.map((supplier) => (
+                {filteredSuppliers.map((supplier) => (
                   <tr key={supplier.id}>
                     <td className="px-6 py-4">{supplier.id}</td>
                     <td className="px-6 py-4">{supplier.name}</td>
@@ -210,11 +242,16 @@ const Suppliers = () => {
                 ))}
               </tbody>
             </table>
+            {filteredSuppliers.length === 0 && (
+              <p className="text-center text-gray-500 py-4">
+                No suppliers found.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Add/Edit Modal */}
+            {/* Add/Edit Modal */}
       <Dialog
         open={isAddModalOpen || isEditModalOpen}
         onOpenChange={(val) => {

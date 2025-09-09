@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FileText, Plus, Pencil, Trash2 } from "lucide-react";
+import { FileText, Plus, Pencil, Trash2, Search } from "lucide-react";
 
 const INITIAL_FORM = {
   customer: "",
@@ -67,7 +67,10 @@ const Invoices = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
 
-  // calculate total based on passed items and tax (avoid stale state)
+  // 🔎 Search state
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // calculate total
   const calculateTotal = (items = formData.items, tax = formData.tax) => {
     const subtotal = items.reduce(
       (sum, i) => sum + Number(i.qty || 0) * Number(i.price || 0),
@@ -82,7 +85,6 @@ const Invoices = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
     if (field === "tax") {
-      // recalc using updated tax
       calculateTotal(formData.items, Number(value || 0));
     }
   };
@@ -115,16 +117,13 @@ const Invoices = () => {
     calculateTotal(updatedItems, formData.tax);
   };
 
-  // Reset form to initial blank state
   const resetForm = () => {
     setFormData(INITIAL_FORM);
     setSelectedInvoice(null);
   };
 
-  // Add Invoice
   const handleAddInvoice = () => {
     if (!formData.customer || !formData.date) return;
-
     const newId = invoices.length + 1;
     const invoiceNo = `INV-${String(newId).padStart(3, "0")}`;
     const invoice = { id: newId, invoiceNo, amount: formData.total, ...formData };
@@ -134,10 +133,8 @@ const Invoices = () => {
     resetForm();
   };
 
-  // Open Edit Modal - populate form with invoice data
   const openEditModal = (invoice) => {
     setSelectedInvoice(invoice);
-    // ensure add modal is closed
     setIsAddModalOpen(false);
     setIsEditModalOpen(true);
 
@@ -145,7 +142,9 @@ const Invoices = () => {
       customer: invoice.customer || "",
       date: invoice.date || "",
       orderRef: invoice.orderRef || "",
-      items: invoice.items ? invoice.items.map(it => ({ ...it })) : [{ item: "", qty: 1, price: 0 }],
+      items: invoice.items
+        ? invoice.items.map((it) => ({ ...it }))
+        : [{ item: "", qty: 1, price: 0 }],
       tax: invoice.tax || 0,
       total: invoice.total || 0,
       paymentTerms: invoice.paymentTerms || "",
@@ -155,7 +154,6 @@ const Invoices = () => {
 
   const handleEditInvoice = () => {
     if (!selectedInvoice) return;
-
     setInvoices((prev) =>
       prev.map((inv) =>
         inv.id === selectedInvoice.id
@@ -167,7 +165,6 @@ const Invoices = () => {
     resetForm();
   };
 
-  // Delete
   const openDeleteModal = (invoice) => {
     setSelectedInvoice(invoice);
     setIsDeleteModalOpen(true);
@@ -180,12 +177,25 @@ const Invoices = () => {
     setSelectedInvoice(null);
   };
 
-  // When opening the Add modal, make sure form is reset (this avoids the edit data showing)
   const handleOpenAddModal = () => {
     resetForm();
     setIsEditModalOpen(false);
     setIsAddModalOpen(true);
   };
+
+  // 🧹 Clear search
+  const clearFilters = () => setSearchTerm("");
+
+  // 📌 Apply search filter
+  const filteredInvoices = useMemo(() => {
+    return invoices.filter(
+      (inv) =>
+        inv.invoiceNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        inv.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        inv.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        inv.status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [invoices, searchTerm]);
 
   return (
     <div className="space-y-6">
@@ -193,13 +203,47 @@ const Invoices = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Invoices</h2>
-          <p className="text-muted-foreground">Manage sales invoices and payments</p>
+          <p className="text-muted-foreground">
+            Manage sales invoices and payments
+          </p>
         </div>
         <Button variant="outline" onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" />
           <span>Add Invoice</span>
         </Button>
       </div>
+
+      {/* 🔎 Search & Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Search Invoices</CardTitle>
+          <CardDescription>
+            Search by invoice no, customer, date, or status
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="search"
+                  placeholder="Search invoices..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear Search
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Invoice Table */}
       <Card>
@@ -212,16 +256,28 @@ const Invoices = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Invoice No</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Amount</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Invoice No
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Customer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Date
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Amount
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {invoices.map((inv) => (
+                {filteredInvoices.map((inv) => (
                   <tr key={inv.id}>
                     <td className="px-6 py-4">{inv.invoiceNo}</td>
                     <td className="px-6 py-4">{inv.customer}</td>
@@ -240,10 +296,18 @@ const Invoices = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="outline" onClick={() => openEditModal(inv)}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openEditModal(inv)}
+                        >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="destructive" onClick={() => openDeleteModal(inv)}>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => openDeleteModal(inv)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -252,11 +316,16 @@ const Invoices = () => {
                 ))}
               </tbody>
             </table>
+            {filteredInvoices.length === 0 && (
+              <p className="text-center text-gray-500 py-4">
+                No invoices found.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Add/Edit Modal (shared) */}
+            {/* Add/Edit Modal (shared) */}
       <Dialog
         open={isAddModalOpen || isEditModalOpen}
         onOpenChange={(val) => {
@@ -359,3 +428,4 @@ const Invoices = () => {
 };
 
 export default Invoices;
+

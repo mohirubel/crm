@@ -197,7 +197,7 @@ const StockMovements = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Stock Movements</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Stock Transactions</h2>
           <p className="text-muted-foreground">
             Track all stock in and out movements with detailed records
           </p>

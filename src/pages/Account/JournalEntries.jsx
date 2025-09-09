@@ -16,8 +16,8 @@ import {
 
 const INITIAL_FORM = {
   date: "",
-  debitAccount: "",
-  creditAccount: "",
+  debit: "",
+  credit: "",
   amount: 0,
   narration: "",
 };
@@ -41,17 +41,17 @@ const JournalEntries = () => {
 
   const handleSave = () => {
     if (!formData.date || !formData.debitAccount || !formData.creditAccount) return;
-    if (selected) {
-      setEntries((prev) =>
-        prev.map((e) => (e.id === selected.id ? { ...e, ...formData } : e))
-      );
-    } else {
-      const newId = entries.length + 1;
-      setEntries((prev) => [
-        ...prev,
-        { id: newId, entryNo: `JE-${String(newId).padStart(3, "0")}`, ...formData },
-      ]);
-    }
+    // if (selected) {
+    //   setEntries((prev) =>
+    //     prev.map((e) => (e.id === selected.id ? { ...e, ...formData } : e))
+    //   );
+    // } else {
+    //   const newId = entries.length + 1;
+    //   setEntries((prev) => [
+    //     ...prev,
+    //     { id: newId, entryNo: `JE-${String(newId).padStart(3, "0")}`, ...formData },
+    //   ]);
+    // }
     setIsModalOpen(false);
     resetForm();
   };
@@ -206,9 +206,15 @@ const JournalEntries = () => {
             <Label>Date</Label>
             <Input type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} />
             <Label>Debit Account</Label>
-            <Input value={formData.debitAccount} onChange={(e) => setFormData({ ...formData, debitAccount: e.target.value })} />
+            <Input
+  value={formData.debit}
+  onChange={(e) => setFormData({ ...formData, debit: e.target.value })}
+/>
             <Label>Credit Account</Label>
-            <Input value={formData.creditAccount} onChange={(e) => setFormData({ ...formData, creditAccount: e.target.value })} />
+            <Input
+  value={formData.credit}
+  onChange={(e) => setFormData({ ...formData, credit: e.target.value })}
+/>
             <Label>Amount</Label>
             <Input type="number" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} />
             <Label>Narration</Label>

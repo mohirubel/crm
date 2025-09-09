@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -17,7 +17,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Package } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, Pencil, Trash2, Package, Search } from "lucide-react";
 
 const INITIAL_FORM = {
   supplier: "",
@@ -55,6 +62,10 @@ const PurchaseOrders = () => {
 
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
+
+  // 🔍 Search & Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const resetForm = () => {
     setFormData(INITIAL_FORM);
@@ -100,7 +111,7 @@ const PurchaseOrders = () => {
     calculateTotal(updatedItems);
   };
 
-  // Add
+  // ➕ Add
   const handleAddOrder = () => {
     if (!formData.supplier || !formData.date) return;
     const newId = orders.length + 1;
@@ -112,7 +123,7 @@ const PurchaseOrders = () => {
     resetForm();
   };
 
-  // Edit
+  // ✏️ Edit
   const openEditModal = (order) => {
     setSelectedOrder(order);
     setIsAddModalOpen(false);
@@ -138,7 +149,7 @@ const PurchaseOrders = () => {
     resetForm();
   };
 
-  // Delete
+  // 🗑️ Delete
   const openDeleteModal = (order) => {
     setSelectedOrder(order);
     setIsDeleteModalOpen(true);
@@ -151,11 +162,32 @@ const PurchaseOrders = () => {
     resetForm();
   };
 
-  // Add modal always reset form
   const handleOpenAddModal = () => {
     resetForm();
     setIsEditModalOpen(false);
     setIsAddModalOpen(true);
+  };
+
+  // ✅ Filtering logic
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        order.poNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.date.includes(searchTerm);
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        order.status.toLowerCase() === statusFilter.toLowerCase();
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [orders, searchTerm, statusFilter]);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
   };
 
   return (
@@ -164,32 +196,57 @@ const PurchaseOrders = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Purchase Orders</h2>
-          <p className="text-muted-foreground">
-            Manage supplier purchase orders
-          </p>
+          <p className="text-muted-foreground">Manage supplier purchase orders</p>
         </div>
         <Button variant="outline" onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Order</span>
         </Button>
       </div>
-
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Purchase Orders
-            </CardTitle>
-            <Package className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{orders.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Registered purchase orders
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      
+      {/* 🔍 Search & Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Search & Filter Orders</CardTitle>
+          <CardDescription>
+            Search by PO number, supplier, or date
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="search"
+                  placeholder="Search orders..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Status</Label>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters}>
+                Clear Filters
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Orders Table */}
       <Card>
@@ -223,7 +280,7 @@ const PurchaseOrders = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {orders.map((order) => (
+                {filteredOrders.map((order) => (
                   <tr key={order.id}>
                     <td className="px-6 py-4">{order.poNo}</td>
                     <td className="px-6 py-4">{order.supplier}</td>
@@ -250,6 +307,16 @@ const PurchaseOrders = () => {
                     </td>
                   </tr>
                 ))}
+                {filteredOrders.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-6 py-4 text-center text-gray-500"
+                    >
+                      No orders found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -283,9 +350,7 @@ const PurchaseOrders = () => {
               <Label>Supplier</Label>
               <Input
                 value={formData.supplier}
-                onChange={(e) =>
-                  handleInputChange("supplier", e.target.value)
-                }
+                onChange={(e) => handleInputChange("supplier", e.target.value)}
               />
             </div>
             <div>
@@ -305,17 +370,13 @@ const PurchaseOrders = () => {
                   <Input
                     placeholder="Item"
                     value={it.item}
-                    onChange={(e) =>
-                      handleItemChange(idx, "item", e.target.value)
-                    }
+                    onChange={(e) => handleItemChange(idx, "item", e.target.value)}
                   />
                   <Input
                     type="number"
                     placeholder="Qty"
                     value={it.qty}
-                    onChange={(e) =>
-                      handleItemChange(idx, "qty", e.target.value)
-                    }
+                    onChange={(e) => handleItemChange(idx, "qty", e.target.value)}
                   />
                   <Input
                     type="number"
@@ -348,9 +409,7 @@ const PurchaseOrders = () => {
               <select
                 className="border rounded p-2 w-full"
                 value={formData.status}
-                onChange={(e) =>
-                  handleInputChange("status", e.target.value)
-                }
+                onChange={(e) => handleInputChange("status", e.target.value)}
               >
                 <option value="Pending">Pending</option>
                 <option value="Completed">Completed</option>

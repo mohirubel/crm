@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card, CardContent, CardDescription, CardHeader, CardTitle,
 } from "@/components/ui/card";
@@ -9,7 +9,10 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+} from "@/components/ui/select";
 
 const INITIAL_FORM = {
   code: "",
@@ -22,11 +25,32 @@ const ChartOfAccounts = () => {
   const [accounts, setAccounts] = useState([
     { id: 1, code: "1001", name: "Cash", type: "Asset", parent: "" },
     { id: 2, code: "2001", name: "Accounts Payable", type: "Liability", parent: "" },
+    { id: 3, code: "3001", name: "Sales Revenue", type: "Income", parent: "" },
+    { id: 4, code: "4001", name: "Rent Expense", type: "Expense", parent: "" },
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
+
+  // 🔍 Search & Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+
+  // Filtered accounts list
+  const filteredAccounts = useMemo(() => {
+    return accounts.filter((acc) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        acc.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        acc.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesType =
+        typeFilter === "all" || acc.type.toLowerCase() === typeFilter.toLowerCase();
+
+      return matchesSearch && matchesType;
+    });
+  }, [accounts, searchTerm, typeFilter]);
 
   const resetForm = () => { setFormData(INITIAL_FORM); setSelected(null); };
 
@@ -48,6 +72,11 @@ const ChartOfAccounts = () => {
     setAccounts((prev) => prev.filter((a) => a.id !== acc.id));
   };
 
+  const clearFilters = () => {
+    setSearchTerm("");
+    setTypeFilter("all");
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -57,6 +86,55 @@ const ChartOfAccounts = () => {
         </Button>
       </div>
 
+      {/* 🔍 Search & Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Search & Filter Accounts</CardTitle>
+          <CardDescription>Search by code, name, or filter by type</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Search */}
+            <div>
+              <Label htmlFor="search">Search</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  id="search"
+                  placeholder="Search accounts..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Filter by Type */}
+            <div>
+              <Label>Type</Label>
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="Asset">Asset</SelectItem>
+                  <SelectItem value="Liability">Liability</SelectItem>
+                  <SelectItem value="Expense">Expense</SelectItem>
+                  <SelectItem value="Income">Income</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Clear Filters */}
+            <div className="flex items-end">
+              <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Accounts Table */}
       <Card>
         <CardHeader>
           <CardTitle>Accounts</CardTitle>
@@ -74,7 +152,7 @@ const ChartOfAccounts = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {accounts.map((acc) => (
+              {filteredAccounts.map((acc) => (
                 <tr key={acc.id}>
                   <td className="px-6 py-4">{acc.code}</td>
                   <td className="px-6 py-4">{acc.name}</td>
@@ -108,7 +186,11 @@ const ChartOfAccounts = () => {
             <Label>Name</Label>
             <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
             <Label>Type</Label>
-            <select className="border rounded p-2" value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })}>
+            <select
+              className="border rounded p-2"
+              value={formData.type}
+              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+            >
               <option value="Asset">Asset</option>
               <option value="Liability">Liability</option>
               <option value="Expense">Expense</option>

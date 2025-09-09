@@ -77,7 +77,10 @@ const SupportTickets = () => {
           <h2 className="text-3xl font-bold">Support Tickets</h2>
           <p className="text-muted-foreground">Track customer issues</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
+        <Button onClick={() => {
+          resetForm()
+          setIsModalOpen(true)
+        }}>
           <Plus className="h-4 w-4 mr-1"/> Add Ticket
         </Button>
       </div>
@@ -89,7 +92,7 @@ const SupportTickets = () => {
           <CardDescription>Find tickets quickly</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <Label htmlFor="search">Search</Label>
               <Input
@@ -128,7 +131,22 @@ const SupportTickets = () => {
                 <option>High</option>
               </select>
             </div>
+            {/* Clear Filters Button */}
+          <div className="flex justify-start items-end">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery("");
+                setStatusFilter("All");
+                setPriorityFilter("All");
+              }}
+            >
+              Clear Filters
+            </Button>
           </div>
+          </div>
+
+          
         </CardContent>
       </Card>
 

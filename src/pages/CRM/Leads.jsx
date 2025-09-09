@@ -71,19 +71,23 @@ const Leads = () => {
     setLeads((prev) => prev.filter((l) => l.id !== id));
   };
 
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("All");
+  };
+
   // Derived leads with search & filter applied
   const filteredLeads = useMemo(() => {
     return leads.filter((lead) => {
       const query = searchQuery.toLowerCase();
 
-      // normalize lead id to include L-001 style
       const leadId = `L-${String(lead.id).padStart(3, "0")}`.toLowerCase();
 
       const matchesSearch =
         lead.name.toLowerCase().includes(query) ||
         lead.contact.toLowerCase().includes(query) ||
-        String(lead.id).includes(query) || // raw numeric id
-        leadId.includes(query); // formatted id like L-001
+        String(lead.id).includes(query) ||
+        leadId.includes(query);
 
       const matchesStatus =
         statusFilter === "All" || lead.status === statusFilter;
@@ -92,7 +96,6 @@ const Leads = () => {
     });
   }, [leads, searchQuery, statusFilter]);
 
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -100,7 +103,10 @@ const Leads = () => {
           <h2 className="text-3xl font-bold">Leads</h2>
           <p className="text-muted-foreground">Manage your customer leads</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
+        <Button onClick={() => {
+          resetForm();
+          setIsModalOpen(true)
+        }}>
           <Plus className="h-4 w-4 mr-1" /> Add Lead
         </Button>
       </div>
@@ -112,7 +118,7 @@ const Leads = () => {
           <CardDescription>Find leads quickly</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
               <Label htmlFor="search">Search</Label>
               <Input
@@ -136,6 +142,15 @@ const Leads = () => {
                 <option value="Qualified">Qualified</option>
                 <option value="Lost">Lost</option>
               </select>
+            </div>
+            <div>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleClearFilters}
+              >
+                Clear Filters
+              </Button>
             </div>
           </div>
         </CardContent>
