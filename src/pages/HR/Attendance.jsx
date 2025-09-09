@@ -11,6 +11,9 @@ const EmployeeAttendance = () => {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [showEditPresentDaysModal, setShowEditPresentDaysModal] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState(null);
+  const [editPresentDays, setEditPresentDays] = useState(0);
 
   // Sample employee data
   const [employees] = useState([
@@ -58,12 +61,44 @@ const EmployeeAttendance = () => {
     },
   ]);
 
+  // Monthly present days storage
+  const [monthlyPresentDays, setMonthlyPresentDays] = useState({});
+
   const handleUpdateAttendance = (newStatus) => {
     if (!selectedRecord) return;
     const statusValue = newStatus === 'Present' ? true : false;
     markAttendance(selectedRecord.employee.id, statusValue, selectedRecord.date);
     setShowEditModal(false);
     setSelectedRecord(null);
+  };
+
+  const handleEditPresentDays = (employee) => {
+    const [year, month] = selectedMonth.split('-');
+    const daysInMonth = new Date(parseInt(year), parseInt(month), 0).getDate();
+    
+    const employeeWithTotalDays = {
+      ...employee,
+      totalDays: daysInMonth
+    };
+    
+    setEditingEmployee(employeeWithTotalDays);
+    
+    const monthKey = `${employee.id}-${selectedMonth}`;
+    const currentPresentDays = monthlyPresentDays[monthKey] !== undefined ? monthlyPresentDays[monthKey] : employee.presentDays;
+    setEditPresentDays(currentPresentDays);
+    setShowEditPresentDaysModal(true);
+  };
+
+  const handleUpdatePresentDays = () => {
+    if (!editingEmployee) return;
+    const monthKey = `${editingEmployee.id}-${selectedMonth}`;
+    setMonthlyPresentDays(prev => ({
+      ...prev,
+      [monthKey]: editPresentDays
+    }));
+    setShowEditPresentDaysModal(false);
+    setEditingEmployee(null);
+    setEditPresentDays(0);
   };
   
   const [attendance, setAttendance] = useState({});
@@ -127,6 +162,9 @@ const EmployeeAttendance = () => {
 
   const getMonthlyAttendance = () => {
     const [year, month] = selectedMonth.split('-');
+    // Get actual days in the selected month
+    const daysInMonth = new Date(parseInt(year), parseInt(month), 0).getDate();
+    
     const monthData = attendanceHistory.filter(record => {
       const recordDate = new Date(record.date);
       return recordDate.getFullYear() === parseInt(year) && 
@@ -135,8 +173,13 @@ const EmployeeAttendance = () => {
 
     const employeeStats = employees.map(employee => {
       const employeeRecords = monthData.filter(record => record.employeeId === employee.id);
-      const presentDays = employeeRecords.filter(record => record.status === 'Present').length;
-      const totalDays = employeeRecords.length;
+      const defaultPresentDays = employeeRecords.filter(record => record.status === 'Present').length;
+      
+      // Check if there's a manually edited present days value
+      const monthKey = `${employee.id}-${selectedMonth}`;
+      const presentDays = monthlyPresentDays[monthKey] !== undefined ? monthlyPresentDays[monthKey] : defaultPresentDays;
+      
+      const totalDays = daysInMonth; // Use actual days in month
       const percentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
 
       return {
@@ -558,7 +601,14 @@ const EmployeeAttendance = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{employee.presentDays}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          <button
+                            onClick={() => handleEditPresentDays(employee)}
+                            className="text-blue-600 hover:text-blue-800 font-medium text-sm hover:underline cursor-pointer bg-blue-50 px-2 py-1 rounded"
+                          >
+                            ✏️ {employee.presentDays}
+                          </button>
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{employee.totalDays}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
@@ -650,6 +700,68 @@ const EmployeeAttendance = () => {
                     })}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Present Days Modal */}
+        {showEditPresentDaysModal && editingEmployee && (
+          <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-md w-full p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Edit Present Days</h3>
+                <button
+                  onClick={() => setShowEditPresentDaysModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <XCircle size={20} />
+                </button>
+              </div>
+              
+              <div className="mb-6">
+                <div className="text-center mb-4">
+                  <h4 className="text-lg font-medium text-gray-900">{editingEmployee.name}</h4>
+                  <p className="text-sm text-gray-600">{editingEmployee.employeeId}</p>
+                  <p className="text-sm text-gray-500">
+                    Month: {new Date(selectedMonth + '-01').toLocaleDateString('en', { month: 'long', year: 'numeric' })}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Present Days (out of {editingEmployee.totalDays} days)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max={editingEmployee.totalDays}
+                      value={editPresentDays}
+                      onChange={(e) => setEditPresentDays(parseInt(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  <div className="text-sm text-gray-600">
+                    Attendance Percentage: {editingEmployee.totalDays > 0 ? Math.round((editPresentDays / editingEmployee.totalDays) * 100) : 0}%
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowEditPresentDaysModal(false)}
+                  className="flex-1 px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdatePresentDays}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Update
+                </button>
               </div>
             </div>
           </div>

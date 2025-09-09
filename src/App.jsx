@@ -35,7 +35,6 @@ import EmployeeList from "./pages/HR/EmployeeList";
 
 import "./App.css";
 import LoginPage from "./components/LoginPage";
-import EmployeeAttendance from "./pages/HR/EmployeeAttendance";
 import Warehouses from "./pages/Inventory/Warehouses";
 import Invoices from "./pages/Sales/Invoices";
 import SalesOrders from "./pages/Sales/SalesOrders";
@@ -52,6 +51,8 @@ import Opportunities from "./pages/CRM/Opportunities";
 import SupportTickets from "./pages/CRM/SupportTickets";
 import Projects from "./pages/Projects/Projects";
 import Tasks from "./pages/Projects/Tasks";
+import EmployeeAttendance from "./pages/HR/Attendance";
+import LeaveManagement from "./pages/HR/LeaveManagement";
 
 function App() {
   // State management (still kept here)
@@ -164,7 +165,9 @@ function App() {
 
             {/* HR */}
             <Route path="/employee-list" element={<EmployeeList />} />
-            <Route path="/attendance" element={<EmployeeAttendance />} />
+            <Route path="/Attendance" element={<EmployeeAttendance />} />
+            <Route path="/LeaveManagement" element={<LeaveManagement />} />
+            
             <Route
               path="/products"
               element={<Products products={products} setProducts={setProducts} />}

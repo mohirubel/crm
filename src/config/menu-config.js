@@ -6,7 +6,14 @@ import {
   FileEditIcon,
   SettingsIcon,
   User2Icon,
-  BadgePoundSterling
+  BadgePoundSterling,
+  UserCheck2Icon,
+  UserCheck2,
+  Trello,
+  BrickWallFire,
+  TrelloIcon,
+  LucideShieldCheck,
+  PackageCheckIcon
 } from 'lucide-react';
 
 // This file manages all application menus
@@ -46,7 +53,7 @@ export const menuConfig = [
   {
     id: 'products',
     name: 'Products',
-    icon: Package,
+    icon: PackageCheckIcon,
     component: 'Products',
     color: "bg-white text-black-800",
     section: "Core Applications"
@@ -69,6 +76,22 @@ export const menuConfig = [
     section: "Core Applications"
   },
   {
+    id: 'Leads',
+    name: 'CRM',
+    icon: BrickWallFire,
+    component: 'CRM',
+    color: "bg-white text-black-800",
+    section: "Core Applications"
+  },
+  {
+    id: 'Projects',
+    name: 'Projects',
+    icon: TrelloIcon,
+    component: 'Projects',
+    color: "bg-white text-black-800",
+    section: "Core Applications"
+  },
+  {
     id: 'reports/sales-reports',
     name: 'Reports',
     icon: FileText,
@@ -79,7 +102,7 @@ export const menuConfig = [
   {
     id: 'my-profile',
     name: 'Security',
-    icon: SettingsIcon,
+    icon: LucideShieldCheck,
     component: 'MyProfile',
     color: "bg-white text-black-800",
     section: "Core Applications"
