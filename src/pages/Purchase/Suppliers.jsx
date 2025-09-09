@@ -1,0 +1,324 @@
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Plus, Pencil, Trash2, Building2 } from "lucide-react";
+
+const INITIAL_FORM = {
+  name: "",
+  email: "",
+  phone: "",
+  address: "",
+  paymentTerms: "",
+};
+
+const Suppliers = () => {
+  const [suppliers, setSuppliers] = useState([
+    {
+      id: 1,
+      name: "ABC Supplies Ltd.",
+      phone: "01711111111",
+      email: "abc@supplies.com",
+      address: "Dhaka, Bangladesh",
+      paymentTerms: "Net 30",
+    },
+    {
+      id: 2,
+      name: "XYZ Traders",
+      phone: "01822222222",
+      email: "xyz@traders.com",
+      address: "Chittagong, Bangladesh",
+      paymentTerms: "Advance",
+    },
+  ]);
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [formData, setFormData] = useState(INITIAL_FORM);
+
+  const resetForm = () => {
+    setFormData(INITIAL_FORM);
+    setSelectedSupplier(null);
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Add
+  const handleAddSupplier = () => {
+    if (!formData.name || !formData.phone || !formData.email) return;
+    const newId = suppliers.length + 1;
+    const newSupplier = { id: newId, ...formData };
+
+    setSuppliers((prev) => [...prev, newSupplier]);
+    setIsAddModalOpen(false);
+    resetForm();
+  };
+
+  // Edit
+  const openEditModal = (supplier) => {
+    setSelectedSupplier(supplier);
+    setIsAddModalOpen(false);
+    setIsEditModalOpen(true);
+
+    setFormData({
+      name: supplier.name || "",
+      email: supplier.email || "",
+      phone: supplier.phone || "",
+      address: supplier.address || "",
+      paymentTerms: supplier.paymentTerms || "",
+    });
+  };
+
+  const handleEditSupplier = () => {
+    if (!selectedSupplier) return;
+    setSuppliers((prev) =>
+      prev.map((s) =>
+        s.id === selectedSupplier.id ? { ...s, ...formData } : s
+      )
+    );
+    setIsEditModalOpen(false);
+    resetForm();
+  };
+
+  // Delete
+  const openDeleteModal = (supplier) => {
+    setSelectedSupplier(supplier);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteSupplier = () => {
+    if (!selectedSupplier) return;
+    setSuppliers((prev) => prev.filter((s) => s.id !== selectedSupplier.id));
+    setIsDeleteModalOpen(false);
+    resetForm();
+  };
+
+  // Add modal always reset form
+  const handleOpenAddModal = () => {
+    resetForm();
+    setIsEditModalOpen(false);
+    setIsAddModalOpen(true);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Suppliers</h2>
+          <p className="text-muted-foreground">
+            Manage supplier information
+          </p>
+        </div>
+        <Button variant="outline" onClick={handleOpenAddModal}>
+          <Plus className="h-4 w-4" /> <span>Add Supplier</span>
+        </Button>
+      </div>
+
+      {/* Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Suppliers
+            </CardTitle>
+            <Building2 className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{suppliers.length}</div>
+            <p className="text-xs text-muted-foreground">
+              Registered suppliers
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Suppliers Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Suppliers</CardTitle>
+          <CardDescription>All registered suppliers</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Supplier ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Phone
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {suppliers.map((supplier) => (
+                  <tr key={supplier.id}>
+                    <td className="px-6 py-4">{supplier.id}</td>
+                    <td className="px-6 py-4">{supplier.name}</td>
+                    <td className="px-6 py-4">{supplier.phone}</td>
+                    <td className="px-6 py-4">{supplier.email}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openEditModal(supplier)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => openDeleteModal(supplier)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Add/Edit Modal */}
+      <Dialog
+        open={isAddModalOpen || isEditModalOpen}
+        onOpenChange={(val) => {
+          if (!val) {
+            setIsAddModalOpen(false);
+            setIsEditModalOpen(false);
+            resetForm();
+          }
+        }}
+      >
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {isEditModalOpen ? "Edit Supplier" : "Add New Supplier"}
+            </DialogTitle>
+            <DialogDescription>
+              {isEditModalOpen
+                ? "Update supplier details."
+                : "Enter details to register a new supplier."}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div>
+              <Label>Name</Label>
+              <Input
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Phone</Label>
+              <Input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Address</Label>
+              <Input
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Payment Terms</Label>
+              <Input
+                value={formData.paymentTerms}
+                onChange={(e) =>
+                  handleInputChange("paymentTerms", e.target.value)
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsAddModalOpen(false);
+                setIsEditModalOpen(false);
+                resetForm();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={isEditModalOpen ? handleEditSupplier : handleAddSupplier}
+            >
+              {isEditModalOpen ? "Save Changes" : "Add Supplier"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Modal */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Supplier</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="font-bold">{selectedSupplier?.name}</span>?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteSupplier}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Suppliers;

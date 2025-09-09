@@ -1,0 +1,323 @@
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Warehouse, Plus, Pencil, Trash2 } from "lucide-react";
+
+const Warehouses = () => {
+  const [warehouses, setWarehouses] = useState([
+    {
+      id: 1,
+      name: "Central Warehouse",
+      address: "123 Main Street, Dhaka",
+      contact: "+8801712345678",
+    },
+    {
+      id: 2,
+      name: "Branch Warehouse",
+      address: "45 Park Road, Chattogram",
+      contact: "+8801998765432",
+    },
+  ]);
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    address: "",
+    contact: "",
+  });
+
+  // Handle input change
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Add warehouse
+  const handleAddWarehouse = () => {
+    if (!formData.name || !formData.address) return;
+
+    const newId = warehouses.length + 1;
+    const warehouse = {
+      id: newId,
+      ...formData,
+    };
+
+    setWarehouses((prev) => [...prev, warehouse]);
+    setIsAddModalOpen(false);
+    resetForm();
+  };
+
+  // Open edit modal
+  const openEditModal = (warehouse) => {
+    setSelectedWarehouse(warehouse);
+    setFormData({
+      name: warehouse.name,
+      address: warehouse.address,
+      contact: warehouse.contact,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  // Save edit
+  const handleEditWarehouse = () => {
+    if (!formData.name || !formData.address) return;
+
+    setWarehouses((prev) =>
+      prev.map((w) =>
+        w.id === selectedWarehouse.id ? { ...w, ...formData } : w
+      )
+    );
+    setIsEditModalOpen(false);
+    resetForm();
+  };
+
+  // Open delete modal
+  const openDeleteModal = (warehouse) => {
+    setSelectedWarehouse(warehouse);
+    setIsDeleteModalOpen(true);
+  };
+
+  // Confirm delete
+  const handleDeleteWarehouse = () => {
+    setWarehouses((prev) =>
+      prev.filter((w) => w.id !== selectedWarehouse.id)
+    );
+    setIsDeleteModalOpen(false);
+    setSelectedWarehouse(null);
+  };
+
+  const resetForm = () => {
+    setFormData({ name: "", address: "", contact: "" });
+    setSelectedWarehouse(null);
+  };
+
+  const totalWarehouses = warehouses.length;
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Warehouses</h2>
+          <p className="text-muted-foreground">
+            Manage your warehouse locations and details
+          </p>
+        </div>
+        <Button variant="outline" onClick={() => {
+          resetForm();
+          setIsAddModalOpen(true);
+        }}>
+          <Plus className="h-4 w-4" />
+          <span>Add Warehouse</span>
+        </Button>
+      </div>
+
+      {/* Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Warehouses
+            </CardTitle>
+            <Warehouse className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalWarehouses}</div>
+            <p className="text-xs text-muted-foreground">
+              Registered locations
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Warehouse List</CardTitle>
+          <CardDescription>All warehouse locations and contacts</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Location
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Contact
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {warehouses.map((wh) => (
+                  <tr key={wh.id}>
+                    <td className="px-6 py-4">{wh.id}</td>
+                    <td className="px-6 py-4 font-medium">{wh.name}</td>
+                    <td className="px-6 py-4">{wh.address}</td>
+                    <td className="px-6 py-4">{wh.contact}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openEditModal(wh)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => openDeleteModal(wh)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Add Modal */}
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Warehouse</DialogTitle>
+            <DialogDescription>
+              Create a new warehouse entry with details.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label>Name</Label>
+              <Input
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Address</Label>
+              <Input
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Contact</Label>
+              <Input
+                value={formData.contact}
+                onChange={(e) => handleInputChange("contact", e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddWarehouse}>Add Warehouse</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Warehouse</DialogTitle>
+            <DialogDescription>
+              Update the details of this warehouse.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label>Name</Label>
+              <Input
+                value={formData.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Address</Label>
+              <Input
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Contact</Label>
+              <Input
+                value={formData.contact}
+                onChange={(e) => handleInputChange("contact", e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEditWarehouse}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Modal */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Warehouse</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete{" "}
+              <span className="font-bold">
+                {selectedWarehouse?.name}
+              </span>
+              ? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteWarehouse}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Warehouses;

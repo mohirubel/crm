@@ -5,7 +5,8 @@ import {
   UsersIcon,
   FileEditIcon,
   SettingsIcon,
-  User2Icon
+  User2Icon,
+  BadgePoundSterling
 } from 'lucide-react';
 
 // This file manages all application menus
@@ -23,6 +24,14 @@ export const menuConfig = [
     name: 'Purchase',
     icon: ShoppingCart,
     component: 'Purchase',
+    color: "bg-white text-black-800",
+    section: "Core Applications"
+  },
+  {
+    id: 'chart-of-accounts',
+    name: 'Account',
+    icon: BadgePoundSterling,
+    component: 'Account',
     color: "bg-white text-black-800",
     section: "Core Applications"
   },
