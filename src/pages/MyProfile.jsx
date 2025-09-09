@@ -47,11 +47,12 @@ const MyProfile = () => {
             <h1 className="text-3xl font-bold text-gray-800">My Account</h1>
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="flex items-center space-x-2 gap-2 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
             >
               <Edit3 size={16} />
               {isEditing ? 'Cancel' : 'Edit Profile'}
             </button>
+            
           </div>
         </div>
 

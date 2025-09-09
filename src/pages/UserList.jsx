@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Plus, Eye, Edit3, Trash2, X, Save, UserPlus, Lock } from 'lucide-react';
+import { User, Mail, Phone, Plus, Eye, Edit3, Trash2, X, Save, UserPlus } from 'lucide-react';
 
 const UserList = () => {
   const [users, setUsers] = useState([
@@ -40,16 +40,10 @@ const UserList = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [pendingAction, setPendingAction] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
   
-  const [authForm, setAuthForm] = useState({
-    username: '',
-    password: ''
-  });
-
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
@@ -64,31 +58,6 @@ const UserList = () => {
     phone: '',
     position: ''
   });
-
-  const handleAuth = () => {
-    if (authForm.username === 'admin' && authForm.password === '123') {
-      setIsAuthenticated(true);
-      setShowAuthModal(false);
-      setAuthForm({ username: '', password: '' });
-      
-      // Execute pending action
-      if (pendingAction) {
-        pendingAction();
-        setPendingAction(null);
-      }
-    } else {
-      alert('Invalid credentials! Please use username: admin, password: 123');
-    }
-  };
-
-  const requireAuth = (action) => {
-    if (isAuthenticated) {
-      action();
-    } else {
-      setPendingAction(() => action);
-      setShowAuthModal(true);
-    }
-  };
 
   const handleAddUser = () => {
     if (newUser.name && newUser.email && newUser.phone && newUser.position) {
@@ -122,10 +91,15 @@ const UserList = () => {
   };
 
   const handleDeleteUser = (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      setUsers(users.filter(user => user.id !== userId));
-      alert('User deleted successfully!');
-    }
+    setUsers(users.filter(user => user.id !== userId));
+    setShowDeleteDialog(false);
+    setUserToDelete(null);
+    alert('User deleted successfully!');
+  };
+
+  const openDeleteDialog = (user) => {
+    setUserToDelete(user);
+    setShowDeleteDialog(true);
   };
 
   const openViewModal = (user) => {
@@ -134,27 +108,17 @@ const UserList = () => {
   };
 
   const openEditModal = (user) => {
-    requireAuth(() => {
-      setEditUser(user);
-      setShowEditModal(true);
-    });
+    setEditUser(user);
+    setShowEditModal(true);
   };
 
   const openAddModal = () => {
-    requireAuth(() => {
-      setShowAddModal(true);
-    });
-  };
-
-  const openDeleteAction = (userId) => {
-    requireAuth(() => {
-      handleDeleteUser(userId);
-    });
+    setShowAddModal(true);
   };
 
   return (
     <div className="min-h-screen p-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex items-center justify-between">
@@ -164,7 +128,7 @@ const UserList = () => {
             </div>
             <button
               onClick={openAddModal}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
             >
               <Plus size={16} />
               Add New User
@@ -209,21 +173,21 @@ const UserList = () => {
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => openViewModal(user)}
-                          className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg transition-colors"
+                          className="p-2 text-blue-500 hover:bg-blue-100 border border-gray-300 rounded-lg transition-colors"
                           title="View"
                         >
                           <Eye size={16} />
                         </button>
                         <button
                           onClick={() => openEditModal(user)}
-                          className="p-2 text-green-500 hover:bg-green-100 rounded-lg transition-colors"
+                          className="p-2 text-green-500 hover:bg-green-100 border border-gray-300 rounded-lg transition-colors"
                           title="Edit"
                         >
                           <Edit3 size={16} />
                         </button>
                         <button
-                          onClick={() => openDeleteAction(user.id)}
-                          className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
+                          onClick={() => openDeleteDialog(user)}
+                          className="p-2 text-red-500 hover:bg-red-100 border border-gray-300 rounded-lg transition-colors"
                           title="Delete"
                         >
                           <Trash2 size={16} />
@@ -236,65 +200,6 @@ const UserList = () => {
             </table>
           </div>
         </div>
-
-        {/* Authentication Modal */}
-        {showAuthModal && (
-          <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <Lock size={20} />
-                  Admin Authentication
-                </h3>
-                <button
-                  onClick={() => setShowAuthModal(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                  <input
-                    type="text"
-                    value={authForm.username}
-                    onChange={(e) => setAuthForm({...authForm, username: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter username"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                  <input
-                    type="password"
-                    value={authForm.password}
-                    onChange={(e) => setAuthForm({...authForm, password: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter password"
-                  />
-                </div>
-                
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleAuth}
-                    className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => setShowAuthModal(false)}
-                    className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Add User Modal */}
         {showAddModal && (
@@ -483,33 +388,44 @@ const UserList = () => {
           </div>
         )}
 
+        {/* Delete Confirmation Dialog */}
+        {showDeleteDialog && userToDelete && (
+          <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-sm mx-4">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete User</h3>
+                <p className="text-sm text-gray-600">
+                  Are you sure you want to delete "{userToDelete.name}"? This action cannot be undone.
+                </p>
+              </div>
+              
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setShowDeleteDialog(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDeleteUser(userToDelete.id)}
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Status Bar */}
         <div className="mt-6 bg-white rounded-lg shadow-md p-4">
           <div className="flex items-center justify-between">
             <p className="text-gray-600">Total Users: <span className="font-semibold">{users.length}</span></p>
-            <div className="flex items-center gap-4">
-              {isAuthenticated && (
-                <div className="flex items-center gap-2 text-green-600">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm">Admin Authenticated</span>
-                </div>
-              )}
-              {isAuthenticated && (
-                <button
-                  onClick={() => setIsAuthenticated(false)}
-                  className="text-sm text-red-600 hover:text-red-700"
-                >
-                  Logout
-                </button>
-              )}
-            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-
 
 export default UserList;

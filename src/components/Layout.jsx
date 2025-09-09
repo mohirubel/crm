@@ -171,6 +171,8 @@ const Layout = () => {
       submenus: [
         { path: "/my-profile", label: "My Profile" },
         { path: "/user-list", label: "User List" },
+        { path: "/Security/RolesPermissions", label: "Roles & Permissions" },
+        { path: "/Security/AuditLogs", label: "Audit Logs" },
       ],
     },
   };

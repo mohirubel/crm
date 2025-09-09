@@ -308,8 +308,8 @@ const LeaveManagement = () => {
                   <h2 className="text-lg font-semibold text-gray-900 mb-1">Leave Applications</h2>
                   <p className="text-gray-600 text-sm">Manage and review employee leave requests</p>
                 </div>
-                <div className="flex gap-4">
-                  <div className="relative">
+                <div className="flex gap-4 py-2">
+                  <div className="flex relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input
                       type="text"

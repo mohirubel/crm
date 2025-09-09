@@ -53,6 +53,8 @@ import Projects from "./pages/Projects/Projects";
 import Tasks from "./pages/Projects/Tasks";
 import EmployeeAttendance from "./pages/HR/Attendance";
 import LeaveManagement from "./pages/HR/LeaveManagement";
+import RolesPermissions from "./pages/Security/RolesPermissions";
+import AuditLogs from "./pages/Security/AuditLogs";
 
 function App() {
   // State management (still kept here)
@@ -168,10 +170,8 @@ function App() {
             <Route path="/Attendance" element={<EmployeeAttendance />} />
             <Route path="/LeaveManagement" element={<LeaveManagement />} />
             
-            <Route
-              path="/products"
-              element={<Products products={products} setProducts={setProducts} />}
-            />
+            <Route path="/products" element={<Products products={products} setProducts={setProducts} />} />
+
             {/* Purchase */}
             <Route path="/purchase" element={<Purchase />} />
             <Route path="/suppliers" element={<Suppliers />} />
@@ -243,9 +243,11 @@ function App() {
               }
             />
 
-            {/* User */}
+            {/* Security */}
             <Route path="/my-profile" element={<UserProfile />} />
             <Route path="/user-list" element={<UserList />} />
+            <Route path="/Security/RolesPermissions" element={<RolesPermissions />} />
+            <Route path="/Security/AuditLogs" element={<AuditLogs />} />
           </Route>
 
           <Route path="/login" element={<LoginPage />} />

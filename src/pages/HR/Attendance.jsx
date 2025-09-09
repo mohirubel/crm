@@ -299,7 +299,7 @@ const EmployeeAttendance = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm mb-6">
           <div className="p-6 border-b border-gray-200">
@@ -379,7 +379,7 @@ const EmployeeAttendance = () => {
                   <p className="text-gray-600 text-sm">Mark attendance for {new Date(currentDate).toLocaleDateString()}</p>
                 </div>
                 <div className="flex gap-4">
-                  <div className="relative">
+                  <div className="flex relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                     <input
                       type="text"
