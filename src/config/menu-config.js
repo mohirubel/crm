@@ -27,6 +27,30 @@ export const menuConfig = [
     section: " "
   },
   {
+    id: 'employee-list',
+    name: 'HR',
+    icon: UserCog,
+    component: 'EmployeeList',
+    color: "bg-white text-black-800",
+    section: "  "
+  },
+  {
+    id: 'current-stock',
+    name: 'Inventory',
+    icon: Warehouse,
+    component: 'currentStock',
+    color: "bg-white text-black-800",
+    section: "  "
+  },
+  {
+    id: 'sales',
+    name: 'Sales',
+    icon: ShoppingCart,
+    component: 'Sales',
+    color: "bg-white text-black-800",
+    section: "  "
+  },
+  {
     id: 'purchase',
     name: 'Purchase',
     icon: ShoppingCart,
@@ -43,35 +67,10 @@ export const menuConfig = [
     section: "  "
   },
   {
-    id: 'sales',
-    name: 'Sales',
-    icon: ShoppingCart,
-    component: 'Sales',
-    color: "bg-white text-black-800",
-    section: "  "
-  },
-  {
     id: 'products',
     name: 'Products',
     icon: PackageCheckIcon,
     component: 'Products',
-    color: "bg-white text-black-800",
-    section: "  "
-  },
-  {
-    id: 'current-stock',
-    name: 'Inventory',
-    icon: Warehouse,
-    component: 'currentStock',
-    color: "bg-white text-black-800",
-    section: "  "
-  },
-
-  {
-    id: 'employee-list',
-    name: 'HR',
-    icon: UserCog,
-    component: 'EmployeeList',
     color: "bg-white text-black-800",
     section: "  "
   },
