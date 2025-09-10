@@ -17,6 +17,7 @@ import {
   BadgePoundSterling,
   ChartColumn,
   CircleCheckBig,
+  Grid2x2,
 } from "lucide-react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import {
@@ -73,30 +74,17 @@ const Layout = () => {
       icon: LayoutDashboard,
       label: "Dashboard",
     },
-    sales: {
-      icon: ShoppingCart,
-      label: "Sales",
-      rootPath: "/sales",
+        hr: {
+      icon: Users,
+      label: "HR",
+      rootPath: "/employee-list",
       submenus: [
-        { path: "/sales", label: "Sales" },
-        { path: "/customers", label: "Customers" },
-        { path: "/sales-orders", label: "Sales Orders" },
-        { path: "/invoices", label: "Invoices" },
+        { path: "/employee-list", label: "Employee List" },
+        { path: "/attendance", label: "Attendance" },
+        { path: "/LeaveManagement", label: "Leave Management" },
       ],
     },
-    products: {
-      icon: Package,
-      label: "Products",
-      rootPath: "/products",
-      submenus: [
-        { path: "/products", label: "All Products" },
-        { path: "/create-product", label: "Create Products" },
-        { path: "/create-brand", label: "Create Brand" },
-        { path: "/create-category", label: "Create Category" },
-        { path: "/returns", label: "Return" },
-      ],
-    },
-    inventory: {
+        inventory: {
       icon: Warehouse,
       label: "Inventory",
       rootPath: "/current-stock",
@@ -108,6 +96,29 @@ const Layout = () => {
         // { path: "/stock-report", label: "Stock Report" },
       ],
     },
+    sales: {
+      icon: ShoppingCart,
+      label: "Sales",
+      rootPath: "/sales",
+      submenus: [
+        { path: "/sales", label: "Sales" },
+        { path: "/customers", label: "Customers" },
+        { path: "/sales-orders", label: "Sales Orders" },
+        { path: "/invoices", label: "Invoices" },
+      ],
+    },
+    // products: {
+    //   icon: Package,
+    //   label: "Products",
+    //   rootPath: "/products",
+    //   submenus: [
+    //     { path: "/products", label: "All Products" },
+    //     { path: "/create-product", label: "Create Products" },
+    //     { path: "/create-brand", label: "Create Brand" },
+    //     { path: "/create-category", label: "Create Category" },
+    //     { path: "/returns", label: "Return" },
+    //   ],
+    // },
     purchase: {
       path: "/purchase",
       icon: ShoppingCart,
@@ -165,16 +176,6 @@ const Layout = () => {
         { path: "/reports/FinanceReports", label: "Finance Reports" },
       ],
     },
-    hr: {
-      icon: Users,
-      label: "HR",
-      rootPath: "/employee-list",
-      submenus: [
-        { path: "/employee-list", label: "Employee List" },
-        { path: "/attendance", label: "Attendance" },
-        { path: "/LeaveManagement", label: "Leave Management" },
-      ],
-    },
     security: {
       icon: Shield,
       label: "Security",
@@ -204,7 +205,6 @@ const Layout = () => {
     return null;
   };
   const currentMenuKey = getCurrentMenuKey();
-
   const isActivePath = (path) => location.pathname === path;
 
   // ---------- Fix: ensure top menus close correctly ----------
@@ -243,7 +243,7 @@ const Layout = () => {
       <div className="relative" key={menuKey}>
         <button
           onClick={() => handleTopMenuClick(menuKey, menu)}
-          className={`px-2 2xl:scroll-px-2.5 py-2 rounded-md text-sm font-medium flex items-center ${
+          className={`px-2 2xl:scroll-px-2.5 py-2 cursor-pointer rounded-md text-sm font-medium flex items-center ${
             isActivePath(menu.path)
               ? "bg-blue-100 text-blue-700"
               : "text-gray-700 hover:bg-gray-100"
@@ -300,7 +300,7 @@ const Layout = () => {
         <div key={menuKey}>
           <button
             onClick={toggleMenu}
-            className={`w-full flex items-center justify-between rounded-lg py-3 px-1 transition-colors ${
+            className={`w-full flex items-center justify-between cursor-pointer rounded-lg p-2 transition-colors ${
               isOpen
                 ? "bg-gray-100 text-gray-700"
                 : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
@@ -319,7 +319,7 @@ const Layout = () => {
             )}
           </button>
           {isOpen && sidebarOpen && menu.submenus && (
-            <ul className="ml-8 mt-1 space-y-1">
+            <ul className="ml-3 mt-2 space-y-1">
               {menu.submenus.map((submenu) => (
                 <li key={submenu.path}>
                   <button
@@ -328,7 +328,7 @@ const Layout = () => {
                       setOpenTopMenus({});
                       navigate(submenu.path);
                     }}
-                    className={`w-full text-left py-2 px-2 rounded-md text-sm ${
+                    className={`w-full text-left p-2 rounded-md text-sm cursor-pointer ${
                       isActivePath(submenu.path)
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -351,7 +351,7 @@ const Layout = () => {
           setOpenTopMenus({}); // close any top dropdowns
           navigate(menu.path);
         }}
-        className={`w-full flex items-center rounded-lg py-3 pl-1 ${
+        className={`w-full flex items-center rounded-lg p-2 ${
           isActivePath(menu.path)
             ? "bg-blue-100 text-blue-700"
             : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
@@ -377,11 +377,11 @@ const Layout = () => {
                 navigate("/");
               }}
             >
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <ShoppingCart className="h-6 w-6 text-white" />
+              <div className="bg-blue-600 p-1.5 rounded-lg">
+                <Grid2x2 className="h-6 w-6 text-white" />
               </div>
-              <h1 className="ml-3 text-xl font-bold text-gray-900">
-                Inventory
+              <h1 className="ml-3 text-xl font-bold text-gray-900 capitalize">
+                {currentMenuKey}
               </h1>
             </div>
 
@@ -460,9 +460,9 @@ const Layout = () => {
           sidebarOpen ? "translate-x-0 w-64" : "-translate-x-full w-16"
         } lg:translate-x-0`}
       >
-        <div className="p-4 flex flex-col h-full overflow-y-auto">
+        <div className="p-3 flex flex-col h-full overflow-y-auto">
           {/* Sidebar Header */}
-          <div className="hidden lg:flex items-center justify-between mb-6">
+          <div className="hidden lg:flex items-center justify-between mb-4">
             {sidebarOpen && (
               <h2 className="text-lg font-semibold text-gray-800">Menu</h2>
             )}
