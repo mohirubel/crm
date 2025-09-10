@@ -16,8 +16,8 @@ import {
 
 const INITIAL_FORM = {
   date: "",
-  debit: "",
-  credit: "",
+  debitAccount: "",
+  creditAccount: "",
   amount: 0,
   narration: "",
 };
@@ -41,17 +41,32 @@ const JournalEntries = () => {
 
   const handleSave = () => {
     if (!formData.date || !formData.debitAccount || !formData.creditAccount) return;
-    // if (selected) {
-    //   setEntries((prev) =>
-    //     prev.map((e) => (e.id === selected.id ? { ...e, ...formData } : e))
-    //   );
-    // } else {
-    //   const newId = entries.length + 1;
-    //   setEntries((prev) => [
-    //     ...prev,
-    //     { id: newId, entryNo: `JE-${String(newId).padStart(3, "0")}`, ...formData },
-    //   ]);
-    // }
+    if (selected) {
+      setEntries((prev) =>
+        prev.map((e) => (e.id === selected.id ? { 
+          ...e, 
+          date: formData.date,
+          debit: formData.debitAccount,
+          credit: formData.creditAccount,
+          amount: formData.amount,
+          narration: formData.narration
+        } : e))
+      );
+    } else {
+      const newId = entries.length + 1;
+      setEntries((prev) => [
+        ...prev,
+        { 
+          id: newId, 
+          entryNo: `JE-${String(newId).padStart(3, "0")}`, 
+          date: formData.date,
+          debit: formData.debitAccount,
+          credit: formData.creditAccount,
+          amount: formData.amount,
+          narration: formData.narration
+        },
+      ]);
+    }
     setIsModalOpen(false);
     resetForm();
   };
@@ -83,6 +98,18 @@ const JournalEntries = () => {
     setSearchTerm("");
     setDebitFilter("all");
     setCreditFilter("all");
+  };
+
+  const handleEdit = (entry) => {
+    setSelected(entry);
+    setFormData({
+      date: entry.date,
+      debitAccount: entry.debit,
+      creditAccount: entry.credit,
+      amount: entry.amount,
+      narration: entry.narration
+    });
+    setIsModalOpen(true);
   };
 
   return (
@@ -181,7 +208,7 @@ const JournalEntries = () => {
                   <td className="px-6 py-4">{entry.amount}</td>
                   <td className="px-6 py-4">{entry.narration}</td>
                   <td className="px-6 py-4 flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => { setSelected(entry); setFormData(entry); setIsModalOpen(true); }}>
+                    <Button size="sm" variant="outline" onClick={() => handleEdit(entry)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <Button size="sm" variant="destructive" onClick={() => handleDelete(entry)}>
@@ -206,15 +233,9 @@ const JournalEntries = () => {
             <Label>Date</Label>
             <Input type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} />
             <Label>Debit Account</Label>
-            <Input
-  value={formData.debit}
-  onChange={(e) => setFormData({ ...formData, debit: e.target.value })}
-/>
+            <Input value={formData.debitAccount} onChange={(e) => setFormData({ ...formData, debitAccount: e.target.value })} />
             <Label>Credit Account</Label>
-            <Input
-  value={formData.credit}
-  onChange={(e) => setFormData({ ...formData, credit: e.target.value })}
-/>
+            <Input value={formData.creditAccount} onChange={(e) => setFormData({ ...formData, creditAccount: e.target.value })} />
             <Label>Amount</Label>
             <Input type="number" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} />
             <Label>Narration</Label>

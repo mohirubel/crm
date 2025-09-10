@@ -16,9 +16,18 @@ import {
   Shield,
   BadgePoundSterling,
   ChartColumn,
-  CircleCheckBig
+  CircleCheckBig,
 } from "lucide-react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Layout = () => {
   const { logout, user } = useAuth();
@@ -119,7 +128,7 @@ const Layout = () => {
         { path: "/chart-of-accounts", label: "Chart Of Accounts" },
         { path: "/journal-entries", label: "Journal Entries" },
         { path: "/payments-receipts", label: "Payments Receipts" },
-        { path: "/account-reports", label: "Reports" }
+        { path: "/account-reports", label: "Reports" },
       ],
     },
     crm: {
@@ -138,7 +147,7 @@ const Layout = () => {
       rootPath: "/projects",
       submenus: [
         { path: "/projects", label: "Projects" },
-        { path: "/tasks", label: "Tasks" }
+        { path: "/tasks", label: "Tasks" },
       ],
     },
     reports: {
@@ -377,25 +386,54 @@ const Layout = () => {
             </div>
 
             {/* Top Menu Items */}
-            <div className="hidden lg:flex space-x-1" ref={topMenuRef}>
+            <div className="hidden lg:flex space-x-3.5 2xl:space-x-4" ref={topMenuRef}>
               {Object.keys(menuStructure).map(renderTopMenuItem)}
             </div>
 
             {/* User Menu */}
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">{user?.name}</span>
-              </div>
+            <div className="ml-auto sm:ml-0 mr-2 sm:mr-0">
+              {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="focus:outline-none">
+                    <Avatar className="h-10 w-10 cursor-pointer">
+                      <AvatarImage
+                        src={user?.avatarUrl || ""}
+                        alt={user?.name}
+                      />
+                      <AvatarFallback>
+                        {user?.name?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-48 mt-2 mr-2">
+                  <DropdownMenuLabel className="flex items-center space-x-2">
+                    <User className="h-4 w-4 text-gray-500" />
+                    <span>{user?.name}</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2"
+                  >
+                    <LogOut className="h-4 w-4 text-gray-500" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleLogout}
+                onClick={() => navigate("/login")}
                 className="flex items-center space-x-2"
               >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Logout</span>
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline">Login</span>
               </Button>
+            )}
             </div>
 
             {/* Mobile Hamburger */}

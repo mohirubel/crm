@@ -7,9 +7,18 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { useAuth } from '../contexts/AuthContext';
 import { menuConfig } from '../config/menu-config';
 import { useNavigate } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const MainDashboard = () => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 const navigate = useNavigate();
   // Sample data from Dashboard component
   const todaysSales = 15420;
@@ -92,7 +101,7 @@ const navigate = useNavigate();
           </div>
 
           {/* User Menu */}
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-600 cursor-pointer flex items-center gap-1" onClick={logout}>
               <LogOut className="w-4 h-4" /> Log Out
             </span>
@@ -106,7 +115,53 @@ const navigate = useNavigate();
               <User className="w-4 h-4 mr-1" />
               <ChevronDown className="w-3 h-3" />
             </Button>
-          </div>
+          </div> */}
+
+          <div className="ml-auto sm:ml-0 mr-2 sm:mr-0">
+              {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="focus:outline-none">
+                    <Avatar className="h-10 w-10 cursor-pointer">
+                      <AvatarImage
+                        src={user?.avatarUrl || ""}
+                        alt={user?.name}
+                      />
+                      <AvatarFallback>
+                        {user?.name?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-48 mt-2 mr-2">
+                  <DropdownMenuLabel className="flex items-center space-x-2">
+                    <User className="h-4 w-4 text-gray-500" />
+                    <span>{user?.name}</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={()=> logout()}
+                    className="flex items-center space-x-2"
+                  >
+                    <LogOut className="h-4 w-4 text-gray-500" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/login")}
+                className="flex items-center space-x-2"
+              >
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline">Login</span>
+              </Button>
+            )}
+            </div>
+
         </div>
       </header>
 
