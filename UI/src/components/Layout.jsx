@@ -82,6 +82,7 @@ const Layout = () => {
         { path: "/employee-list", label: "Employee List" },
         { path: "/attendance", label: "Attendance" },
         { path: "/LeaveManagement", label: "Leave Management" },
+        { path: "/EmployeeSalaryList", label: "Employee Salary List" },
       ],
     },
         inventory: {

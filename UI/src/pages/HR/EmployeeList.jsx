@@ -24,7 +24,8 @@ const EmployeeList = () => {
       designation: "Software Engineer",
       joiningDate: "2023-01-15",
       salary: "$75,000",
-      status: "Active"
+      status: "Active",
+      cv: ""
     },
     {
       id: 2,
@@ -36,7 +37,8 @@ const EmployeeList = () => {
       designation: "Project Manager",
       joiningDate: "2022-11-08",
       salary: "$80,000",
-      status: "Active"
+      status: "Active",
+      cv: ""
     },
     {
       id: 3,
@@ -48,7 +50,8 @@ const EmployeeList = () => {
       designation: "Marketing Specialist",
       joiningDate: "2023-06-12",
       salary: "$55,000",
-      status: "Active"
+      status: "Active",
+      cv: ""
     },
     {
       id: 4,
@@ -60,11 +63,13 @@ const EmployeeList = () => {
       designation: "DevOps Engineer",
       joiningDate: "2023-02-28",
       salary: "$85,000",
-      status: "Inactive"
+      status: "Inactive",
+      cv: ""
     }
   ]);
-const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-const [employeeToDelete, setEmployeeToDelete] = useState(null);
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -79,7 +84,8 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
     joiningDate: '',
     salary: '',
     status: 'Active',
-    image: ''
+    image: '',
+    cv: ''
   });
 
   const handleImageUpload = (file, isEdit = false) => {
@@ -96,6 +102,38 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
     }
   };
 
+  const handleCVUpload = (file, isEdit = false) => {
+    if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const cvData = {
+          name: file.name,
+          data: e.target.result,
+          size: file.size
+        };
+        if (isEdit && selectedEmployee) {
+          setSelectedEmployee({...selectedEmployee, cv: cvData});
+        } else {
+          setNewEmployee({...newEmployee, cv: cvData});
+        }
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('Please upload a PDF file only.');
+    }
+  };
+
+  const handleCVDownload = (cvData) => {
+    if (cvData && cvData.data) {
+      const link = document.createElement('a');
+      link.href = cvData.data;
+      link.download = cvData.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   const handleAddEmployee = () => {
     if (newEmployee.name && newEmployee.email && newEmployee.phone && newEmployee.department && newEmployee.designation && newEmployee.joiningDate && newEmployee.salary) {
       const employee = {
@@ -104,7 +142,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
         image: newEmployee.image || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
       };
       setEmployees([...employees, employee]);
-      setNewEmployee({ name: '', email: '', phone: '', department: '', designation: '', joiningDate: '', salary: '', status: 'Active', image: '' });
+      setNewEmployee({ name: '', email: '', phone: '', department: '', designation: '', joiningDate: '', salary: '', status: 'Active', image: '', cv: '' });
       setShowAddForm(false);
     }
   };
@@ -153,6 +191,45 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
       return `${baseClasses} bg-red-100 text-red-800`;
     }
   };
+
+  const CVUploadSection = ({ currentCV, onCVUpload, label = "Upload CV" }) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <div className="flex items-center space-x-4">
+        {currentCV && (
+          <div 
+            className="flex items-center space-x-2 p-2 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
+            onClick={() => handleCVDownload(currentCV)}
+          >
+            <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
+              <span className="text-white text-xs font-bold">PDF</span>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-blue-800">{currentCV.name}</p>
+              <p className="text-xs text-blue-600">{(currentCV.size / 1024).toFixed(1)} KB • Click to download</p>
+            </div>
+          </div>
+        )}
+        <div className="flex-1">
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={(e) => onCVUpload(e.target.files[0])}
+            className="hidden"
+            id="cv-upload"
+          />
+          <label
+            htmlFor="cv-upload"
+            className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Choose CV (PDF)
+          </label>
+          <p className="text-xs text-gray-500 mt-1">PDF files only, up to 5MB</p>
+        </div>
+      </div>
+    </div>
+  );
 
   const ImageUploadSection = ({ currentImage, onImageUpload, label = "Employee Photo" }) => (
     <div>
@@ -336,7 +413,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
         {/* Add Employee Modal */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Add New Employee</h3>
                 <button 
@@ -347,12 +424,19 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 </button>
               </div>
               
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <ImageUploadSection 
                   currentImage={newEmployee.image}
                   onImageUpload={(file) => handleImageUpload(file, false)}
                 />
 
+                <CVUploadSection 
+                  currentCV={newEmployee.cv}
+                  onCVUpload={(file) => handleCVUpload(file, false)}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
@@ -469,7 +553,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
         {/* Edit Employee Modal */}
         {showEditForm && selectedEmployee && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Edit Employee</h3>
                 <button 
@@ -480,12 +564,19 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 </button>
               </div>
               
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <ImageUploadSection 
                   currentImage={selectedEmployee.image}
                   onImageUpload={(file) => handleImageUpload(file, true)}
                 />
 
+                <CVUploadSection 
+                  currentCV={selectedEmployee.cv}
+                  onCVUpload={(file) => handleCVUpload(file, true)}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
@@ -651,6 +742,18 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <span className="text-sm font-medium text-gray-500">Salary:</span>
                   <span className="text-sm text-gray-900 font-medium">{selectedEmployee.salary}</span>
                 </div>
+                {selectedEmployee.cv && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-gray-500">CV:</span>
+                    <button
+                      onClick={() => handleCVDownload(selectedEmployee.cv)}
+                      className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                    >
+                      <span>📄 {selectedEmployee.cv.name}</span>
+                      <span className="text-xs">(Download)</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="mt-6">

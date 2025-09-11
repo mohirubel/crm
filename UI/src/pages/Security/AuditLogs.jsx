@@ -514,7 +514,7 @@ const AuditLogs = () => {
         </div>
 
         {/* Pagination */}
-        {filteredLogs.length > 0 && (
+        {/* {filteredLogs.length > 0 && (
           <div className="mt-6 flex items-center justify-between">
             <div className="flex-1 flex justify-between sm:hidden">
               <Button variant="outline">Previous</Button>
@@ -538,7 +538,7 @@ const AuditLogs = () => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         
         {/* Details Modal */}
         {isModalOpen && selectedLog && (
