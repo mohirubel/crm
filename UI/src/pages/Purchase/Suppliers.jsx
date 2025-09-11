@@ -148,7 +148,7 @@ const Suppliers = () => {
           <h2 className="text-3xl font-bold tracking-tight">Suppliers</h2>
           <p className="text-muted-foreground">Manage supplier information</p>
         </div>
-        <Button variant="outline" onClick={handleOpenAddModal}>
+        <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Supplier</span>
         </Button>
       </div>
@@ -193,34 +193,24 @@ const Suppliers = () => {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Supplier ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Phone
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Actions
-                  </th>
+                  <th className="px-4 py-2 text-left">Supplier ID</th>
+                  <th className="px-4 py-2 text-left">Name</th>
+                  <th className="px-4 py-2 text-left">Phone</th>
+                  <th className="px-4 py-2 text-left">Email</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredSuppliers.map((supplier) => (
                   <tr key={supplier.id}>
-                    <td className="px-6 py-4">{supplier.id}</td>
-                    <td className="px-6 py-4">{supplier.name}</td>
-                    <td className="px-6 py-4">{supplier.phone}</td>
-                    <td className="px-6 py-4">{supplier.email}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">{supplier.id}</td>
+                    <td className="px-4 py-2">{supplier.name}</td>
+                    <td className="px-4 py-2">{supplier.phone}</td>
+                    <td className="px-4 py-2">{supplier.email}</td>
+                    <td className="px-4 py-2">
                       <div className="flex space-x-2">
                         <Button
                           size="sm"
@@ -251,7 +241,7 @@ const Suppliers = () => {
         </CardContent>
       </Card>
 
-            {/* Add/Edit Modal */}
+      {/* Add/Edit Modal */}
       <Dialog
         open={isAddModalOpen || isEditModalOpen}
         onOpenChange={(val) => {
@@ -345,7 +335,10 @@ const Suppliers = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteSupplier}>

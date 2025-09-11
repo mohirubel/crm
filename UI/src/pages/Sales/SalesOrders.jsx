@@ -200,7 +200,7 @@ const SalesOrders = () => {
           <h2 className="text-3xl font-bold tracking-tight">Sales Orders</h2>
           <p className="text-muted-foreground">Manage customer sales orders</p>
         </div>
-        <Button variant="outline" onClick={handleOpenAddModal}>
+        <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Order</span>
         </Button>
       </div>
@@ -249,7 +249,7 @@ const SalesOrders = () => {
             <div>
               <Label>Credit Limit</Label>
         <select
-          className="border rounded p-2"
+          className="border rounded p-2 w-full"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
@@ -277,27 +277,27 @@ const SalesOrders = () => {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Order No</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Customer</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Total</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Actions</th>
+                  <th className="px-4 py-2 text-left">Order No</th>
+                  <th className="px-4 py-2 text-left">Customer</th>
+                  <th className="px-4 py-2 text-left">Date</th>
+                  <th className="px-4 py-2 text-left">Status</th>
+                  <th className="px-4 py-2 text-left">Total</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredOrders.length > 0 ? (
                   filteredOrders.map((order) => (
                     <tr key={order.id}>
-                      <td className="px-6 py-4">{order.orderNo}</td>
-                      <td className="px-6 py-4">{order.customer}</td>
-                      <td className="px-6 py-4">{order.date}</td>
-                      <td className="px-6 py-4">{order.status}</td>
-                      <td className="px-6 py-4">${order.total}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-2">{order.orderNo}</td>
+                      <td className="px-4 py-2">{order.customer}</td>
+                      <td className="px-4 py-2">{order.date}</td>
+                      <td className="px-4 py-2">{order.status}</td>
+                      <td className="px-4 py-2">${order.total}</td>
+                      <td className="px-4 py-2">
                         <div className="flex space-x-2">
                           <Button size="sm" variant="outline" onClick={() => openEditModal(order)}>
                             <Pencil className="h-4 w-4" />

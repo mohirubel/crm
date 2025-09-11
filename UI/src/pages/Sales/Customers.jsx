@@ -155,7 +155,6 @@ const Customers = () => {
           </p>
         </div>
         <Button
-          variant="outline"
           onClick={() => {
             resetForm();
             setIsAddModalOpen(true);
@@ -221,22 +220,22 @@ const Customers = () => {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  <th className="px-4 py-2 text-left">
                     ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  <th className="px-4 py-2 text-left">
                     Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  <th className="px-4 py-2 text-left">
                     Phone
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  <th className="px-4 py-2 text-left">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  <th className="px-4 py-2 text-left">
                     Actions
                   </th>
                 </tr>
@@ -244,11 +243,11 @@ const Customers = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredCustomers.map((c) => (
                   <tr key={c.id}>
-                    <td className="px-6 py-4">{c.id}</td>
-                    <td className="px-6 py-4 font-medium">{c.name}</td>
-                    <td className="px-6 py-4">{c.phone}</td>
-                    <td className="px-6 py-4">{c.email}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">{c.id}</td>
+                    <td className="px-4 py-2">{c.name}</td>
+                    <td className="px-4 py-2">{c.phone}</td>
+                    <td className="px-4 py-2">{c.email}</td>
+                    <td className="px-4 py-2">
                       <div className="flex space-x-2">
                         <Button
                           size="sm"

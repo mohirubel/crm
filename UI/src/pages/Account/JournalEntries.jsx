@@ -186,28 +186,28 @@ const JournalEntries = () => {
           <CardDescription>Manage journal entries</CardDescription>
         </CardHeader>
         <CardContent>
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 text-sm border">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium">Entry No</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Debit</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Credit</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Narration</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Actions</th>
+                <th className="px-4 py-2 text-left">Entry No</th>
+                <th className="px-4 py-2 text-left">Date</th>
+                <th className="px-4 py-2 text-left">Debit</th>
+                <th className="px-4 py-2 text-left">Credit</th>
+                <th className="px-4 py-2 text-left">Amount</th>
+                <th className="px-4 py-2 text-left">Narration</th>
+                <th className="px-4 py-2 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredEntries.map((entry) => (
                 <tr key={entry.id}>
-                  <td className="px-6 py-4">{entry.entryNo}</td>
-                  <td className="px-6 py-4">{entry.date}</td>
-                  <td className="px-6 py-4">{entry.debit}</td>
-                  <td className="px-6 py-4">{entry.credit}</td>
-                  <td className="px-6 py-4">{entry.amount}</td>
-                  <td className="px-6 py-4">{entry.narration}</td>
-                  <td className="px-6 py-4 flex gap-2">
+                  <td className="px-4 py-2">{entry.entryNo}</td>
+                  <td className="px-4 py-2">{entry.date}</td>
+                  <td className="px-4 py-2">{entry.debit}</td>
+                  <td className="px-4 py-2">{entry.credit}</td>
+                  <td className="px-4 py-2">{entry.amount}</td>
+                  <td className="px-4 py-2">{entry.narration}</td>
+                  <td className="px-4 py-2 flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => handleEdit(entry)}>
                       <Pencil className="h-4 w-4" />
                     </Button>

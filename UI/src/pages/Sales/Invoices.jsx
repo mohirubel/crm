@@ -207,7 +207,7 @@ const Invoices = () => {
             Manage sales invoices and payments
           </p>
         </div>
-        <Button variant="outline" onClick={handleOpenAddModal}>
+        <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" />
           <span>Add Invoice</span>
         </Button>
@@ -253,25 +253,25 @@ const Invoices = () => {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
+                  <th className="px-4 py-2 text-left">
                     Invoice No
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
+                  <th className="px-4 py-2 text-left">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
+                  <th className="px-4 py-2 text-left">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
+                  <th className="px-4 py-2 text-left">
                     Amount
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
+                  <th className="px-4 py-2 text-left">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
+                  <th className="px-4 py-2 text-left">
                     Actions
                   </th>
                 </tr>
@@ -279,11 +279,11 @@ const Invoices = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredInvoices.map((inv) => (
                   <tr key={inv.id}>
-                    <td className="px-6 py-4">{inv.invoiceNo}</td>
-                    <td className="px-6 py-4">{inv.customer}</td>
-                    <td className="px-6 py-4">{inv.date}</td>
-                    <td className="px-6 py-4">${inv.amount}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">{inv.invoiceNo}</td>
+                    <td className="px-4 py-2">{inv.customer}</td>
+                    <td className="px-4 py-2">{inv.date}</td>
+                    <td className="px-4 py-2">${inv.amount}</td>
+                    <td className="px-4 py-2">
                       <span
                         className={`px-2 py-1 rounded text-xs ${
                           inv.status === "Paid"

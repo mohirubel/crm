@@ -175,7 +175,7 @@ const GoodsReceiving = () => {
             Manage incoming goods and supplier deliveries
           </p>
         </div>
-        <Button variant="outline" onClick={() => setIsAddModalOpen(true)}>
+        <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="h-4 w-4" /> <span>Add GRN</span>
         </Button>
       </div>
@@ -231,25 +231,25 @@ const GoodsReceiving = () => {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">GRN No</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Supplier</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Items</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">Actions</th>
+                  <th className="px-4 py-2 text-left">GRN No</th>
+                  <th className="px-4 py-2 text-left">Supplier</th>
+                  <th className="px-4 py-2 text-left">Date</th>
+                  <th className="px-4 py-2 text-left">Items</th>
+                  <th className="px-4 py-2 text-left">Status</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredGRNs.map((grn) => (
                   <tr key={grn.id}>
-                    <td className="px-6 py-4">{grn.grnNo}</td>
-                    <td className="px-6 py-4">{grn.supplier}</td>
-                    <td className="px-6 py-4">{grn.date}</td>
-                    <td className="px-6 py-4">{grn.items}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">{grn.grnNo}</td>
+                    <td className="px-4 py-2">{grn.supplier}</td>
+                    <td className="px-4 py-2">{grn.date}</td>
+                    <td className="px-4 py-2">{grn.items}</td>
+                    <td className="px-4 py-2">
                       <span
                         className={`px-2 py-1 rounded-full text-xs ${
                           grn.status === "Completed"

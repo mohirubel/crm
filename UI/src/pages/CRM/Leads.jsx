@@ -146,7 +146,6 @@ const Leads = () => {
             <div>
               <Button
                 variant="outline"
-                className="w-full"
                 onClick={handleClearFilters}
               >
                 Clear Filters

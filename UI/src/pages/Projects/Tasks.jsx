@@ -169,7 +169,7 @@ const Tasks = () => {
             </Select>
           </div>
           <div className="flex items-end">
-            <Button variant="outline" onClick={resetFilters} className="w-full">
+            <Button variant="outline" onClick={resetFilters}>
               Clear Filters
             </Button>
           </div>
@@ -183,7 +183,7 @@ const Tasks = () => {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-2 text-left">ID</th>

@@ -103,9 +103,7 @@ const Warehouses = () => {
 
   // Confirm delete
   const handleDeleteWarehouse = () => {
-    setWarehouses((prev) =>
-      prev.filter((w) => w.id !== selectedWarehouse.id)
-    );
+    setWarehouses((prev) => prev.filter((w) => w.id !== selectedWarehouse.id));
     setIsDeleteModalOpen(false);
     setSelectedWarehouse(null);
   };
@@ -143,7 +141,6 @@ const Warehouses = () => {
           </p>
         </div>
         <Button
-          variant="outline"
           onClick={() => {
             resetForm();
             setIsAddModalOpen(true);
@@ -194,34 +191,24 @@ const Warehouses = () => {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Location
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Contact
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Actions
-                  </th>
+                  <th className="px-4 py-2 text-left">ID</th>
+                  <th className="px-4 py-2 text-left">Name</th>
+                  <th className="px-4 py-2 text-left">Location</th>
+                  <th className="px-4 py-2 text-left">Contact</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredWarehouses.map((wh) => (
                   <tr key={wh.id}>
-                    <td className="px-6 py-4">{wh.id}</td>
-                    <td className="px-6 py-4 font-medium">{wh.name}</td>
-                    <td className="px-6 py-4">{wh.address}</td>
-                    <td className="px-6 py-4">{wh.contact}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">{wh.id}</td>
+                    <td className="px-4 py-2 font-medium">{wh.name}</td>
+                    <td className="px-4 py-2">{wh.address}</td>
+                    <td className="px-4 py-2">{wh.contact}</td>
+                    <td className="px-4 py-2">
                       <div className="flex space-x-2">
                         <Button
                           size="sm"
@@ -340,14 +327,15 @@ const Warehouses = () => {
             <DialogTitle>Delete Warehouse</DialogTitle>
             <DialogDescription>
               Are you sure you want to delete{" "}
-              <span className="font-bold">
-                {selectedWarehouse?.name}
-              </span>
-              ? This action cannot be undone.
+              <span className="font-bold">{selectedWarehouse?.name}</span>? This
+              action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteWarehouse}>

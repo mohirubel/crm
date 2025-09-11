@@ -99,7 +99,7 @@ const PaymentsReceipts = () => {
           <CardDescription>Search payments or filter by type/date</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
               <Label>Search</Label>
               <div className="relative">
@@ -128,18 +128,20 @@ const PaymentsReceipts = () => {
 
             <div>
               <Label>From Date</Label>
-              <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+              <Input className="w-auto" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
             </div>
 
             <div>
               <Label>To Date</Label>
-              <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+              <Input className="w-auto" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
             </div>
-          </div>
 
-          <div className="mt-4">
+             <div className="flex justify-start items-end">
             <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
           </div>
+          </div>
+
+         
         </CardContent>
       </Card>
 
@@ -150,28 +152,28 @@ const PaymentsReceipts = () => {
           <CardDescription>Manage payments and receipts</CardDescription>
         </CardHeader>
         <CardContent>
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 text-sm border">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium">Payment ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Ref No</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Notes</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Actions</th>
+                <th className="px-4 py-2 text-left">Payment ID</th>
+                <th className="px-4 py-2 text-left">Type</th>
+                <th className="px-4 py-2 text-left">Amount</th>
+                <th className="px-4 py-2 text-left">Date</th>
+                <th className="px-4 py-2 text-left">Ref No</th>
+                <th className="px-4 py-2 text-left">Notes</th>
+                <th className="px-4 py-2 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredPayments.map((p) => (
                 <tr key={p.id}>
-                  <td className="px-6 py-4">{p.paymentId}</td>
-                  <td className="px-6 py-4">{p.type}</td>
-                  <td className="px-6 py-4">{p.amount}</td>
-                  <td className="px-6 py-4">{p.date}</td>
-                  <td className="px-6 py-4">{p.refInvoice}</td>
-                  <td className="px-6 py-4">{p.notes}</td>
-                  <td className="px-6 py-4 flex gap-2">
+                  <td className="px-4 py-2">{p.paymentId}</td>
+                  <td className="px-4 py-2">{p.type}</td>
+                  <td className="px-4 py-2">{p.amount}</td>
+                  <td className="px-4 py-2">{p.date}</td>
+                  <td className="px-4 py-2">{p.refInvoice}</td>
+                  <td className="px-4 py-2">{p.notes}</td>
+                  <td className="px-4 py-2 flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => { setSelected(p); setFormData(p); setIsModalOpen(true); }}>
                       <Pencil className="h-4 w-4" />
                     </Button>

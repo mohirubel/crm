@@ -237,7 +237,7 @@ const CurrentStock = () => {
           </p>
         </div>
         <div className="flex space-x-2">
-          <Button variant="outline" onClick={() => setIsAddProductModalOpen(true)}>
+          <Button onClick={() => setIsAddProductModalOpen(true)}>
             <Plus className="h-4 w-4" />
             <span>Add Product</span>
           </Button>
