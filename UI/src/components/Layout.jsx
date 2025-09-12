@@ -100,9 +100,9 @@ const Layout = () => {
     sales: {
       icon: ShoppingCart,
       label: "Sales",
-      rootPath: "/sales",
+      rootPath: "/customers",
       submenus: [
-        { path: "/sales", label: "Sales" },
+        // { path: "/sales", label: "Sales" },
         { path: "/customers", label: "Customers" },
         { path: "/sales-orders", label: "Sales Orders" },
         { path: "/invoices", label: "Invoices" },
@@ -121,12 +121,11 @@ const Layout = () => {
     //   ],
     // },
     purchase: {
-      path: "/purchase",
       icon: ShoppingCart,
       label: "Purchase",
-      rootPath: "/purchase",
+      rootPath: "/suppliers",
       submenus: [
-        { path: "/purchase", label: "Products Stock" },
+        // { path: "/purchase", label: "Products Stock" },
         { path: "/suppliers", label: "Suppliers" },
         { path: "/purchase-orders", label: "Purchase Orders" },
         { path: "/goods-receiving", label: "Goods Receiving" },

@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   customer: "",
@@ -30,30 +30,82 @@ const INITIAL_FORM = {
 };
 
 const SalesOrders = () => {
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      orderNo: "SO-001",
-      customer: "Rahim Uddin",
-      date: "2025-09-01",
-      status: "Completed",
-      total: 5000,
-      items: [{ item: "Product A", qty: 2, price: 2000 }],
-      discount: 0,
-      tax: 500,
-    },
-    {
-      id: 2,
-      orderNo: "SO-002",
-      customer: "Karim Ahmed",
-      date: "2025-09-03",
-      status: "Pending",
-      total: 8000,
-      items: [{ item: "Product B", qty: 4, price: 2000 }],
-      discount: 0,
-      tax: 0,
-    },
-  ]);
+ const [orders, setOrders] = useState([
+  {
+    id: 1,
+    orderNo: "SO-001",
+    customer: "Rahim Uddin",
+    date: "2025-09-01",
+    status: "Completed",
+    total: 5000,
+    items: [{ item: "Product A", qty: 2, price: 2000 }],
+    discount: 0,
+    tax: 500,
+  },
+  {
+    id: 2,
+    orderNo: "SO-002",
+    customer: "Karim Ahmed",
+    date: "2025-09-03",
+    status: "Pending",
+    total: 8000,
+    items: [{ item: "Product B", qty: 4, price: 2000 }],
+    discount: 0,
+    tax: 0,
+  },
+  {
+    id: 3,
+    orderNo: "SO-003",
+    customer: "Sumaiya Akter",
+    date: "2025-09-05",
+    status: "Completed",
+    total: 12000,
+    items: [
+      { item: "Product C", qty: 3, price: 3000 },
+      { item: "Product A", qty: 1, price: 3000 },
+    ],
+    discount: 500,
+    tax: 800,
+  },
+  {
+    id: 4,
+    orderNo: "SO-004",
+    customer: "Imran Hossain",
+    date: "2025-09-07",
+    status: "Cancelled",
+    total: 4000,
+    items: [{ item: "Product D", qty: 2, price: 2000 }],
+    discount: 0,
+    tax: 0,
+  },
+  {
+    id: 5,
+    orderNo: "SO-005",
+    customer: "Nusrat Jahan",
+    date: "2025-09-09",
+    status: "Completed",
+    total: 15000,
+    items: [
+      { item: "Product E", qty: 5, price: 2500 },
+    ],
+    discount: 1000,
+    tax: 1200,
+  },
+  {
+    id: 6,
+    orderNo: "SO-006",
+    customer: "Abdullah Al Mamun",
+    date: "2025-09-11",
+    status: "Pending",
+    total: 6000,
+    items: [
+      { item: "Product F", qty: 2, price: 3000 },
+    ],
+    discount: 0,
+    tax: 0,
+  },
+]);
+
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -193,47 +245,25 @@ const SalesOrders = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Sales Orders</h2>
-          <p className="text-muted-foreground">Manage customer sales orders</p>
+          <h2 className="text-xl font-semibold tracking-tight uppercase">Sales Orders</h2>
         </div>
         <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Order</span>
         </Button>
       </div>
 
-      {/* Search & Filter */}
-      {/* <div className="flex flex-col md:flex-row gap-4 items-center">
-        <Input
-          placeholder="Search by customer or order no..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
-        />
-        <select
-          className="border rounded p-2"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="All">All Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Completed">Completed</option>
-        </select>
-      </div> */}
 
             <Card>
         <CardHeader>
-          <CardTitle>Search & Filter</CardTitle>
-          <CardDescription>Find customers easily</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search Input */}
             <div>
-              <Label>Search</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -247,7 +277,6 @@ const SalesOrders = () => {
 
             {/* Credit Limit Filter */}
             <div>
-              <Label>Credit Limit</Label>
         <select
           className="border rounded p-2 w-full"
           value={statusFilter}
@@ -261,8 +290,8 @@ const SalesOrders = () => {
 
             {/* Clear Filters */}
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Filters
+              <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={clearFilters}>
+               <RefreshCcw className="h-4 w-4" /> Clear Filters
               </Button>
             </div>
           </div>
@@ -271,10 +300,6 @@ const SalesOrders = () => {
 
       {/* Orders Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Orders</CardTitle>
-          <CardDescription>All customer orders</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
@@ -324,126 +349,142 @@ const SalesOrders = () => {
 
       {/* Add/Edit Modal */}
       <Dialog
-        open={isAddModalOpen || isEditModalOpen}
-        onOpenChange={(val) => {
-          if (!val) {
-            setIsAddModalOpen(false);
-            setIsEditModalOpen(false);
-            resetForm();
-          }
+  open={isAddModalOpen || isEditModalOpen}
+  onOpenChange={(val) => {
+    if (!val) {
+      setIsAddModalOpen(false);
+      setIsEditModalOpen(false);
+      resetForm();
+    }
+  }}
+>
+  <DialogContent className="max-w-4xl">
+    <DialogHeader>
+      <DialogTitle>{isEditModalOpen ? "Edit Order" : "Add New Order"}</DialogTitle>
+      <DialogDescription>
+        {isEditModalOpen
+          ? "Update order details."
+          : "Enter details to create a new order."}
+      </DialogDescription>
+    </DialogHeader>
+
+    {/* Two column grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 py-4">
+      <div>
+        <Label>Customer</Label>
+        <Input
+          className="mb-2"
+          value={formData.customer}
+          onChange={(e) => handleInputChange("customer", e.target.value)}
+        />
+      </div>
+
+      <div>
+        <Label>Date</Label>
+        <Input
+          className="mb-2"
+          type="date"
+          value={formData.date}
+          onChange={(e) => handleInputChange("date", e.target.value)}
+        />
+      </div>
+
+      {/* Full-width Items Section */}
+      <div className="md:col-span-2">
+        <Label>Items</Label>
+        {formData.items.map((it, idx) => (
+          <div key={idx} className="flex flex-col md:flex-row gap-2 mb-2">
+            <Input
+              className="mb-2 flex-1"
+              placeholder="Item"
+              value={it.item}
+              onChange={(e) => handleItemChange(idx, "item", e.target.value)}
+            />
+            <Input
+              className="mb-2 w-28"
+              type="number"
+              placeholder="Qty"
+              value={it.qty}
+              onChange={(e) => handleItemChange(idx, "qty", e.target.value)}
+            />
+            <Input
+              className="mb-2 w-32"
+              type="number"
+              placeholder="Price"
+              value={it.price}
+              onChange={(e) => handleItemChange(idx, "price", e.target.value)}
+            />
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => removeItemRow(idx)}
+            >
+              Remove
+            </Button>
+          </div>
+        ))}
+        <Button className="mb-2" variant="outline" size="sm" onClick={addItemRow}>
+          + Add Item
+        </Button>
+      </div>
+
+      <div>
+        <Label>Discount</Label>
+        <Input
+          className="mb-2"
+          type="number"
+          value={formData.discount}
+          onChange={(e) => handleInputChange("discount", e.target.value)}
+        />
+      </div>
+
+      <div>
+        <Label>Tax</Label>
+        <Input
+          className="mb-2"
+          type="number"
+          value={formData.tax}
+          onChange={(e) => handleInputChange("tax", e.target.value)}
+        />
+      </div>
+
+      <div>
+        <Label>Total</Label>
+        <Input className="mb-2" type="number" value={formData.total} readOnly />
+      </div>
+
+      <div>
+        <Label>Status</Label>
+        <select
+          className="border rounded p-2 w-full mb-2"
+          value={formData.status}
+          onChange={(e) => handleInputChange("status", e.target.value)}
+        >
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+    </div>
+
+    <DialogFooter>
+      <Button
+        variant="outline"
+        onClick={() => {
+          setIsAddModalOpen(false);
+          setIsEditModalOpen(false);
+          resetForm();
         }}
       >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{isEditModalOpen ? "Edit Order" : "Add New Order"}</DialogTitle>
-            <DialogDescription>
-              {isEditModalOpen
-                ? "Update order details."
-                : "Enter details to create a new order."}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div>
-              <Label>Customer</Label>
-              <Input
-                value={formData.customer}
-                onChange={(e) => handleInputChange("customer", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Date</Label>
-              <Input
-                type="date"
-                value={formData.date}
-                onChange={(e) => handleInputChange("date", e.target.value)}
-              />
-            </div>
+        Cancel
+      </Button>
+      <Button onClick={isEditModalOpen ? handleEditOrder : handleAddOrder}>
+        {isEditModalOpen ? "Save Changes" : "Add Order"}
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
 
-            {/* Items */}
-            <div>
-              <Label>Items</Label>
-              {formData.items.map((it, idx) => (
-                <div key={idx} className="flex gap-2 mb-2">
-                  <Input
-                    placeholder="Item"
-                    value={it.item}
-                    onChange={(e) => handleItemChange(idx, "item", e.target.value)}
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Qty"
-                    value={it.qty}
-                    onChange={(e) => handleItemChange(idx, "qty", e.target.value)}
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Price"
-                    value={it.price}
-                    onChange={(e) => handleItemChange(idx, "price", e.target.value)}
-                  />
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => removeItemRow(idx)}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              ))}
-              <Button variant="outline" size="sm" onClick={addItemRow}>
-                + Add Item
-              </Button>
-            </div>
 
-            <div>
-              <Label>Discount</Label>
-              <Input
-                type="number"
-                value={formData.discount}
-                onChange={(e) => handleInputChange("discount", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Tax</Label>
-              <Input
-                type="number"
-                value={formData.tax}
-                onChange={(e) => handleInputChange("tax", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Total</Label>
-              <Input type="number" value={formData.total} readOnly />
-            </div>
-            <div>
-              <Label>Status</Label>
-              <select
-                className="border rounded p-2 w-full"
-                value={formData.status}
-                onChange={(e) => handleInputChange("status", e.target.value)}
-              >
-                <option value="Pending">Pending</option>
-                <option value="Completed">Completed</option>
-              </select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsAddModalOpen(false);
-                setIsEditModalOpen(false);
-                resetForm();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button onClick={isEditModalOpen ? handleEditOrder : handleAddOrder}>
-              {isEditModalOpen ? "Save Changes" : "Add Order"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Delete Modal */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>

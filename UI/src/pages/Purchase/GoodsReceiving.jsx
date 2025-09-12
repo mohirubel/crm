@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, PackageCheck, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, PackageCheck, Search, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   supplier: "",
@@ -38,29 +38,63 @@ const INITIAL_FORM = {
 
 const GoodsReceiving = () => {
   const [grns, setGrns] = useState([
-    {
-      id: 1,
-      grnNo: "GRN-001",
-      supplier: "ABC Supplies Ltd.",
-      date: "2025-09-05",
-      items: "Laptop, Mouse",
-      qty: 12,
-      notes: "Delivered in good condition",
-      status: "Completed",
-      linkedPO: "PO-101",
-    },
-    {
-      id: 2,
-      grnNo: "GRN-002",
-      supplier: "XYZ Traders",
-      date: "2025-09-07",
-      items: "Office Chairs",
-      qty: 20,
-      notes: "Minor scratches",
-      status: "Pending",
-      linkedPO: "PO-102",
-    },
-  ]);
+  {
+    id: 1,
+    grnNo: "GRN-001",
+    supplier: "ABC Supplies Ltd.",
+    date: "2025-09-05",
+    items: "Laptop, Mouse",
+    qty: 12,
+    notes: "Delivered in good condition",
+    status: "Completed",
+    linkedPO: "PO-101",
+  },
+  {
+    id: 2,
+    grnNo: "GRN-002",
+    supplier: "XYZ Traders",
+    date: "2025-09-07",
+    items: "Office Chairs",
+    qty: 20,
+    notes: "Minor scratches",
+    status: "Pending",
+    linkedPO: "PO-102",
+  },
+  {
+    id: 3,
+    grnNo: "GRN-003",
+    supplier: "Global Importers",
+    date: "2025-09-08",
+    items: "Printers",
+    qty: 5,
+    notes: "Packed securely",
+    status: "Completed",
+    linkedPO: "PO-103",
+  },
+  {
+    id: 4,
+    grnNo: "GRN-004",
+    supplier: "Delta Distributors",
+    date: "2025-09-09",
+    items: "Desks",
+    qty: 15,
+    notes: "2 desks slightly damaged",
+    status: "Pending",
+    linkedPO: "PO-104",
+  },
+  {
+    id: 5,
+    grnNo: "GRN-005",
+    supplier: "Sunrise Enterprises",
+    date: "2025-09-10",
+    items: "Projectors",
+    qty: 3,
+    notes: "Delivered late",
+    status: "Completed",
+    linkedPO: "PO-105",
+  }
+]);
+
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -166,14 +200,11 @@ const GoodsReceiving = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Goods Receiving</h2>
-          <p className="text-muted-foreground">
-            Manage incoming goods and supplier deliveries
-          </p>
+          <h2 className="text-xl font-semibold tracking-tight uppercase">Goods Receiving</h2>
         </div>
         <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="h-4 w-4" /> <span>Add GRN</span>
@@ -182,14 +213,9 @@ const GoodsReceiving = () => {
 
       {/* 🔍 Search & Filter */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter GRNs</CardTitle>
-          <CardDescription>Search by GRN No, Supplier, Date, or Items</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <Label htmlFor="search">Search</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -202,7 +228,6 @@ const GoodsReceiving = () => {
               </div>
             </div>
             <div>
-              <Label>Status</Label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Status" />
@@ -215,8 +240,8 @@ const GoodsReceiving = () => {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Filters
+              <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={clearFilters}>
+               <RefreshCcw className="h-4 w-4" /> Clear Filters
               </Button>
             </div>
           </div>
@@ -225,10 +250,6 @@ const GoodsReceiving = () => {
 
       {/* Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Goods Receiving Notes</CardTitle>
-          <CardDescription>All recorded GRNs</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
@@ -295,100 +316,107 @@ const GoodsReceiving = () => {
 
       {/* Add/Edit Modal */}
       <Dialog
-        open={isAddModalOpen || isEditModalOpen}
-        onOpenChange={(val) => {
-          if (!val) {
-            setIsAddModalOpen(false);
-            setIsEditModalOpen(false);
-            resetForm();
-          }
+  open={isAddModalOpen || isEditModalOpen}
+  onOpenChange={(val) => {
+    if (!val) {
+      setIsAddModalOpen(false);
+      setIsEditModalOpen(false);
+      resetForm();
+    }
+  }}
+>
+  <DialogContent className="max-w-2xl">
+    <DialogHeader>
+      <DialogTitle>
+        {isEditModalOpen ? "Edit GRN" : "Add Goods Receiving Note"}
+      </DialogTitle>
+      <DialogDescription>
+        {isEditModalOpen
+          ? "Update goods receiving details."
+          : "Enter details for a new GRN."}
+      </DialogDescription>
+    </DialogHeader>
+
+    {/* Two Column Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+      <div>
+        <Label>Supplier</Label>
+        <Input
+          value={formData.supplier}
+          onChange={(e) => handleInputChange("supplier", e.target.value)}
+        />
+      </div>
+      <div>
+        <Label>Date</Label>
+        <Input
+          type="date"
+          value={formData.date}
+          onChange={(e) => handleInputChange("date", e.target.value)}
+        />
+      </div>
+
+      <div>
+        <Label>Linked PO</Label>
+        <Input
+          value={formData.linkedPO}
+          onChange={(e) => handleInputChange("linkedPO", e.target.value)}
+        />
+      </div>
+      <div>
+        <Label>Received Items</Label>
+        <Input
+          value={formData.receivedItems}
+          onChange={(e) => handleInputChange("receivedItems", e.target.value)}
+        />
+      </div>
+
+      <div>
+        <Label>Quantity</Label>
+        <Input
+          type="number"
+          value={formData.qty}
+          onChange={(e) => handleInputChange("qty", e.target.value)}
+        />
+      </div>
+      <div>
+        <Label>Status</Label>
+        <select
+          className="w-full border rounded-md p-2"
+          value={formData.status}
+          onChange={(e) => handleInputChange("status", e.target.value)}
+        >
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      {/* Full-width notes field */}
+      <div className="md:col-span-2">
+        <Label>Notes</Label>
+        <Input
+          value={formData.notes}
+          onChange={(e) => handleInputChange("notes", e.target.value)}
+        />
+      </div>
+    </div>
+
+    <DialogFooter>
+      <Button
+        variant="outline"
+        onClick={() => {
+          setIsAddModalOpen(false);
+          setIsEditModalOpen(false);
+          resetForm();
         }}
       >
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>
-              {isEditModalOpen ? "Edit GRN" : "Add Goods Receiving Note"}
-            </DialogTitle>
-            <DialogDescription>
-              {isEditModalOpen
-                ? "Update goods receiving details."
-                : "Enter details for a new GRN."}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div>
-              <Label>Supplier</Label>
-              <Input
-                value={formData.supplier}
-                onChange={(e) => handleInputChange("supplier", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Date</Label>
-              <Input
-                type="date"
-                value={formData.date}
-                onChange={(e) => handleInputChange("date", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Linked PO</Label>
-              <Input
-                value={formData.linkedPO}
-                onChange={(e) => handleInputChange("linkedPO", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Received Items</Label>
-              <Input
-                value={formData.receivedItems}
-                onChange={(e) => handleInputChange("receivedItems", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Quantity</Label>
-              <Input
-                type="number"
-                value={formData.qty}
-                onChange={(e) => handleInputChange("qty", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Notes</Label>
-              <Input
-                value={formData.notes}
-                onChange={(e) => handleInputChange("notes", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label>Status</Label>
-              <select
-                className="w-full border rounded-md p-2"
-                value={formData.status}
-                onChange={(e) => handleInputChange("status", e.target.value)}
-              >
-                <option value="Pending">Pending</option>
-                <option value="Completed">Completed</option>
-              </select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsAddModalOpen(false);
-                setIsEditModalOpen(false);
-                resetForm();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button onClick={isEditModalOpen ? handleEditGRN : handleAddGRN}>
-              {isEditModalOpen ? "Save Changes" : "Add GRN"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        Cancel
+      </Button>
+      <Button onClick={isEditModalOpen ? handleEditGRN : handleAddGRN}>
+        {isEditModalOpen ? "Save Changes" : "Add GRN"}
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
 
       {/* Delete Modal */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>

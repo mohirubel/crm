@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   customer: "",
@@ -21,9 +21,14 @@ const INITIAL_FORM = {
 
 const SupportTickets = () => {
   const [tickets, setTickets] = useState([
-    { id: 1, customer: "John Doe", issue: "Login not working", status: "Open", priority: "High" },
-    { id: 2, customer: "Jane Smith", issue: "Payment issue", status: "Closed", priority: "Medium" },
-  ]);
+  { id: 1, customer: "John Doe", issue: "Login not working", status: "Open", priority: "High" },
+  { id: 2, customer: "Jane Smith", issue: "Payment issue", status: "Closed", priority: "Medium" },
+  { id: 3, customer: "Rahim Uddin", issue: "Account locked", status: "In Progress", priority: "High" },
+  { id: 4, customer: "Karim Ahmed", issue: "Unable to generate report", status: "Open", priority: "Low" },
+  { id: 5, customer: "Sumaiya Akter", issue: "Error on checkout", status: "Resolved", priority: "Medium" },
+  { id: 6, customer: "Imran Hossain", issue: "Page loading slowly", status: "Open", priority: "Low" },
+]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
@@ -71,11 +76,10 @@ const SupportTickets = () => {
   }, [tickets, searchQuery, statusFilter, priorityFilter]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold">Support Tickets</h2>
-          <p className="text-muted-foreground">Track customer issues</p>
+          <h2 className="text-xl font-semibold uppercase">Support Tickets</h2>
         </div>
         <Button onClick={() => {
           resetForm()
@@ -87,23 +91,17 @@ const SupportTickets = () => {
 
       {/* 🔍 Search & Filter Section */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter</CardTitle>
-          <CardDescription>Find tickets quickly</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <Label htmlFor="search">Search</Label>
               <Input
                 id="search"
-                placeholder="Search by Ticket No, Customer, or Issue..."
+                placeholder="Search by Ticket No or Customer"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div>
-              <Label htmlFor="status">Filter by Status</Label>
               <select
                 id="status"
                 className="border p-2 rounded w-full"
@@ -118,7 +116,6 @@ const SupportTickets = () => {
               </select>
             </div>
             <div>
-              <Label htmlFor="priority">Filter by Priority</Label>
               <select
                 id="priority"
                 className="border p-2 rounded w-full"
@@ -134,6 +131,7 @@ const SupportTickets = () => {
             {/* Clear Filters Button */}
           <div className="flex justify-start items-end">
             <Button
+             className="bg-yellow-500 hover:bg-yellow-600"
               variant="outline"
               onClick={() => {
                 setSearchQuery("");
@@ -141,7 +139,7 @@ const SupportTickets = () => {
                 setPriorityFilter("All");
               }}
             >
-              Clear Filters
+             <RefreshCcw className="h-4 w-4" /> Clear Filters
             </Button>
           </div>
           </div>
@@ -197,35 +195,80 @@ const SupportTickets = () => {
 
       {/* ➕ Add/Edit Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{selected ? "Edit Ticket" : "Add Ticket"}</DialogTitle>
-            <DialogDescription>Fill in the ticket details</DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-3 py-2">
-            <Label>Customer</Label>
-            <Input value={formData.customer} onChange={(e)=>setFormData({...formData, customer: e.target.value})}/>
-            <Label>Issue</Label>
-            <Input value={formData.issue} onChange={(e)=>setFormData({...formData, issue: e.target.value})}/>
-            <Label>Issue Type</Label>
-            <Input value={formData.issueType} onChange={(e)=>setFormData({...formData, issueType: e.target.value})}/>
-            <Label>Priority</Label>
-            <select className="border p-2 rounded" value={formData.priority} onChange={(e)=>setFormData({...formData, priority: e.target.value})}>
-              <option>Low</option><option>Medium</option><option>High</option>
-            </select>
-            <Label>Assigned To</Label>
-            <Input value={formData.assignedTo} onChange={(e)=>setFormData({...formData, assignedTo: e.target.value})}/>
-            <Label>Status</Label>
-            <select className="border p-2 rounded" value={formData.status} onChange={(e)=>setFormData({...formData, status: e.target.value})}>
-              <option>Open</option><option>In Progress</option><option>Resolved</option><option>Closed</option>
-            </select>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={()=>setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave}>{selected?"Save":"Add"}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+  <DialogContent className="max-w-2xl">
+    <DialogHeader>
+      <DialogTitle>{selected ? "Edit Ticket" : "Add Ticket"}</DialogTitle>
+      <DialogDescription>Fill in the ticket details</DialogDescription>
+    </DialogHeader>
+
+    {/* Two-column grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+      <div>
+        <Label>Customer</Label>
+        <Input
+          value={formData.customer}
+          onChange={(e) => setFormData({ ...formData, customer: e.target.value })}
+        />
+      </div>
+      <div>
+        <Label>Issue</Label>
+        <Input
+          value={formData.issue}
+          onChange={(e) => setFormData({ ...formData, issue: e.target.value })}
+        />
+      </div>
+
+      <div>
+        <Label>Issue Type</Label>
+        <Input
+          value={formData.issueType}
+          onChange={(e) => setFormData({ ...formData, issueType: e.target.value })}
+        />
+      </div>
+      <div>
+        <Label>Priority</Label>
+        <select
+          className="border p-2 rounded w-full"
+          value={formData.priority}
+          onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+        >
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+
+      <div>
+        <Label>Assigned To</Label>
+        <Input
+          value={formData.assignedTo}
+          onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
+        />
+      </div>
+      <div>
+        <Label>Status</Label>
+        <select
+          className="border p-2 rounded w-full"
+          value={formData.status}
+          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+        >
+          <option>Open</option>
+          <option>In Progress</option>
+          <option>Resolved</option>
+          <option>Closed</option>
+        </select>
+      </div>
+    </div>
+
+    <DialogFooter>
+      <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+        Cancel
+      </Button>
+      <Button onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
     </div>
   );
 };

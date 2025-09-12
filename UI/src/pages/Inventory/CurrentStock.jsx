@@ -2,9 +2,6 @@ import React, { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -383,7 +380,7 @@ const CurrentStock = () => {
             </div>
             <div className="flex items-end">
               <Button
-                className="bg-yellow-500"
+                className="bg-yellow-500 hover:bg-yellow-600"
                 variant="outline"
                 onClick={clearFilters}
               >

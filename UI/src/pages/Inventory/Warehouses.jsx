@@ -2,9 +2,6 @@ import React, { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Warehouse, Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
 
 const Warehouses = () => {
   const [warehouses, setWarehouses] = useState([
@@ -42,7 +39,6 @@ const Warehouses = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -128,39 +124,34 @@ const Warehouses = () => {
     );
   }, [warehouses, searchTerm]);
 
-  const totalWarehouses = warehouses.length;
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Warehouses</h2>
-          <p className="text-muted-foreground">
-            Manage your warehouse locations and details
-          </p>
+          <h2 className="text-xl font-semibold tracking-tight uppercase">
+            Warehouses
+          </h2>
         </div>
-        <Button
-          onClick={() => {
-            resetForm();
-            setIsAddModalOpen(true);
-          }}
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add Warehouse</span>
-        </Button>
+        <div className="flex space-x-2">
+          <Button
+            className="bg-[#161717]"
+            onClick={() => {
+              resetForm();
+              setIsAddModalOpen(true);
+            }}
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add Warehouse</span>
+          </Button>
+        </div>
       </div>
 
-      {/* 🔎 Search & Filter */}
+      {/* 🔎 Search */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search Warehouses</CardTitle>
-          <CardDescription>Search by name, address, or contact</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <Label htmlFor="search">Search</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -173,8 +164,13 @@ const Warehouses = () => {
               </div>
             </div>
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Search
+              <Button
+                className="bg-yellow-500 hover:bg-yellow-600"
+                variant="outline"
+                onClick={clearFilters}
+              >
+                <RefreshCcw className="h-4 w-4" />
+                Clear Filters
               </Button>
             </div>
           </div>
@@ -183,12 +179,6 @@ const Warehouses = () => {
 
       {/* Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Warehouse List</CardTitle>
-          <CardDescription>
-            All warehouse locations and contacts
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
@@ -238,31 +228,29 @@ const Warehouses = () => {
           </div>
         </CardContent>
       </Card>
+
       {/* Add Modal */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add New Warehouse</DialogTitle>
-            <DialogDescription>
-              Create a new warehouse entry with details.
-            </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
+          <div className="grid grid-cols-1 gap-4 py-4">
+            <div className="grid">
               <Label>Name</Label>
               <Input
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
+            <div className="grid">
               <Label>Address</Label>
               <Input
                 value={formData.address}
                 onChange={(e) => handleInputChange("address", e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
+            <div className="grid">
               <Label>Contact</Label>
               <Input
                 value={formData.contact}
@@ -274,7 +262,12 @@ const Warehouses = () => {
             <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAddWarehouse}>Add Warehouse</Button>
+            <Button
+              className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-[#333] font-semibold"
+              onClick={handleAddWarehouse}
+            >
+              Add Warehouse
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -284,26 +277,23 @@ const Warehouses = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Warehouse</DialogTitle>
-            <DialogDescription>
-              Update the details of this warehouse.
-            </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
+          <div className="grid grid-cols-1 py-4 gap-4">
+            <div className="grid">
               <Label>Name</Label>
               <Input
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
+            <div className="grid">
               <Label>Address</Label>
               <Input
                 value={formData.address}
                 onChange={(e) => handleInputChange("address", e.target.value)}
               />
             </div>
-            <div className="grid gap-2">
+            <div className="grid">
               <Label>Contact</Label>
               <Input
                 value={formData.contact}

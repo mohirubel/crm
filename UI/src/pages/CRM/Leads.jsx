@@ -17,7 +17,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   name: "",
@@ -28,10 +28,14 @@ const INITIAL_FORM = {
 };
 
 const Leads = () => {
-  const [leads, setLeads] = useState([
-    { id: 1, name: "John Doe", contact: "john@example.com", status: "New" },
-    { id: 2, name: "Jane Smith", contact: "+880123456789", status: "Contacted" },
-  ]);
+const [leads, setLeads] = useState([
+  { id: 1, name: "John Doe", contact: "john@example.com", status: "New" },
+  { id: 2, name: "Jane Smith", contact: "+880123456789", status: "Contacted" },
+  { id: 3, name: "Rahim Uddin", contact: "rahim@example.com", status: "Qualified" },
+  { id: 4, name: "Karim Ahmed", contact: "+8801712345678", status: "New" },
+  { id: 5, name: "Sumaiya Akter", contact: "sumaiya@example.com", status: "Contacted" },
+  { id: 6, name: "Imran Hossain", contact: "+8801998765432", status: "Lost" },
+]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
@@ -97,11 +101,10 @@ const Leads = () => {
   }, [leads, searchQuery, statusFilter]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold">Leads</h2>
-          <p className="text-muted-foreground">Manage your customer leads</p>
+          <h2 className="text-xl font-semibold uppercase">Leads</h2>
         </div>
         <Button onClick={() => {
           resetForm();
@@ -113,14 +116,9 @@ const Leads = () => {
 
       {/* 🔍 Search & Filter Section */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter</CardTitle>
-          <CardDescription>Find leads quickly</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
-              <Label htmlFor="search">Search</Label>
               <Input
                 id="search"
                 placeholder="Search by name or contact..."
@@ -129,7 +127,6 @@ const Leads = () => {
               />
             </div>
             <div>
-              <Label htmlFor="status">Filter by Status</Label>
               <select
                 id="status"
                 className="border p-2 rounded w-full"
@@ -145,10 +142,11 @@ const Leads = () => {
             </div>
             <div>
               <Button
+               className="bg-yellow-500 hover:bg-yellow-600"
                 variant="outline"
                 onClick={handleClearFilters}
               >
-                Clear Filters
+               <RefreshCcw className="h-4 w-4" />  Clear Filters
               </Button>
             </div>
           </div>
@@ -157,10 +155,6 @@ const Leads = () => {
 
       {/* 📋 Leads Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Lead List</CardTitle>
-          <CardDescription>All captured leads</CardDescription>
-        </CardHeader>
         <CardContent>
           <table className="w-full border text-sm">
             <thead className="bg-gray-100">

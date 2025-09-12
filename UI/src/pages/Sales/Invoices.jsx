@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FileText, Plus, Pencil, Trash2, Search } from "lucide-react";
+import { FileText, Plus, Pencil, Trash2, Search, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   customer: "",
@@ -32,33 +32,76 @@ const INITIAL_FORM = {
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState([
-    {
-      id: 1,
-      invoiceNo: "INV-001",
-      customer: "Rahim Uddin",
-      date: "2025-09-01",
-      amount: 5000,
-      status: "Paid",
-      orderRef: "SO-001",
-      items: [{ item: "Product A", qty: 2, price: 2000 }],
-      tax: 500,
-      total: 5000,
-      paymentTerms: "Net 30",
-    },
-    {
-      id: 2,
-      invoiceNo: "INV-002",
-      customer: "Karim Ahmed",
-      date: "2025-09-03",
-      amount: 8000,
-      status: "Pending",
-      orderRef: "SO-002",
-      items: [{ item: "Product B", qty: 4, price: 2000 }],
-      tax: 0,
-      total: 8000,
-      paymentTerms: "Net 15",
-    },
-  ]);
+  {
+    id: 1,
+    invoiceNo: "INV-001",
+    customer: "Rahim Uddin",
+    date: "2025-09-01",
+    amount: 5000,
+    status: "Paid",
+    orderRef: "SO-001",
+    items: [{ item: "Product A", qty: 2, price: 2000 }],
+    tax: 500,
+    total: 5000,
+    paymentTerms: "Net 30",
+  },
+  {
+    id: 2,
+    invoiceNo: "INV-002",
+    customer: "Karim Ahmed",
+    date: "2025-09-03",
+    amount: 8000,
+    status: "Pending",
+    orderRef: "SO-002",
+    items: [{ item: "Product B", qty: 4, price: 2000 }],
+    tax: 0,
+    total: 8000,
+    paymentTerms: "Net 15",
+  },
+  {
+    id: 3,
+    invoiceNo: "INV-003",
+    customer: "Sumaiya Akter",
+    date: "2025-09-05",
+    amount: 12000,
+    status: "Paid",
+    orderRef: "SO-003",
+    items: [
+      { item: "Product C", qty: 3, price: 3000 },
+      { item: "Product A", qty: 1, price: 3000 },
+    ],
+    tax: 800,
+    total: 12800,
+    paymentTerms: "Net 45",
+  },
+  {
+    id: 4,
+    invoiceNo: "INV-004",
+    customer: "Imran Hossain",
+    date: "2025-09-07",
+    amount: 4000,
+    status: "Cancelled",
+    orderRef: "SO-004",
+    items: [{ item: "Product D", qty: 2, price: 2000 }],
+    tax: 0,
+    total: 4000,
+    paymentTerms: "Due on Receipt",
+  },
+  {
+    id: 5,
+    invoiceNo: "INV-005",
+    customer: "Nusrat Jahan",
+    date: "2025-09-09",
+    amount: 15000,
+    status: "Overdue",
+    orderRef: "SO-005",
+    items: [{ item: "Product E", qty: 5, price: 2500 }],
+    tax: 1200,
+    total: 16200,
+    paymentTerms: "Net 30",
+  }
+]);
+
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -198,14 +241,11 @@ const Invoices = () => {
   }, [invoices, searchTerm]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Invoices</h2>
-          <p className="text-muted-foreground">
-            Manage sales invoices and payments
-          </p>
+          <h2 className="text-xl font-semibold tracking-tight uppercase">Invoices</h2>
         </div>
         <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" />
@@ -215,16 +255,9 @@ const Invoices = () => {
 
       {/* 🔎 Search & Filter */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search Invoices</CardTitle>
-          <CardDescription>
-            Search by invoice no, customer, date, or status
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <Label htmlFor="search">Search</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -237,8 +270,8 @@ const Invoices = () => {
               </div>
             </div>
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Search
+              <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={clearFilters}>
+               <RefreshCcw className="h-4 w-4" /> Clear Search
               </Button>
             </div>
           </div>
@@ -247,10 +280,6 @@ const Invoices = () => {
 
       {/* Invoice Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Invoice List</CardTitle>
-          <CardDescription>All generated invoices</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
@@ -326,86 +355,154 @@ const Invoices = () => {
       </Card>
 
             {/* Add/Edit Modal (shared) */}
-      <Dialog
-        open={isAddModalOpen || isEditModalOpen}
-        onOpenChange={(val) => {
-          if (!val) {
-            // close both modes and reset to avoid leftover data
-            setIsAddModalOpen(false);
-            setIsEditModalOpen(false);
-            resetForm();
-          }
-        }}
-      >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{isEditModalOpen ? "Edit Invoice" : "Add New Invoice"}</DialogTitle>
-            <DialogDescription>
-              {isEditModalOpen ? "Update invoice details." : "Enter invoice details to create."}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div>
-              <Label>Customer</Label>
-              <Input value={formData.customer} onChange={(e) => handleInputChange("customer", e.target.value)} />
-            </div>
-            <div>
-              <Label>Date</Label>
-              <Input type="date" value={formData.date} onChange={(e) => handleInputChange("date", e.target.value)} />
-            </div>
-            <div>
-              <Label>Order Ref</Label>
-              <Input value={formData.orderRef} onChange={(e) => handleInputChange("orderRef", e.target.value)} />
-            </div>
+          <Dialog
+      open={isAddModalOpen || isEditModalOpen}
+      onOpenChange={(val) => {
+        if (!val) {
+          setIsAddModalOpen(false);
+          setIsEditModalOpen(false);
+          resetForm();
+        }
+      }}
+    >
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>
+            {isEditModalOpen ? "Edit Invoice" : "Add New Invoice"}
+          </DialogTitle>
+          <DialogDescription>
+            {isEditModalOpen
+              ? "Update invoice details."
+              : "Enter invoice details to create."}
+          </DialogDescription>
+        </DialogHeader>
 
-            {/* Items */}
-            <div>
-              <Label>Items</Label>
-              {formData.items.map((it, idx) => (
-                <div key={idx} className="flex gap-2 mb-2">
-                  <Input placeholder="Item" value={it.item} onChange={(e) => handleItemChange(idx, "item", e.target.value)} />
-                  <Input type="number" placeholder="Qty" value={it.qty} onChange={(e) => handleItemChange(idx, "qty", e.target.value)} />
-                  <Input type="number" placeholder="Price" value={it.price} onChange={(e) => handleItemChange(idx, "price", e.target.value)} />
-                  <Button variant="destructive" size="sm" onClick={() => removeItemRow(idx)}>
-                    Remove
-                  </Button>
-                </div>
-              ))}
-              <Button variant="outline" size="sm" onClick={addItemRow}>
-                + Add Item
-              </Button>
-            </div>
-
-            <div>
-              <Label>Tax</Label>
-              <Input type="number" value={formData.tax} onChange={(e) => handleInputChange("tax", e.target.value)} />
-            </div>
-            <div>
-              <Label>Total</Label>
-              <Input type="number" value={formData.total} readOnly />
-            </div>
-            <div>
-              <Label>Payment Terms</Label>
-              <Input value={formData.paymentTerms} onChange={(e) => handleInputChange("paymentTerms", e.target.value)} />
-            </div>
-            <div>
-              <Label>Status</Label>
-              <select className="border rounded p-2 w-full" value={formData.status} onChange={(e) => handleInputChange("status", e.target.value)}>
-                <option value="Paid">Paid</option>
-                <option value="Pending">Pending</option>
-              </select>
-            </div>
+        {/* Two column grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 py-4">
+          <div>
+            <Label>Customer</Label>
+            <Input
+              className="mb-2"
+              value={formData.customer}
+              onChange={(e) => handleInputChange("customer", e.target.value)}
+            />
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => { setIsAddModalOpen(false); setIsEditModalOpen(false); resetForm(); }}>
-              Cancel
+
+          <div>
+            <Label>Date</Label>
+            <Input
+             className="mb-2"
+              type="date"
+              value={formData.date}
+              onChange={(e) => handleInputChange("date", e.target.value)}
+            />
+          </div>
+
+          <div>
+            <Label>Order Ref</Label>
+            <Input
+              className="mb-2"
+              value={formData.orderRef}
+              onChange={(e) => handleInputChange("orderRef", e.target.value)}
+            />
+          </div>
+
+          <div>
+            <Label>Payment Terms</Label>
+            <Input
+              className="mb-2"
+              value={formData.paymentTerms}
+              onChange={(e) =>
+                handleInputChange("paymentTerms", e.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <Label>Tax</Label>
+            <Input
+              className="mb-2"
+              type="number"
+              value={formData.tax}
+              onChange={(e) => handleInputChange("tax", e.target.value)}
+            />
+          </div>
+
+          <div>
+            <Label>Total</Label>
+            <Input className="mb-2" type="number" value={formData.total} readOnly />
+          </div>
+
+          <div className="md:col-span-2">
+            <Label>Status</Label>
+            <select
+              className="border rounded p-2 w-full mb-2"
+              value={formData.status}
+              onChange={(e) => handleInputChange("status", e.target.value)}
+            >
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+
+          {/* Full width items list */}
+          <div className="md:col-span-2">
+            <Label>Items</Label>
+            {formData.items.map((it, idx) => (
+              <div key={idx} className="flex gap-2 mb-2">
+                <Input
+                  placeholder="Item"
+                  value={it.item}
+                  onChange={(e) =>
+                    handleItemChange(idx, "item", e.target.value)
+                  }
+                />
+                <Input
+                  type="number"
+                  placeholder="Qty"
+                  value={it.qty}
+                  onChange={(e) => handleItemChange(idx, "qty", e.target.value)}
+                />
+                <Input
+                  type="number"
+                  placeholder="Price"
+                  value={it.price}
+                  onChange={(e) =>
+                    handleItemChange(idx, "price", e.target.value)
+                  }
+                />
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => removeItemRow(idx)}
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline" size="sm" onClick={addItemRow}>
+              + Add Item
             </Button>
-            <Button onClick={isEditModalOpen ? handleEditInvoice : handleAddInvoice}>
-              {isEditModalOpen ? "Save Changes" : "Add Invoice"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsAddModalOpen(false);
+              setIsEditModalOpen(false);
+              resetForm();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button onClick={isEditModalOpen ? handleEditInvoice : handleAddInvoice}>
+            {isEditModalOpen ? "Save Changes" : "Add Invoice"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
 
       {/* Delete Modal */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
