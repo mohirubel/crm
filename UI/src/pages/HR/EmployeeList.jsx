@@ -184,7 +184,7 @@ const EmployeeList = () => {
   };
 
   const getStatusBadge = (status) => {
-    const baseClasses = "px-2 py-1 text-xs font-medium rounded-full";
+    const baseClasses = "px-2 py-1 text-sm font-medium rounded-md";
     if (status === 'Active') {
       return `${baseClasses} bg-green-100 text-green-800`;
     } else {
@@ -202,11 +202,11 @@ const EmployeeList = () => {
             onClick={() => handleCVDownload(currentCV)}
           >
             <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
-              <span className="text-white text-xs font-bold">PDF</span>
+              <span className="text-white text-sm font-bold">PDF</span>
             </div>
             <div>
               <p className="text-sm font-medium text-blue-800">{currentCV.name}</p>
-              <p className="text-xs text-blue-600">{(currentCV.size / 1024).toFixed(1)} KB • Click to download</p>
+              <p className="text-sm text-blue-600">{(currentCV.size / 1024).toFixed(1)} KB • Click to download</p>
             </div>
           </div>
         )}
@@ -225,7 +225,7 @@ const EmployeeList = () => {
             <Upload className="w-4 h-4 mr-2" />
             Choose CV (PDF)
           </label>
-          <p className="text-xs text-gray-500 mt-1">PDF files only, up to 5MB</p>
+          <p className="text-sm text-gray-500 mt-1">PDF files only, up to 5MB</p>
         </div>
       </div>
     </div>
@@ -259,7 +259,7 @@ const EmployeeList = () => {
             <Upload className="w-4 h-4 mr-2" />
             Choose Photo
           </label>
-          <p className="text-xs text-gray-500 mt-1">JPG, PNG, GIF up to 5MB</p>
+          <p className="text-sm text-gray-500 mt-1">JPG, PNG, GIF up to 5MB</p>
         </div>
       </div>
     </div>
@@ -269,11 +269,10 @@ const EmployeeList = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-0">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Employees</h1>
-              <p className="text-gray-600">Manage your employee records and information</p>
+              <h1 className="text-xl font-bold text-gray-900 mb-2">Employees</h1>
             </div>
             <button
               onClick={() => setShowAddForm(true)}
@@ -313,22 +312,22 @@ const EmployeeList = () => {
 
         {/* Employee List */}
         <div className="bg-white rounded-xl shadow-sm border">
-          <div className="p-6 border-b">
+          {/* <div className="p-6 border-b">
             <h2 className="text-lg font-semibold text-gray-900">Employee List</h2>
             <p className="text-gray-600 text-sm">View and manage your employee records</p>
-          </div>
+          </div> */}
 
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-2 text-left">Photo</th>
+                  <th className="px-4 py-2 text-left">Employee ID</th>
+                  <th className="px-4 py-2 text-left">Name</th>
+                  <th className="px-4 py-2 text-left">Department</th>
+                  <th className="px-4 py-2 text-left">Designation</th>
+                  <th className="px-4 py-2 text-left">Status</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -413,7 +412,7 @@ const EmployeeList = () => {
         {/* Add Employee Modal */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[85vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Add New Employee</h3>
                 <button 
@@ -422,26 +421,14 @@ const EmployeeList = () => {
                 >
                   <X className="w-5 h-5" />
                 </button>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <ImageUploadSection 
-                  currentImage={newEmployee.image}
-                  onImageUpload={(file) => handleImageUpload(file, false)}
-                />
-
-                <CVUploadSection 
-                  currentCV={newEmployee.cv}
-                  onCVUpload={(file) => handleCVUpload(file, false)}
-                />
-              </div>
+              </div>            
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.name}
                     onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -452,7 +439,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.email}
                     onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
                     placeholder="Enter email address"
@@ -463,7 +450,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.phone}
                     onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})}
                     placeholder="Enter phone number"
@@ -473,7 +460,7 @@ const EmployeeList = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.department}
                     onChange={(e) => setNewEmployee({...newEmployee, department: e.target.value})}
                   >
@@ -491,7 +478,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.designation}
                     onChange={(e) => setNewEmployee({...newEmployee, designation: e.target.value})}
                     placeholder="Enter designation"
@@ -502,7 +489,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.joiningDate}
                     onChange={(e) => setNewEmployee({...newEmployee, joiningDate: e.target.value})}
                   />
@@ -512,7 +499,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.salary}
                     onChange={(e) => setNewEmployee({...newEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -522,7 +509,7 @@ const EmployeeList = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.status}
                     onChange={(e) => setNewEmployee({...newEmployee, status: e.target.value})}
                   >
@@ -532,10 +519,22 @@ const EmployeeList = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <ImageUploadSection 
+                  currentImage={newEmployee.image}
+                  onImageUpload={(file) => handleImageUpload(file, false)}
+                />
+
+                <CVUploadSection 
+                  currentCV={newEmployee.cv}
+                  onCVUpload={(file) => handleCVUpload(file, false)}
+                />
+              </div>
+
+              <div className="text-right mt-6">
                 <button
                   onClick={handleAddEmployee}
-                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors"
+                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors mr-2"
                 >
                   Add Employee
                 </button>
@@ -553,7 +552,7 @@ const EmployeeList = () => {
         {/* Edit Employee Modal */}
         {showEditForm && selectedEmployee && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[85vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Edit Employee</h3>
                 <button 
@@ -581,7 +580,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.name}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -592,7 +591,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.email}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, email: e.target.value})}
                     placeholder="Enter email address"
@@ -603,7 +602,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.phone}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, phone: e.target.value})}
                     placeholder="Enter phone number"
@@ -613,7 +612,7 @@ const EmployeeList = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.department}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, department: e.target.value})}
                   >
@@ -631,7 +630,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.designation}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, designation: e.target.value})}
                     placeholder="Enter designation"
@@ -642,7 +641,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.joiningDate}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, joiningDate: e.target.value})}
                   />
@@ -652,7 +651,7 @@ const EmployeeList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.salary}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -662,7 +661,7 @@ const EmployeeList = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.status}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, status: e.target.value})}
                   >
@@ -672,10 +671,10 @@ const EmployeeList = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-6">
+              <div className="text-right mt-6">
                 <button
                   onClick={handleEditEmployee}
-                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors"
+                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors mr-2"
                 >
                   Save Changes
                 </button>
@@ -750,7 +749,7 @@ const EmployeeList = () => {
                       className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
                     >
                       <span>📄 {selectedEmployee.cv.name}</span>
-                      <span className="text-xs">(Download)</span>
+                      <span className="text-sm">(Download)</span>
                     </button>
                   </div>
                 )}

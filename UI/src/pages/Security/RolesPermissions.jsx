@@ -175,14 +175,14 @@ const RolesPermissions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6">
+    <div className="min-h-screen bg-gray-50">
       <div className="mx-auto ">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="mb-0">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Roles & Permissions</h1>
-              <p className="text-gray-600 mt-2">Manage user roles and their access permissions</p>
+              <h1 className="text-xl font-bold text-gray-900">Roles & Permissions</h1>
+              {/* <p className="text-gray-600 mt-2">Manage user roles and their access permissions</p> */}
             </div>
             <button
               onClick={handleAddRole}
@@ -242,19 +242,19 @@ const RolesPermissions = () => {
           {/* Desktop Table */}
           <div className="hidden md:block">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       Role ID
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       Role Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       Assigned Permissions
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-right">
                       Actions
                     </th>
                   </tr>
@@ -281,7 +281,7 @@ const RolesPermissions = () => {
                             return (
                               <span
                                 key={permission}
-                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-100 text-blue-800"
                                 title={moduleInfo?.description}
                               >
                                 <IconComponent className="w-3 h-3 mr-1" />

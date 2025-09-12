@@ -123,8 +123,8 @@ const UserList = () => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">User Management</h1>
-              <p className="text-gray-600 mt-1">Manage team members and their information</p>
+              <h1 className="text-xl font-bold text-gray-800">User Management</h1>
+              {/* <p className="text-gray-600 mt-1">Manage team members and their information</p> */}
             </div>
             <button
               onClick={openAddModal}
@@ -139,14 +139,14 @@ const UserList = () => {
         {/* Users Table */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">User</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Email</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Phone</th>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">Position</th>
-                  <th className="px-6 py-4 text-center text-sm font-medium text-gray-700">Actions</th>
+                  <th className="px-4 py-2 text-left">User</th>
+                  <th className="px-4 py-2 text-left">Email</th>
+                  <th className="px-4 py-2 text-left">Phone</th>
+                  <th className="px-4 py-2 text-left">Position</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -165,7 +165,7 @@ const UserList = () => {
                     <td className="px-6 py-4 text-gray-600">{user.email}</td>
                     <td className="px-6 py-4 text-gray-600">{user.phone}</td>
                     <td className="px-6 py-4">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-sm">
                         {user.position}
                       </span>
                     </td>

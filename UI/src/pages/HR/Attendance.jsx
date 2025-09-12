@@ -305,8 +305,7 @@ const EmployeeAttendance = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Attendance</h1>
-                <p className="text-gray-600">Track and manage employee attendance</p>
+                <h1 className="text-xl font-bold text-gray-900">Attendance</h1>
               </div>
               <div className="flex items-center gap-3">
                 <input
@@ -325,7 +324,7 @@ const EmployeeAttendance = () => {
                 >
                   Mark Attendance
                 </button>
-                <button
+                {/* <button
                   onClick={() => setSelectedView('view')}
                   className={`px-4 py-2 text-sm font-medium rounded-md ${
                     selectedView === 'view' 
@@ -334,7 +333,7 @@ const EmployeeAttendance = () => {
                   }`}
                 >
                   View Records
-                </button>
+                </button> */}
                 <button
                   onClick={() => setSelectedView('monthly')}
                   className={`px-4 py-2 text-sm font-medium rounded-md ${
@@ -352,7 +351,7 @@ const EmployeeAttendance = () => {
           {/* Stats */}
           <div className="grid grid-cols-4 gap-8 p-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+              <div className="text-xl font-bold text-gray-900">{stats.total}</div>
               <div className="text-sm text-gray-600">Total Employees</div>
             </div>
             <div className="text-center">
@@ -403,14 +402,14 @@ const EmployeeAttendance = () => {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="min-w-full divide-y divide-gray-200 text-sm border">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-4 py-2 text-left">Employee</th>
+                    <th className="px-4 py-2 text-left">Department</th>
+                    <th className="px-4 py-2 text-left">Position</th>
+                    <th className="px-4 py-2 text-center">Status</th>
+                    <th className="px-4 py-2 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -430,17 +429,17 @@ const EmployeeAttendance = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.position}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           {employeeStatus === true && (
-                            <span className="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                            <span className="inline-flex px-2 py-1 text-sm font-medium bg-green-100 text-green-800 rounded-md">
                               Present
                             </span>
                           )}
                           {employeeStatus === false && (
-                            <span className="inline-flex px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                            <span className="inline-flex px-2 py-1 text-sm font-medium bg-red-100 text-red-800 rounded-md">
                               Absent
                             </span>
                           )}
                           {employeeStatus === null && (
-                            <span className="inline-flex px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+                            <span className="inline-flex px-2 py-1 text-sm font-medium bg-gray-100 text-gray-800 rounded-md">
                               Not Marked
                             </span>
                           )}
@@ -449,7 +448,7 @@ const EmployeeAttendance = () => {
                           <div className="flex justify-center gap-2">
                             <button
                               onClick={() => markAttendance(employee.id, true)}
-                              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
                                 employeeStatus === true
                                   ? 'bg-green-600 text-white'
                                   : 'bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-700'
@@ -459,7 +458,7 @@ const EmployeeAttendance = () => {
                             </button>
                             <button
                               onClick={() => markAttendance(employee.id, false)}
-                              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                              className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
                                 employeeStatus === false
                                   ? 'bg-red-600 text-white'
                                   : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-700'
@@ -500,13 +499,13 @@ const EmployeeAttendance = () => {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="min-w-full divide-y divide-gray-200 text-sm border">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-4 py-2 text-left">Employee</th>
+                    <th className="px-4 py-2 text-left">Department</th>
+                    <th className="px-4 py-2 text-center">Status</th>
+                    <th className="px-4 py-2 text-center">Date</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -525,17 +524,17 @@ const EmployeeAttendance = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           {employeeStatus === true && (
-                            <span className="inline-flex px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                            <span className="inline-flex px-2 py-1 text-sm font-medium bg-green-100 text-green-800 rounded-md">
                               Present
                             </span>
                           )}
                           {employeeStatus === false && (
-                            <span className="inline-flex px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                            <span className="inline-flex px-2 py-1 text-sm font-medium bg-red-100 text-red-800 rounded-md">
                               Absent
                             </span>
                           )}
                           {employeeStatus === null && (
-                            <span className="inline-flex px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+                            <span className="inline-flex px-2 py-1 text-sm font-medium bg-gray-100 text-gray-800 rounded-md">
                               Not Marked
                             </span>
                           )}
@@ -581,14 +580,14 @@ const EmployeeAttendance = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="min-w-full divide-y divide-gray-200 text-sm border">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Present Days</th>
-                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Days</th>
-                      <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance</th>
+                      <th className="px-4 py-2 text-left">Employee</th>
+                      <th className="px-4 py-2 text-left">Department</th>
+                      <th className="px-4 py-2 text-center">Present Days</th>
+                      <th className="px-4 py-2 text-center">Total Days</th>
+                      <th className="px-4 py-2 text-center">Attendance</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -611,7 +610,7 @@ const EmployeeAttendance = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{employee.totalDays}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                          <span className={`inline-flex px-2 py-1 text-sm font-medium rounded-md ${
                             employee.percentage >= 90 ? 'bg-green-100 text-green-800' :
                             employee.percentage >= 75 ? 'bg-yellow-100 text-yellow-800' :
                             'bg-red-100 text-red-800'
@@ -656,13 +655,13 @@ const EmployeeAttendance = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-xs">
+                <table className="min-w-full divide-y divide-gray-200 text-sm border text-sm">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dept</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Dept</th>
                       {Object.keys(getYearlyAttendance()).map(month => (
-                        <th key={month} className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th key={month} className="px-3 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
                           {month.slice(0, 3)}
                         </th>
                       ))}
@@ -675,17 +674,17 @@ const EmployeeAttendance = () => {
                         <tr key={employee.id}>
                           <td className="px-4 py-3 whitespace-nowrap">
                             <div>
-                              <div className="text-xs font-medium text-gray-900">{employee.name}</div>
-                              <div className="text-xs text-gray-500">{employee.employeeId}</div>
+                              <div className="text-sm font-medium text-gray-900">{employee.name}</div>
+                              <div className="text-sm text-gray-500">{employee.employeeId}</div>
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">{employee.department.split(' ')[0]}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{employee.department.split(' ')[0]}</td>
                           {Object.values(yearlyData).map((monthData, index) => {
                             const empData = monthData.find(emp => emp.id === employee.id);
                             const percentage = empData ? empData.percentage : 0;
                             return (
                               <td key={index} className="px-3 py-3 whitespace-nowrap text-center">
-                                <span className={`inline-flex px-1.5 py-0.5 text-xs font-medium rounded ${
+                                <span className={`inline-flex px-1.5 py-0.5 text-sm font-medium rounded ${
                                   percentage >= 90 ? 'bg-green-100 text-green-800' :
                                   percentage >= 75 ? 'bg-yellow-100 text-yellow-800' :
                                   'bg-red-100 text-red-800'
@@ -708,7 +707,7 @@ const EmployeeAttendance = () => {
         {/* Edit Present Days Modal */}
         {showEditPresentDaysModal && editingEmployee && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <div className="bg-white rounded-lg max-w-md min-w-full divide-y divide-gray-200 text-sm border p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Edit Present Days</h3>
                 <button
@@ -739,7 +738,7 @@ const EmployeeAttendance = () => {
                       max={editingEmployee.totalDays}
                       value={editPresentDays}
                       onChange={(e) => setEditPresentDays(parseInt(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="min-w-full divide-y divide-gray-200 text-sm border px-3 py-2 border border-gray-300 rounded-md"
                     />
                   </div>
                   
@@ -770,7 +769,7 @@ const EmployeeAttendance = () => {
         {/* Edit Attendance Modal */}
         {showEditModal && selectedRecord && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <div className="bg-white rounded-lg max-w-md min-w-full divide-y divide-gray-200 text-sm border p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Edit Attendance</h3>
                 <button
@@ -792,7 +791,7 @@ const EmployeeAttendance = () => {
 
                 <div className="space-y-3">
                   <p className="text-sm text-gray-600">Current Status: 
-                    <span className={`ml-2 inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                    <span className={`ml-2 inline-flex px-2 py-1 text-sm font-medium rounded-md ${
                       selectedRecord.currentStatus === 'Present' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}>
                       {selectedRecord.currentStatus}

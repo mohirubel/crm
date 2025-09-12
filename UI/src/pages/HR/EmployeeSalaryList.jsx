@@ -401,10 +401,10 @@ const EmployeeSalaryList = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-0">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Employee Salary Management</h1>
+              <h1 className="text-xl font-bold text-gray-900 mb-2">Employee Salary Management</h1>
               {/* <p className="text-gray-600">Manage employee salaries, bonuses, and deductions with monthly/yearly views</p> */}
             </div>
             {/* <button
@@ -584,20 +584,20 @@ const EmployeeSalaryList = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Present Days</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Basic Salary</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Advance Loan</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deduction</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bonus</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Salary</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-2 text-left">ID</th>
+                  <th className="px-4 py-2 text-left">Employee Name</th>
+                  <th className="px-4 py-2 text-left">Department</th>
+                  <th className="px-4 py-2 text-left">Date</th>
+                  <th className="px-4 py-2 text-left">Present Days</th>
+                  <th className="px-4 py-2 text-left">Basic Salary</th>
+                  <th className="px-4 py-2 text-left">Advance Loan</th>
+                  <th className="px-4 py-2 text-left">Deduction</th>
+                  <th className="px-4 py-2 text-left">Bonus</th>
+                  <th className="px-4 py-2 text-left">Net Salary</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
