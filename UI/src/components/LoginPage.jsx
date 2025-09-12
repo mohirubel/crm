@@ -50,7 +50,7 @@ const LoginPage = () => {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold text-gray-900">
-            Sales Inventory Management
+            ERP Management
           </CardTitle>
           <CardDescription>
             Sign in to access your dashboard

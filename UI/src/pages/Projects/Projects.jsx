@@ -12,7 +12,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import { Plus, Edit, Trash } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
 const Projects = () => {
   const [projects, setProjects] = useState([
@@ -216,7 +216,7 @@ const Projects = () => {
                         variant="destructive"
                         onClick={() => handleDelete(p.id)}
                       >
-                        <Trash className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </td>
                   </tr>

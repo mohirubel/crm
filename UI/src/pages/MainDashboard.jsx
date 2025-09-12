@@ -135,7 +135,7 @@ const navigate = useNavigate();
                 </div>
               </div>
               <span className="text-gray-600 text-2xl font-medium">
-                bhsale
+                ERP
               </span>
             </div>
           </div>
