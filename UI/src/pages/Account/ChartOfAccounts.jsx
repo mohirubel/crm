@@ -9,10 +9,19 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, ChevronsUpDown } from "lucide-react";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 
 const INITIAL_FORM = {
   code: "",
@@ -109,21 +118,37 @@ const ChartOfAccounts = () => {
               </div>
             </div>
 
-            {/* Filter by Type */}
+            {/* Filter by Type (Searchable) */}
             <div>
               <Label>Type</Label>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Types" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="Asset">Asset</SelectItem>
-                  <SelectItem value="Liability">Liability</SelectItem>
-                  <SelectItem value="Expense">Expense</SelectItem>
-                  <SelectItem value="Income">Income</SelectItem>
-                </SelectContent>
-              </Select>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="w-full justify-between"
+                  >
+                    {typeFilter !== "all" ? typeFilter : "All Types"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="start" className="w-[var(--radix-popover-trigger-width)] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search type..." />
+                    <CommandEmpty>No type found.</CommandEmpty>
+                    <CommandGroup>
+                      {["all", "Asset", "Liability", "Expense", "Income"].map((type) => (
+                        <CommandItem
+                          key={type}
+                          onSelect={() => setTypeFilter(type)}
+                        >
+                          {type === "all" ? "All Types" : type}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
             {/* Clear Filters */}
@@ -197,7 +222,38 @@ const ChartOfAccounts = () => {
               <option value="Income">Income</option>
             </select>
             <Label>Parent Account</Label>
-            <Input value={formData.parent} onChange={(e) => setFormData({ ...formData, parent: e.target.value })} />
+
+            {/* 🔍 Searchable Parent Select */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className="w-full justify-between"
+                >
+                  {formData.parent
+                    ? accounts.find((a) => a.code === formData.parent)?.name
+                    : "Select parent account..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[300px] p-0">
+                <Command>
+                  <CommandInput placeholder="Search account..." />
+                  <CommandEmpty>No account found.</CommandEmpty>
+                  <CommandGroup>
+                    {accounts.map((acc) => (
+                      <CommandItem
+                        key={acc.id}
+                        onSelect={() => setFormData({ ...formData, parent: acc.code })}
+                      >
+                        {acc.code} - {acc.name}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
