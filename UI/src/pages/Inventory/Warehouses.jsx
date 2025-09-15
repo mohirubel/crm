@@ -129,7 +129,7 @@ const Warehouses = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight uppercase">
+          <h2 className="font-bold tracking-tight uppercase">
             Warehouses
           </h2>
         </div>
@@ -153,10 +153,10 @@ const Warehouses = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
-                  placeholder="Search warehouses..."
+                  placeholder="Search warehouses"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -183,23 +183,23 @@ const Warehouses = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
-                <tr>
+                <tr className="text-[14px]">
                   <th className="px-4 py-2 text-left">ID</th>
                   <th className="px-4 py-2 text-left">Name</th>
                   <th className="px-4 py-2 text-left">Location</th>
                   <th className="px-4 py-2 text-left">Contact</th>
-                  <th className="px-4 py-2 text-left">Actions</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredWarehouses.map((wh) => (
                   <tr key={wh.id}>
-                    <td className="px-4 py-2">{wh.id}</td>
-                    <td className="px-4 py-2 font-medium">{wh.name}</td>
-                    <td className="px-4 py-2">{wh.address}</td>
-                    <td className="px-4 py-2">{wh.contact}</td>
-                    <td className="px-4 py-2">
-                      <div className="flex space-x-2">
+                    <td className="px-4 py-0.5">{wh.id}</td>
+                    <td className="px-4 py-0.5">{wh.name}</td>
+                    <td className="px-4 py-0.5">{wh.address}</td>
+                    <td className="px-4 py-0.5">{wh.contact}</td>
+                    <td className="px-4 py-0.5">
+                      <div className="flex justify-center space-x-2">
                         <Button
                           size="sm"
                           variant="outline"
@@ -235,7 +235,7 @@ const Warehouses = () => {
           <DialogHeader>
             <DialogTitle>Add New Warehouse</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-1 gap-4 py-4">
+          <div className="grid grid-cols-1 gap-4 p-6">
             <div className="grid">
               <Label>Name</Label>
               <Input
@@ -259,7 +259,7 @@ const Warehouses = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+            <Button variant="destructive" onClick={() => setIsAddModalOpen(false)}>
               Cancel
             </Button>
             <Button
@@ -278,7 +278,7 @@ const Warehouses = () => {
           <DialogHeader>
             <DialogTitle>Edit Warehouse</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-1 py-4 gap-4">
+          <div className="grid grid-cols-1 p-6 gap-4">
             <div className="grid">
               <Label>Name</Label>
               <Input
@@ -302,10 +302,10 @@ const Warehouses = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+            <Button variant="destructive" onClick={() => setIsEditModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleEditWarehouse}>Save Changes</Button>
+            <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={handleEditWarehouse}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

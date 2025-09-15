@@ -9,7 +9,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, RefreshCcw } from "lucide-react";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -113,9 +113,9 @@ const JournalEntries = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Journal Entries</h2>
+        <h2 className="font-bold uppercase">Journal Entries</h2>
         <Button onClick={() => { resetForm(); setIsModalOpen(true); }}>
           <Plus className="h-4 w-4" /> Add Entry
         </Button>
@@ -123,18 +123,13 @@ const JournalEntries = () => {
 
       {/* 🔎 Search & Filter */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter</CardTitle>
-          <CardDescription>Search by entry no, narration, or filter by accounts</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <Label>Search</Label>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search entries..."
+                  placeholder="Search entries"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -143,7 +138,6 @@ const JournalEntries = () => {
             </div>
 
             <div>
-              <Label>Debit Account</Label>
               <Select value={debitFilter} onValueChange={setDebitFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Debits" />
@@ -158,7 +152,6 @@ const JournalEntries = () => {
             </div>
 
             <div>
-              <Label>Credit Account</Label>
               <Select value={creditFilter} onValueChange={setCreditFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Credits" />
@@ -173,7 +166,7 @@ const JournalEntries = () => {
             </div>
 
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
+              <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={clearFilters}> <RefreshCcw className="h-4 w-4" /> Clear Filters</Button>
             </div>
           </div>
         </CardContent>
@@ -181,33 +174,29 @@ const JournalEntries = () => {
 
       {/* 📑 Entries Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Entries</CardTitle>
-          <CardDescription>Manage journal entries</CardDescription>
-        </CardHeader>
         <CardContent>
           <table className="min-w-full divide-y divide-gray-200 text-sm border">
             <thead className="bg-gray-50">
-              <tr>
+              <tr className="text-[14px]">
                 <th className="px-4 py-2 text-left">Entry No</th>
                 <th className="px-4 py-2 text-left">Date</th>
                 <th className="px-4 py-2 text-left">Debit</th>
                 <th className="px-4 py-2 text-left">Credit</th>
                 <th className="px-4 py-2 text-left">Amount</th>
                 <th className="px-4 py-2 text-left">Narration</th>
-                <th className="px-4 py-2 text-left">Actions</th>
+                <th className="px-4 py-2 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredEntries.map((entry) => (
                 <tr key={entry.id}>
-                  <td className="px-4 py-2">{entry.entryNo}</td>
-                  <td className="px-4 py-2">{entry.date}</td>
-                  <td className="px-4 py-2">{entry.debit}</td>
-                  <td className="px-4 py-2">{entry.credit}</td>
-                  <td className="px-4 py-2">{entry.amount}</td>
-                  <td className="px-4 py-2">{entry.narration}</td>
-                  <td className="px-4 py-2 flex gap-2">
+                  <td className="px-4 py-0.5">{entry.entryNo}</td>
+                  <td className="px-4 py-0.5">{entry.date}</td>
+                  <td className="px-4 py-0.5">{entry.debit}</td>
+                  <td className="px-4 py-0.5">{entry.credit}</td>
+                  <td className="px-4 py-0.5">{entry.amount}</td>
+                  <td className="px-4 py-0.5">{entry.narration}</td>
+                  <td className="px-4 py-0.5 justify-center flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => handleEdit(entry)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -229,7 +218,7 @@ const JournalEntries = () => {
             <DialogTitle>{selected ? "Edit Entry" : "Add Entry"}</DialogTitle>
             <DialogDescription>Fill in entry details</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6">
             <Label>Date</Label>
             <Input type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} />
             <Label>Debit Account</Label>

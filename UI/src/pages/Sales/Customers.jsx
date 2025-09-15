@@ -241,7 +241,7 @@ const Customers = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
               <Input
                 placeholder="Search name, email or phone"
                 value={searchTerm}
@@ -347,7 +347,7 @@ const Customers = () => {
                     {sortConfig.key === "email" &&
                       (sortConfig.direction === "asc" ? " ▲" : " ▼")}
                   </th>
-                  <th className="px-4 py-2 text-left">Actions</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -358,7 +358,7 @@ const Customers = () => {
                     <td className="px-4 py-[2px]">{c.phone}</td>
                     <td className="px-4 py-[2px]">{c.email}</td>
                     <td className="px-4 py-[2px]">
-                      <div className="flex space-x-2">
+                      <div className="flex justify-center space-x-2">
                         <Button
                           size="sm"
                           variant="outline"
@@ -436,11 +436,11 @@ const Customers = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
+            <Button variant="destructive" onClick={() => setIsAddModalOpen(false)}>
               Cancel
             </Button>
             <Button
-              className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-[#333] font-semibold"
+              className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold"
               onClick={handleAddCustomer}
             >
               Add Customer
@@ -497,10 +497,10 @@ const Customers = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+            <Button variant="destructive" onClick={() => setIsEditModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleEditCustomer}>Save Changes</Button>
+            <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={handleEditCustomer}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -204,7 +204,7 @@ const GoodsReceiving = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight uppercase">Goods Receiving</h2>
+          <h2 className="font-bold tracking-tight uppercase">Goods Receiving</h2>
         </div>
         <Button onClick={() => setIsAddModalOpen(true)}>
           <Plus className="h-4 w-4" /> <span>Add GRN</span>
@@ -217,7 +217,7 @@ const GoodsReceiving = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
                   placeholder="Search GRNs..."
@@ -260,19 +260,19 @@ const GoodsReceiving = () => {
                   <th className="px-4 py-2 text-left">Date</th>
                   <th className="px-4 py-2 text-left">Items</th>
                   <th className="px-4 py-2 text-left">Status</th>
-                  <th className="px-4 py-2 text-left">Actions</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredGRNs.map((grn) => (
                   <tr key={grn.id}>
-                    <td className="px-4 py-2">{grn.grnNo}</td>
-                    <td className="px-4 py-2">{grn.supplier}</td>
-                    <td className="px-4 py-2">{grn.date}</td>
-                    <td className="px-4 py-2">{grn.items}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-0.5">{grn.grnNo}</td>
+                    <td className="px-4 py-0.5">{grn.supplier}</td>
+                    <td className="px-4 py-0.5">{grn.date}</td>
+                    <td className="px-4 py-0.5">{grn.items}</td>
+                    <td className="px-4 py-0.5">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${
+                        className={`px-2 py-[1px] rounded-full text-xs ${
                           grn.status === "Completed"
                             ? "bg-green-100 text-green-700"
                             : "bg-yellow-100 text-yellow-700"
@@ -281,8 +281,8 @@ const GoodsReceiving = () => {
                         {grn.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex space-x-2">
+                    <td className="px-6 py-0.5">
+                      <div className="flex justify-center space-x-2">
                         <Button
                           size="sm"
                           variant="outline"
@@ -338,7 +338,7 @@ const GoodsReceiving = () => {
     </DialogHeader>
 
     {/* Two Column Grid */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
       <div>
         <Label>Supplier</Label>
         <Input
@@ -402,7 +402,7 @@ const GoodsReceiving = () => {
 
     <DialogFooter>
       <Button
-        variant="outline"
+        variant="destructive"
         onClick={() => {
           setIsAddModalOpen(false);
           setIsEditModalOpen(false);
@@ -411,7 +411,7 @@ const GoodsReceiving = () => {
       >
         Cancel
       </Button>
-      <Button onClick={isEditModalOpen ? handleEditGRN : handleAddGRN}>
+      <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={isEditModalOpen ? handleEditGRN : handleAddGRN}>
         {isEditModalOpen ? "Save Changes" : "Add GRN"}
       </Button>
     </DialogFooter>

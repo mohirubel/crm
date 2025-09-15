@@ -310,7 +310,7 @@ const CurrentStock = () => {
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight uppercase">
+          <h2 className="font-bold tracking-tight uppercase">
             Products
           </h2>
         </div>
@@ -339,7 +339,7 @@ const CurrentStock = () => {
             <div>
               {/* <Label htmlFor="search">Search</Label> */}
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
                   placeholder="Search products..."
@@ -398,7 +398,7 @@ const CurrentStock = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
-                <tr>
+                <tr className="text-[14px]">
                   <th className="px-4 py-2 text-left">Code</th>
                   <th className="px-4 py-2 text-left">Product Name</th>
                   <th className="px-4 py-2 text-left">Category</th>
@@ -407,24 +407,24 @@ const CurrentStock = () => {
                   <th className="px-4 py-2 text-left">Reorder Level</th>
                   <th className="px-4 py-2 text-left">Last Updated</th>
                   <th className="px-4 py-2 text-left">Status</th>
-                  <th className="px-4 py-2 text-left">Actions</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredCurrentStock.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-4 py-2">{item.productCode}</td>
-                    <td className="px-4 py-2">{item.name}</td>
-                    <td className="px-4 py-2">{item.category}</td>
-                    <td className="px-4 py-2">${item.sellingPrice}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-0.5">{item.productCode}</td>
+                    <td className="px-4 py-0.5">{item.name}</td>
+                    <td className="px-4 py-0.5">{item.category}</td>
+                    <td className="px-4 py-0.5">${item.sellingPrice}</td>
+                    <td className="px-4 py-0.5">
                       {item.currentStock} {item.unit}
                     </td>
-                    <td className="px-4 py-2">{item.reorderLevel}</td>
-                    <td className="px-4 py-2">{item.lastUpdated}</td>
-                    <td className="px-4 py-2">{getStatusBadge(item)}</td>
-                    <td className="px-4 py-2">
-                      <div className="flex space-x-2">
+                    <td className="px-4 py-0.5">{item.reorderLevel}</td>
+                    <td className="px-4 py-0.5">{item.lastUpdated}</td>
+                    <td className="px-4 py-0.5">{getStatusBadge(item)}</td>
+                    <td className="px-4 py-0.5">
+                      <div className="flex justify-center space-x-2">
                         <Button
                           className=""
                           variant="outline"
@@ -461,7 +461,7 @@ const CurrentStock = () => {
           </DialogHeader>
 
           {/* Two-column grid for fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 py-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 p-6">
             <div>
               <Label>Code</Label>
               <Input
@@ -563,7 +563,7 @@ const CurrentStock = () => {
             <DialogTitle>Stock In</DialogTitle>
             <DialogDescription>Add stock to a product.</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6">
             <div className="grid gap-2">
               <Label>Product</Label>
               <Select
@@ -612,7 +612,7 @@ const CurrentStock = () => {
             <DialogTitle>Stock Out</DialogTitle>
             <DialogDescription>Remove stock from a product.</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6">
             <div className="grid gap-2">
               <Label>Product</Label>
               <Select

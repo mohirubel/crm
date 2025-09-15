@@ -9,7 +9,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search, ChevronsUpDown } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, ChevronsUpDown, RefreshCcw } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -87,9 +87,9 @@ const ChartOfAccounts = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Chart of Accounts</h2>
+        <h2 className="font-bold uppercase">Chart of Accounts</h2>
         <Button onClick={() => { resetForm(); setIsModalOpen(true); }}>
           <Plus className="h-4 w-4" /> Add Account
         </Button>
@@ -97,20 +97,15 @@ const ChartOfAccounts = () => {
 
       {/* 🔍 Search & Filter */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter Accounts</CardTitle>
-          <CardDescription>Search by code, name, or filter by type</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div>
-              <Label htmlFor="search">Search</Label>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
-                  placeholder="Search accounts..."
+                  placeholder="Search accounts"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -120,7 +115,6 @@ const ChartOfAccounts = () => {
 
             {/* Filter by Type (Searchable) */}
             <div>
-              <Label>Type</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -153,7 +147,7 @@ const ChartOfAccounts = () => {
 
             {/* Clear Filters */}
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
+              <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={clearFilters}> <RefreshCcw className="h-4 w-4" /> Clear Filters</Button>
             </div>
           </div>
         </CardContent>
@@ -161,14 +155,10 @@ const ChartOfAccounts = () => {
 
       {/* Accounts Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Accounts</CardTitle>
-          <CardDescription>Manage your accounts</CardDescription>
-        </CardHeader>
         <CardContent>
           <table className="min-w-full divide-y divide-gray-200 text-sm border">
             <thead className="bg-gray-50">
-              <tr>
+              <tr className="text-[14px]">
                 <th className="px-4 py-2 text-left">Code</th>
                 <th className="px-4 py-2 text-left">Name</th>
                 <th className="px-4 py-2 text-left">Type</th>
@@ -179,11 +169,11 @@ const ChartOfAccounts = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredAccounts.map((acc) => (
                 <tr key={acc.id}>
-                  <td className="px-4 py-2">{acc.code}</td>
-                  <td className="px-4 py-2">{acc.name}</td>
-                  <td className="px-4 py-2">{acc.type}</td>
-                  <td className="px-4 py-2">{acc.parent}</td>
-                  <td className="px-4 py-2 flex gap-2">
+                  <td className="px-4 py-0.5">{acc.code}</td>
+                  <td className="px-4 py-0.5">{acc.name}</td>
+                  <td className="px-4 py-0.5">{acc.type}</td>
+                  <td className="px-4 py-0.5">{acc.parent}</td>
+                  <td className="px-4 py-0.5 flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => { setSelected(acc); setFormData(acc); setIsModalOpen(true); }}>
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -205,14 +195,14 @@ const ChartOfAccounts = () => {
             <DialogTitle>{selected ? "Edit Account" : "Add Account"}</DialogTitle>
             <DialogDescription>Fill in account details</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6">
             <Label>Code</Label>
             <Input value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} />
             <Label>Name</Label>
             <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
             <Label>Type</Label>
             <select
-              className="border rounded p-2"
+              className="border rounded px-2 text-sm h-[27px]"
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value })}
             >

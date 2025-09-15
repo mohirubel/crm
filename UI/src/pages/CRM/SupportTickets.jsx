@@ -104,7 +104,7 @@ const SupportTickets = () => {
             <div>
               <select
                 id="status"
-                className="border p-2 rounded w-full"
+                className="border px-2 rounded w-full text-sm h-[27px]"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -118,7 +118,7 @@ const SupportTickets = () => {
             <div>
               <select
                 id="priority"
-                className="border p-2 rounded w-full"
+                className="border px-2 rounded w-full text-sm h-[27px]"
                 value={priorityFilter}
                 onChange={(e) => setPriorityFilter(e.target.value)}
               >
@@ -202,7 +202,7 @@ const SupportTickets = () => {
     </DialogHeader>
 
     {/* Two-column grid */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
       <div>
         <Label>Customer</Label>
         <Input
@@ -228,7 +228,7 @@ const SupportTickets = () => {
       <div>
         <Label>Priority</Label>
         <select
-          className="border p-2 rounded w-full"
+          className="border px-2 rounded w-full text-sm h-[27px]"
           value={formData.priority}
           onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
         >
@@ -248,7 +248,7 @@ const SupportTickets = () => {
       <div>
         <Label>Status</Label>
         <select
-          className="border p-2 rounded w-full"
+          className="border px-2 rounded w-full text-sm h-[27px]"
           value={formData.status}
           onChange={(e) => setFormData({ ...formData, status: e.target.value })}
         >

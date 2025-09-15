@@ -17,7 +17,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCcw, Search } from "lucide-react";
 
 const INITIAL_FORM = {
   name: "",
@@ -104,7 +104,7 @@ const [leads, setLeads] = useState([
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold uppercase">Leads</h2>
+          <h2 className="font-bold uppercase">Leads</h2>
         </div>
         <Button onClick={() => {
           resetForm();
@@ -118,18 +118,20 @@ const [leads, setLeads] = useState([
       <Card>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            <div>
+            <div className="relative">
+            <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
               <Input
                 id="search"
                 placeholder="Search by name or contact..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
               />
             </div>
             <div>
               <select
                 id="status"
-                className="border p-2 rounded w-full"
+                className="border px-2 rounded w-full text-sm h-[27px]"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -158,25 +160,25 @@ const [leads, setLeads] = useState([
         <CardContent>
           <table className="w-full border text-sm">
             <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 text-left">Lead ID</th>
-                <th className="p-2 text-left">Name</th>
-                <th className="p-2 text-left">Contact</th>
-                <th className="p-2 text-left">Status</th>
-                <th className="p-2">Actions</th>
+              <tr className="text-[14px]">
+                <th className="px-4 py-2 text-left">Lead ID</th>
+                <th className="px-4 py-2 text-left">Name</th>
+                <th className="px-4 py-2 text-left">Contact</th>
+                <th className="px-4 py-2 text-left">Status</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredLeads.length > 0 ? (
                 filteredLeads.map((lead) => (
                   <tr key={lead.id} className="border-t">
-                    <td className="p-2">
+                    <td className="px-4 py-0.5">
                       L-{String(lead.id).padStart(3, "0")}
                     </td>
-                    <td className="p-2">{lead.name}</td>
-                    <td className="p-2">{lead.contact}</td>
-                    <td className="p-2">{lead.status}</td>
-                    <td className="p-2 flex gap-2 justify-center">
+                    <td className="px-4 py-0.5">{lead.name}</td>
+                    <td className="px-4 py-0.5">{lead.contact}</td>
+                    <td className="px-4 py-0.5">{lead.status}</td>
+                    <td className="px-4 py-0.5 flex gap-2 justify-center">
                       <Button
                         size="sm"
                         variant="outline"
@@ -213,7 +215,7 @@ const [leads, setLeads] = useState([
             <DialogTitle>{selected ? "Edit Lead" : "Add Lead"}</DialogTitle>
             <DialogDescription>Fill in the lead details</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-3 py-2">
+          <div className="grid gap-3 p-6">
             <Label>Name</Label>
             <Input
               value={formData.name}
@@ -237,7 +239,7 @@ const [leads, setLeads] = useState([
             />
             <Label>Status</Label>
             <select
-              className="border p-2 rounded"
+              className="border px-2 text-sm h-[27px] rounded"
               value={formData.status}
               onChange={(e) =>
                 setFormData({ ...formData, status: e.target.value })

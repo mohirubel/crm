@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCcw, Search } from "lucide-react";
 
 const INITIAL_FORM = {
   customer: "",
@@ -85,7 +85,7 @@ const [opps, setOpps] = useState([
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold uppercase">Opportunities</h2>
+          <h2 className="font-bold uppercase">Opportunities</h2>
         </div>
         <Button onClick={() => {
           resetForm();
@@ -99,18 +99,20 @@ const [opps, setOpps] = useState([
       <Card>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
+            <div className="relative">
+            <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
               <Input
                 id="search"
                 placeholder="Search by Opp ID, Customer, or Value..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
               />
             </div>
             <div>
               <select
                 id="stage"
-                className="border p-2 rounded w-full"
+                className="border px-2 rounded w-full text-sm h-[27px]"
                 value={stageFilter}
                 onChange={(e) => setStageFilter(e.target.value)}
               >
@@ -192,7 +194,7 @@ const [opps, setOpps] = useState([
             <DialogTitle>{selected ? "Edit Opportunity" : "Add Opportunity"}</DialogTitle>
             <DialogDescription>Fill in the opportunity details</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-3 py-2">
+          <div className="grid gap-3 p-6">
             <Label>Customer</Label>
             <Input 
               value={formData.customer} 
@@ -206,7 +208,7 @@ const [opps, setOpps] = useState([
             />
             <Label>Stage</Label>
             <select 
-              className="border p-2 rounded" 
+              className="border px-2 rounded text-sm h-[27px]" 
               value={formData.stage} 
               onChange={(e)=>setFormData({...formData, stage: e.target.value})}
             >
