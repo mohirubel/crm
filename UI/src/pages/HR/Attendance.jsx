@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, Clock, CheckCircle, XCircle, Search, Download, Eye, Filter } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 
 const EmployeeAttendance = () => {
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
@@ -298,25 +299,22 @@ const EmployeeAttendance = () => {
   const stats = getAttendanceStats();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm mb-6">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="space-y-3">
+      <div className="mb-3">
+            <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Attendance</h1>
+                <h1 className="font-bold text-gray-900">Attendance</h1>
               </div>
               <div className="flex items-center gap-3">
                 <input
                   type="date"
                   value={currentDate}
                   onChange={(e) => setCurrentDate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  className="px-3 py-1 border border-gray-300 rounded-md text-[12px]"
                 />
                 <button
                   onClick={() => setSelectedView('mark')}
-                  className={`px-4 py-2 text-sm font-medium rounded-md ${
+                  className={`px-3 py-1 text-[12px] font-medium border border-gray-300 rounded-md text-gray-700 ${
                     selectedView === 'mark' 
                       ? 'bg-gray-900 text-white' 
                       : 'text-gray-700 hover:text-gray-900'
@@ -336,7 +334,7 @@ const EmployeeAttendance = () => {
                 </button> */}
                 <button
                   onClick={() => setSelectedView('monthly')}
-                  className={`px-4 py-2 text-sm font-medium rounded-md ${
+                  className={`px-3 py-1 text-[12px] font-medium border border-gray-300 rounded-md ${
                     selectedView === 'monthly' 
                       ? 'bg-gray-900 text-white' 
                       : 'text-gray-700 hover:text-gray-900'
@@ -347,9 +345,13 @@ const EmployeeAttendance = () => {
               </div>
             </div>
           </div>
+      <div className="mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-lg shadow-sm mb-3">
+          
 
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-8 p-6">
+          <div className="grid grid-cols-4 gap-8 p-5">
             <div className="text-center">
               <div className="text-xl font-bold text-gray-900">{stats.total}</div>
               <div className="text-sm text-gray-600">Total Employees</div>
@@ -368,13 +370,11 @@ const EmployeeAttendance = () => {
             </div>
           </div>
         </div>
-
-        {selectedView === 'mark' && (
-          <div className="bg-white rounded-lg shadow-sm">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex flex-col md:flex-row gap-4">
+        
+          <div className="bg-white rounded-lg shadow-sm mb-3">
+              <div className="flex flex-col md:flex-row gap-4 p-5">
                 <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-1">Mark Attendance</h2>
+                  <h2 className="font-bold text-gray-900">Mark Attendance</h2>
                   <p className="text-gray-600 text-sm">Mark attendance for {new Date(currentDate).toLocaleDateString()}</p>
                 </div>
                 <div className="flex gap-4 py-2">
@@ -385,13 +385,13 @@ const EmployeeAttendance = () => {
                       placeholder="Search employees..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm"
+                      className="w-full pl-10 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
                     />
                   </div>
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="pl-1 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
                   >
                     <option value="all">All Status</option>
                     <option value="present">Present</option>
@@ -400,7 +400,15 @@ const EmployeeAttendance = () => {
                 </div>
               </div>
             </div>
+          
+        
 
+        {selectedView === 'mark' && (
+          <div className="">
+            
+
+          <Card>
+           <CardContent>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 text-sm border">
                 <thead className="bg-gray-50">
@@ -419,15 +427,15 @@ const EmployeeAttendance = () => {
 
                     return (
                       <tr key={employee.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-[2px] whitespace-nowrap">
                           <div>
                             <div className="text-sm font-medium text-gray-900">{employee.name}</div>
                             <div className="text-sm text-gray-500">{employee.employeeId}</div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.position}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
+                        <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">{employee.position}</td>
+                        <td className="px-4 py-[2px] whitespace-nowrap text-center">
                           {employeeStatus === true && (
                             <span className="inline-flex px-2 py-1 text-sm font-medium bg-green-100 text-green-800 rounded-md">
                               Present
@@ -444,7 +452,7 @@ const EmployeeAttendance = () => {
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <td className="px-4 py-[2px] whitespace-nowrap text-center">
                           <div className="flex justify-center gap-2">
                             <button
                               onClick={() => markAttendance(employee.id, true)}
@@ -474,7 +482,9 @@ const EmployeeAttendance = () => {
                 </tbody>
               </table>
             </div>
-            <div className="px-6 py-3 border-t border-gray-200 text-sm text-gray-500">
+           </CardContent>
+          </Card>
+            <div className="px-6 py-3 border-t border-gray-200 text-sm text-gray-500 bg-white rounded-lg shadow-sm mt-3">
               Showing {filteredEmployees.length} of {employees.length} employees
             </div>
           </div>
@@ -515,14 +525,14 @@ const EmployeeAttendance = () => {
 
                     return (
                       <tr key={employee.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-[2px] whitespace-nowrap">
                           <div>
                             <div className="text-sm font-medium text-gray-900">{employee.name}</div>
                             <div className="text-sm text-gray-500">{employee.employeeId}</div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
+                        <td className="px-4 py-[2px] whitespace-nowrap text-center">
                           {employeeStatus === true && (
                             <span className="inline-flex px-2 py-1 text-sm font-medium bg-green-100 text-green-800 rounded-md">
                               Present
@@ -539,7 +549,7 @@ const EmployeeAttendance = () => {
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
+                        <td className="px-4 py-[2px] whitespace-nowrap text-center text-sm text-gray-900">
                           {new Date(currentDate).toLocaleDateString()}
                         </td>
                       </tr>
@@ -554,11 +564,10 @@ const EmployeeAttendance = () => {
         {selectedView === 'monthly' && (
           <div className="space-y-6">
             {/* Monthly Report */}
-            <div className="bg-white rounded-lg shadow-sm">
-              <div className="p-6 border-b border-gray-200">
+            <div className="bg-white rounded-lg shadow-sm mb-3 p-5">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">Monthly Attendance Report</h2>
+                    <h2 className="font-bold text-gray-900">Monthly Attendance Report</h2>
                     <p className="text-gray-600 text-sm">View monthly attendance statistics</p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -566,11 +575,11 @@ const EmployeeAttendance = () => {
                       type="month"
                       value={selectedMonth}
                       onChange={(e) => setSelectedMonth(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-3 py-1 border border-gray-300 rounded-md text-[12px]"
                     />
                     <button
                       onClick={downloadMonthlyReport}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors"
+                      className="flex items-center gap-2 bg-gray-900 text-white px-3 py-1 border border-gray-300 rounded-md text-[12px] hover:bg-gray-800 transition-colors"
                     >
                       <Download size={16} />
                       Download
@@ -578,7 +587,8 @@ const EmployeeAttendance = () => {
                   </div>
                 </div>
               </div>
-
+          <Card>
+           <CardContent>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 text-sm border">
                   <thead className="bg-gray-50">
@@ -593,14 +603,14 @@ const EmployeeAttendance = () => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {getMonthlyAttendance().map((employee) => (
                       <tr key={employee.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-[2px] whitespace-nowrap">
                           <div>
                             <div className="text-sm font-medium text-gray-900">{employee.name}</div>
                             <div className="text-sm text-gray-500">{employee.employeeId}</div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">{employee.department}</td>
+                        <td className="px-4 py-[2px] whitespace-nowrap text-center">
                           <button
                             onClick={() => handleEditPresentDays(employee)}
                             className="text-blue-600 hover:text-blue-800 font-medium text-sm hover:underline cursor-pointer bg-blue-50 px-2 py-1 rounded"
@@ -608,8 +618,8 @@ const EmployeeAttendance = () => {
                             ✏️ {employee.presentDays}
                           </button>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{employee.totalDays}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <td className="px-4 py-[2px] whitespace-nowrap text-center text-sm text-gray-900">{employee.totalDays}</td>
+                        <td className="px-4 py-[2px] whitespace-nowrap text-center">
                           <span className={`inline-flex px-2 py-1 text-sm font-medium rounded-md ${
                             employee.percentage >= 90 ? 'bg-green-100 text-green-800' :
                             employee.percentage >= 75 ? 'bg-yellow-100 text-yellow-800' :
@@ -623,21 +633,22 @@ const EmployeeAttendance = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            
+           </CardContent>
+          </Card>
 
             {/* Yearly Report */}
-            <div className="bg-white rounded-lg shadow-sm">
-              <div className="p-6 border-b border-gray-200">
+            <div className="bg-white rounded-lg shadow-sm mb-3 p-5">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">Yearly Attendance Report</h2>
+                    <h2 className="font-bold text-gray-900">Yearly Attendance Report</h2>
                     <p className="text-gray-600 text-sm">View yearly attendance statistics by month</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <select
                       value={selectedYear}
                       onChange={(e) => setSelectedYear(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      className="px-3 py-1 border border-gray-300 rounded-md text-[12px]"
                     >
                       <option value="2024">2024</option>
                       <option value="2023">2023</option>
@@ -645,7 +656,7 @@ const EmployeeAttendance = () => {
                     </select>
                     <button
                       onClick={downloadYearlyReport}
-                      className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors"
+                      className="flex items-center gap-2 bg-gray-900 text-white px-3 py-1 border border-gray-300 rounded-md text-[12px] hover:bg-gray-800 transition-colors"
                     >
                       <Download size={16} />
                       Download
@@ -653,7 +664,9 @@ const EmployeeAttendance = () => {
                   </div>
                 </div>
               </div>
-
+          <Card>
+           <CardContent>  
+            <div className="bg-white rounded-lg shadow-sm">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 text-sm border text-sm">
                   <thead className="bg-gray-50">
@@ -701,6 +714,8 @@ const EmployeeAttendance = () => {
                 </table>
               </div>
             </div>
+           </CardContent>
+          </Card>
           </div>
         )}
 
@@ -803,7 +818,7 @@ const EmployeeAttendance = () => {
                     <div className="flex gap-3">
                       <button
                         onClick={() => handleUpdateAttendance('Present')}
-                        className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                        className={`font-bold text-gray-900 ${
                           selectedRecord.currentStatus === 'Present'
                             ? 'bg-green-600 text-white'
                             : 'bg-green-100 text-green-700 hover:bg-green-200'

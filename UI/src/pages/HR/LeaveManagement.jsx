@@ -218,8 +218,7 @@ const LeaveManagement = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm mb-6">
-          <div className="p-6 border-b border-gray-200">
+        <div className="mb-3">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Leave Management</h1>
@@ -272,7 +271,7 @@ const LeaveManagement = () => {
               </div>
             </div>
           </div>
-
+        <div className="bg-white rounded-lg shadow-sm mb-6">
           {/* Stats */}
           <div className="grid grid-cols-4 gap-8 p-4">
             <div className="text-center">
