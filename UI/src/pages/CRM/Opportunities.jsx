@@ -1,14 +1,30 @@
 import React, { useState, useMemo } from "react";
 import {
-  Card, CardContent, CardHeader, CardTitle, CardDescription
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, RefreshCcw, Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const INITIAL_FORM = {
   customer: "",
@@ -19,14 +35,14 @@ const INITIAL_FORM = {
 };
 
 const Opportunities = () => {
-const [opps, setOpps] = useState([
-  { id: 1, customer: "ABC Ltd", value: 20000, stage: "Prospecting" },
-  { id: 2, customer: "XYZ Corp", value: 50000, stage: "Negotiation" },
-  { id: 3, customer: "Global Traders", value: 35000, stage: "Proposal" },
-  { id: 4, customer: "Delta Enterprises", value: 45000, stage: "Qualified" },
-  { id: 5, customer: "Sunrise Solutions", value: 60000, stage: "Closed Won" },
-  { id: 6, customer: "Prime Industries", value: 40000, stage: "Closed Lost" },
-]);
+  const [opps, setOpps] = useState([
+    { id: 1, customer: "ABC Ltd", value: 20000, stage: "Prospecting" },
+    { id: 2, customer: "XYZ Corp", value: 50000, stage: "Negotiation" },
+    { id: 3, customer: "Global Traders", value: 35000, stage: "Proposal" },
+    { id: 4, customer: "Delta Enterprises", value: 45000, stage: "Qualified" },
+    { id: 5, customer: "Sunrise Solutions", value: 60000, stage: "Closed Won" },
+    { id: 6, customer: "Prime Industries", value: 40000, stage: "Closed Lost" },
+  ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -36,29 +52,32 @@ const [opps, setOpps] = useState([
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState("All");
 
-  const resetForm = () => { 
-    setFormData(INITIAL_FORM); 
-    setSelected(null); 
+  const resetForm = () => {
+    setFormData(INITIAL_FORM);
+    setSelected(null);
   };
 
   const handleSave = () => {
     if (!formData.customer || !formData.value) return;
     if (selected) {
-      setOpps(prev => prev.map(o => o.id === selected.id ? { ...o, ...formData } : o));
+      setOpps((prev) =>
+        prev.map((o) => (o.id === selected.id ? { ...o, ...formData } : o))
+      );
     } else {
       const newId = opps.length + 1;
-      setOpps(prev => [...prev, { id: newId, ...formData }]);
+      setOpps((prev) => [...prev, { id: newId, ...formData }]);
     }
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
     resetForm();
   };
 
-  const openEdit = (opp) => { 
-    setSelected(opp); 
-    setFormData(opp); 
-    setIsModalOpen(true); 
+  const openEdit = (opp) => {
+    setSelected(opp);
+    setFormData(opp);
+    setIsModalOpen(true);
   };
-  const handleDelete = (id) => setOpps(prev => prev.filter(o => o.id !== id));
+  const handleDelete = (id) =>
+    setOpps((prev) => prev.filter((o) => o.id !== id));
 
   // 📌 Apply search & filter
   const filteredOpps = useMemo(() => {
@@ -74,8 +93,7 @@ const [opps, setOpps] = useState([
         String(o.id).includes(query) ||
         oppId.includes(query);
 
-      const matchesStage =
-        stageFilter === "All" || o.stage === stageFilter;
+      const matchesStage = stageFilter === "All" || o.stage === stageFilter;
 
       return matchesSearch && matchesStage;
     });
@@ -87,10 +105,12 @@ const [opps, setOpps] = useState([
         <div>
           <h2 className="font-bold uppercase">Opportunities</h2>
         </div>
-        <Button onClick={() => {
-          resetForm();
-          setIsModalOpen(true)
-        }}>
+        <Button
+          onClick={() => {
+            resetForm();
+            setIsModalOpen(true);
+          }}
+        >
           <Plus className="h-4 w-4 mr-1" /> Add Opportunity
         </Button>
       </div>
@@ -100,47 +120,44 @@ const [opps, setOpps] = useState([
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
-            <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
               <Input
                 id="search"
-                placeholder="Search by Opp ID, Customer, or Value..."
+                placeholder="Search by Opp ID, Customer, or Value"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>
             <div>
-              <select
-                id="stage"
-                className="border px-2 rounded w-full text-sm h-[27px]"
-                value={stageFilter}
-                onChange={(e) => setStageFilter(e.target.value)}
-              >
-                <option value="All">All</option>
-                <option>Prospecting</option>
-                <option>Qualified</option>
-                <option>Proposal</option>
-                <option>Negotiation</option>
-                <option>Closed Won</option>
-                <option>Closed Lost</option>
-              </select>
+              <Select value={stageFilter} onValueChange={setStageFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All</SelectItem>
+                  <SelectItem value="Prospecting">Prospecting</SelectItem>
+                  <SelectItem value="Qualified">Qualified</SelectItem>
+                  <SelectItem value="Negotiation">Negotiation</SelectItem>
+                  <SelectItem value="Closed Won">Closed Won</SelectItem>
+                  <SelectItem value="Closed Lost">Closed Lost</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             {/* Clear Filters button */}
-          <div className="flex justify-start items-end">
-            <Button
-              className="bg-yellow-500 hover:bg-yellow-600"
-              variant="outline"
-              onClick={() => {
-                setSearchQuery("");
-                setStageFilter("All");
-              }}
-            >
-            <RefreshCcw className="h-4 w-4" />  Clear Filters
-            </Button>
+            <div className="flex justify-start items-end">
+              <Button
+                className="bg-yellow-500 hover:bg-yellow-600"
+                variant="outline"
+                onClick={() => {
+                  setSearchQuery("");
+                  setStageFilter("All");
+                }}
+              >
+                <RefreshCcw className="h-4 w-4" /> Clear Filters
+              </Button>
+            </div>
           </div>
-          </div>
-
-          
         </CardContent>
       </Card>
 
@@ -159,18 +176,28 @@ const [opps, setOpps] = useState([
             </thead>
             <tbody>
               {filteredOpps.length > 0 ? (
-                filteredOpps.map(o => (
+                filteredOpps.map((o) => (
                   <tr key={o.id} className="border-t">
-                    <td className="px-4 py-0.5">O-{String(o.id).padStart(3,"0")}</td>
+                    <td className="px-4 py-0.5">
+                      O-{String(o.id).padStart(3, "0")}
+                    </td>
                     <td className="px-4 py-0.5">{o.customer}</td>
                     <td className="px-4 py-0.5">${o.value}</td>
                     <td className="px-4 py-0.5">{o.stage}</td>
                     <td className="px-4 py-0.5 flex gap-2 justify-center">
-                      <Button size="sm" variant="outline" onClick={()=>openEdit(o)}>
-                        <Pencil className="h-4 w-4"/>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openEdit(o)}
+                      >
+                        <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="destructive" onClick={()=>handleDelete(o.id)}>
-                        <Trash2 className="h-4 w-4"/>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(o.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </td>
                   </tr>
@@ -191,26 +218,36 @@ const [opps, setOpps] = useState([
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selected ? "Edit Opportunity" : "Add Opportunity"}</DialogTitle>
-            <DialogDescription>Fill in the opportunity details</DialogDescription>
+            <DialogTitle>
+              {selected ? "Edit Opportunity" : "Add Opportunity"}
+            </DialogTitle>
+            <DialogDescription>
+              Fill in the opportunity details
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 p-6">
             <Label>Customer</Label>
-            <Input 
-              value={formData.customer} 
-              onChange={(e)=>setFormData({...formData, customer: e.target.value})}
+            <Input
+              value={formData.customer}
+              onChange={(e) =>
+                setFormData({ ...formData, customer: e.target.value })
+              }
             />
             <Label>Expected Value</Label>
-            <Input 
-              type="number" 
-              value={formData.value} 
-              onChange={(e)=>setFormData({...formData, value: e.target.value})}
+            <Input
+              type="number"
+              value={formData.value}
+              onChange={(e) =>
+                setFormData({ ...formData, value: e.target.value })
+              }
             />
             <Label>Stage</Label>
-            <select 
-              className="border px-2 rounded text-sm h-[27px]" 
-              value={formData.stage} 
-              onChange={(e)=>setFormData({...formData, stage: e.target.value})}
+            <select
+              className="border px-2 rounded text-sm h-[27px]"
+              value={formData.stage}
+              onChange={(e) =>
+                setFormData({ ...formData, stage: e.target.value })
+              }
             >
               <option>Prospecting</option>
               <option>Qualified</option>
@@ -220,20 +257,31 @@ const [opps, setOpps] = useState([
               <option>Closed Lost</option>
             </select>
             <Label>Closing Date</Label>
-            <Input 
-              type="date" 
-              value={formData.closingDate} 
-              onChange={(e)=>setFormData({...formData, closingDate: e.target.value})}
+            <Input
+              type="date"
+              value={formData.closingDate}
+              onChange={(e) =>
+                setFormData({ ...formData, closingDate: e.target.value })
+              }
             />
             <Label>Notes</Label>
-            <Input 
-              value={formData.notes} 
-              onChange={(e)=>setFormData({...formData, notes: e.target.value})}
+            <Input
+              value={formData.notes}
+              onChange={(e) =>
+                setFormData({ ...formData, notes: e.target.value })
+              }
             />
           </div>
           <DialogFooter>
-            <Button variant="destructive" onClick={()=>setIsModalOpen(false)}>Cancel</Button>
-            <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
+            <Button variant="destructive" onClick={() => setIsModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold"
+              onClick={handleSave}
+            >
+              {selected ? "Save" : "Add"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

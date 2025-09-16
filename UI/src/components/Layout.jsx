@@ -137,6 +137,7 @@ const Layout = () => {
       rootPath: "/chart-of-accounts",
       submenus: [
         { path: "/chart-of-accounts", label: "Chart Of Accounts" },
+        { path: "/account-types", label: "Account Types" },
         { path: "/journal-entries", label: "Journal Entries" },
         { path: "/payments-receipts", label: "Payments Receipts" },
         { path: "/account-reports", label: "Reports" },
