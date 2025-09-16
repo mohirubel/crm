@@ -149,23 +149,23 @@ const [opps, setOpps] = useState([
         <CardContent>
           <table className="w-full border text-sm">
             <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 text-left">Opp ID</th>
-                <th className="p-2 text-left">Customer</th>
-                <th className="p-2 text-left">Value</th>
-                <th className="p-2 text-left">Stage</th>
-                <th className="p-2">Actions</th>
+              <tr className="text-[14px]">
+                <th className="px-4 py-2 text-left">Opp ID</th>
+                <th className="px-4 py-2 text-left">Customer</th>
+                <th className="px-4 py-2 text-left">Value</th>
+                <th className="px-4 py-2 text-left">Stage</th>
+                <th className="px-4 py-2 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredOpps.length > 0 ? (
                 filteredOpps.map(o => (
                   <tr key={o.id} className="border-t">
-                    <td className="p-2">O-{String(o.id).padStart(3,"0")}</td>
-                    <td className="p-2">{o.customer}</td>
-                    <td className="p-2">${o.value}</td>
-                    <td className="p-2">{o.stage}</td>
-                    <td className="p-2 flex gap-2 justify-center">
+                    <td className="px-4 py-0.5">O-{String(o.id).padStart(3,"0")}</td>
+                    <td className="px-4 py-0.5">{o.customer}</td>
+                    <td className="px-4 py-0.5">${o.value}</td>
+                    <td className="px-4 py-0.5">{o.stage}</td>
+                    <td className="px-4 py-0.5 flex gap-2 justify-center">
                       <Button size="sm" variant="outline" onClick={()=>openEdit(o)}>
                         <Pencil className="h-4 w-4"/>
                       </Button>
@@ -232,8 +232,8 @@ const [opps, setOpps] = useState([
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={()=>setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
+            <Button variant="destructive" onClick={()=>setIsModalOpen(false)}>Cancel</Button>
+            <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Search, RefreshCcw } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const INITIAL_FORM = {
   customer: "",
@@ -274,15 +275,16 @@ const SalesOrders = () => {
 
             {/* Credit Limit Filter */}
             <div>
-              <select
-                className="border rounded px-2 w-full h-[27px] text-sm"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="All">All Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Completed">Completed</option>
-              </select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All Status</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Clear Filters */}
@@ -495,7 +497,7 @@ const SalesOrders = () => {
 
           <DialogFooter>
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={() => {
                 setIsAddModalOpen(false);
                 setIsEditModalOpen(false);
@@ -505,6 +507,7 @@ const SalesOrders = () => {
               Cancel
             </Button>
             <Button
+              className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold"
               onClick={isEditModalOpen ? handleEditOrder : handleAddOrder}
             >
               {isEditModalOpen ? "Save Changes" : "Add Order"}

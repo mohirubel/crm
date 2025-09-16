@@ -67,14 +67,14 @@ const LoginPage = () => {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="admin@inventory.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-9"
                   required
                 />
               </div>
@@ -83,14 +83,14 @@ const LoginPage = () => {
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-9"
                   required
                 />
               </div>
@@ -98,7 +98,7 @@ const LoginPage = () => {
 
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full h-9 text-base" 
               disabled={loading}
             >
               {loading ? 'Signing in...' : 'Sign In'}

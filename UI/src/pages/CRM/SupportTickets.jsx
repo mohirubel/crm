@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCcw, Search } from "lucide-react";
 
 const INITIAL_FORM = {
   customer: "",
@@ -79,7 +79,7 @@ const SupportTickets = () => {
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold uppercase">Support Tickets</h2>
+          <h2 className="font-bold uppercase">Support Tickets</h2>
         </div>
         <Button onClick={() => {
           resetForm()
@@ -93,12 +93,14 @@ const SupportTickets = () => {
       <Card>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
+            <div className="relative">
+            <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
               <Input
                 id="search"
                 placeholder="Search by Ticket No or Customer"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
               />
             </div>
             <div>
@@ -150,32 +152,28 @@ const SupportTickets = () => {
 
       {/* 📋 Tickets Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Tickets List</CardTitle>
-          <CardDescription>All customer support tickets</CardDescription>
-        </CardHeader>
         <CardContent>
           <table className="w-full border text-sm">
             <thead className="bg-gray-100">
-              <tr>
-                <th className="p-2 text-left">Ticket No</th>
-                <th className="p-2 text-left">Customer</th>
-                <th className="p-2 text-left">Issue</th>
-                <th className="p-2 text-left">Status</th>
-                <th className="p-2 text-left">Priority</th>
-                <th className="p-2">Actions</th>
+              <tr className="text-[14px]">
+                <th className="px-4 py-2 text-left">Ticket No</th>
+                <th className="px-4 py-2 text-left">Customer</th>
+                <th className="px-4 py-2 text-left">Issue</th>
+                <th className="px-4 py-2 text-left">Status</th>
+                <th className="px-4 py-2 text-left">Priority</th>
+                <th className="px-4 py-2 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredTickets.length > 0 ? (
                 filteredTickets.map(t => (
                   <tr key={t.id} className="border-t">
-                    <td className="p-2">T-{String(t.id).padStart(3,"0")}</td>
-                    <td className="p-2">{t.customer}</td>
-                    <td className="p-2">{t.issue}</td>
-                    <td className="p-2">{t.status}</td>
-                    <td className="p-2">{t.priority}</td>
-                    <td className="p-2 flex gap-2 justify-center">
+                    <td className="px-4 py-0.5">T-{String(t.id).padStart(3,"0")}</td>
+                    <td className="px-4 py-0.5">{t.customer}</td>
+                    <td className="px-4 py-0.5">{t.issue}</td>
+                    <td className="px-4 py-0.5">{t.status}</td>
+                    <td className="px-4 py-0.5">{t.priority}</td>
+                    <td className="px-4 py-0.5 flex gap-2 justify-center">
                       <Button size="sm" variant="outline" onClick={()=>openEdit(t)}><Pencil className="h-4 w-4"/></Button>
                       <Button size="sm" variant="destructive" onClick={()=>handleDelete(t.id)}><Trash2 className="h-4 w-4"/></Button>
                     </td>
@@ -261,10 +259,10 @@ const SupportTickets = () => {
     </div>
 
     <DialogFooter>
-      <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+      <Button variant="destructive" onClick={() => setIsModalOpen(false)}>
         Cancel
       </Button>
-      <Button onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
+      <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>

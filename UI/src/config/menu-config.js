@@ -43,7 +43,7 @@ export const menuConfig = [
     section: "  "
   },
   {
-    id: 'sales',
+    id: 'customers',
     name: 'Sales',
     icon: ShoppingCart,
     component: 'Sales',
@@ -51,7 +51,7 @@ export const menuConfig = [
     section: "  "
   },
   {
-    id: 'purchase',
+    id: 'suppliers',
     name: 'Purchase',
     icon: ShoppingCart,
     component: 'Purchase',

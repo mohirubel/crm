@@ -12,31 +12,101 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, RefreshCcw } from 'lucide-react';
+import { Plus, Edit, Trash2, RefreshCcw, Search } from 'lucide-react';
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      name: 'Design Homepage',
-      project: 'E-commerce Website',
-      assignedTo: 'John Doe',
-      startDate: '2024-07-05',
-      endDate: '2024-07-20',
-      dueDate: '2024-07-20',
-      status: 'Pending',
-    },
-    {
-      id: 2,
-      name: 'API Integration',
-      project: 'Mobile App Development',
-      assignedTo: 'Jane Smith',
-      startDate: '2024-08-12',
-      endDate: '2024-09-01',
-      dueDate: '2024-09-01',
-      status: 'Completed',
-    },
-  ]);
+const [tasks, setTasks] = useState([
+  {
+    id: 1,
+    name: 'Design Homepage',
+    project: 'E-commerce Website',
+    assignedTo: 'John Doe',
+    startDate: '2024-07-05',
+    endDate: '2024-07-20',
+    dueDate: '2024-07-20',
+    status: 'Pending',
+  },
+  {
+    id: 2,
+    name: 'API Integration',
+    project: 'Mobile App Development',
+    assignedTo: 'Jane Smith',
+    startDate: '2024-08-12',
+    endDate: '2024-09-01',
+    dueDate: '2024-09-01',
+    status: 'Completed',
+  },
+  {
+    id: 3,
+    name: 'Set Up Database',
+    project: 'CRM System Upgrade',
+    assignedTo: 'Alice Rahman',
+    startDate: '2024-09-10',
+    endDate: '2024-09-25',
+    dueDate: '2024-09-25',
+    status: 'In Progress',
+  },
+  {
+    id: 4,
+    name: 'Inventory API',
+    project: 'Inventory Management',
+    assignedTo: 'Mark Lee',
+    startDate: '2024-10-02',
+    endDate: '2024-10-18',
+    dueDate: '2024-10-18',
+    status: 'Pending',
+  },
+  {
+    id: 5,
+    name: 'UI/UX Testing',
+    project: 'Website Redesign',
+    assignedTo: 'Sophia Khan',
+    startDate: '2024-06-20',
+    endDate: '2024-07-05',
+    dueDate: '2024-07-05',
+    status: 'Completed',
+  },
+  {
+    id: 6,
+    name: 'Chatbot Training',
+    project: 'AI Chatbot',
+    assignedTo: 'David Chowdhury',
+    startDate: '2024-11-05',
+    endDate: '2024-12-01',
+    dueDate: '2024-12-01',
+    status: 'Planning',
+  },
+  {
+    id: 7,
+    name: 'Data Pipeline Setup',
+    project: 'Data Analytics Platform',
+    assignedTo: 'Nadia Islam',
+    startDate: '2024-07-25',
+    endDate: '2024-08-15',
+    dueDate: '2024-08-15',
+    status: 'Active',
+  },
+  {
+    id: 8,
+    name: 'Server Migration',
+    project: 'Cloud Migration',
+    assignedTo: 'Rahim Uddin',
+    startDate: '2024-09-01',
+    endDate: '2024-09-20',
+    dueDate: '2024-09-20',
+    status: 'On Hold',
+  },
+  {
+    id: 9,
+    name: 'SEO Optimization',
+    project: 'Digital Marketing Campaign',
+    assignedTo: 'Lina Das',
+    startDate: '2024-09-12',
+    endDate: '2024-09-30',
+    dueDate: '2024-09-30',
+    status: 'Pending',
+  },
+]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -121,7 +191,7 @@ const Tasks = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold uppercase">Tasks</h2>
+          <h2 className="font-bold uppercase">Tasks</h2>
         </div>
         <Button onClick={() => {
           setNewTask({
@@ -141,11 +211,13 @@ const Tasks = () => {
       {/* Filters */}
       <Card>
         <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
+          <div className='relative'>
+           <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search tasks..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
             />
           </div>
           <div>
@@ -175,7 +247,7 @@ const Tasks = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
-                <tr>
+                <tr className='text-[14px]'>
                   <th className="px-4 py-2 text-left">ID</th>
                   <th className="px-4 py-2 text-left">Task</th>
                   <th className="px-4 py-2 text-left">Project</th>
@@ -188,13 +260,13 @@ const Tasks = () => {
               <tbody>
                 {filteredTasks.map((t) => (
                   <tr key={t.id} className="border-b">
-                    <td className="px-4 py-2">{t.id}</td>
-                    <td className="px-4 py-2 font-medium">{t.name}</td>
-                    <td className="px-4 py-2">{t.project}</td>
-                    <td className="px-4 py-2">{t.assignedTo}</td>
-                    <td className="px-4 py-2">{t.dueDate}</td>
-                    <td className="px-4 py-2">{t.status}</td>
-                    <td className="px-4 py-2 flex space-x-2">
+                    <td className="px-4 py-0.5">{t.id}</td>
+                    <td className="px-4 py-0.5 font-medium">{t.name}</td>
+                    <td className="px-4 py-0.5">{t.project}</td>
+                    <td className="px-4 py-0.5">{t.assignedTo}</td>
+                    <td className="px-4 py-0.5">{t.dueDate}</td>
+                    <td className="px-4 py-0.5">{t.status}</td>
+                    <td className="px-4 py-0.5 flex space-x-2">
                       <Button
                         size="sm"
                         variant="outline"
@@ -227,7 +299,7 @@ const Tasks = () => {
               {editingTaskId ? 'Update the task details' : 'Create a new task under a project'}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6">
             <div>
               <Label>Task Name</Label>
               <Input
@@ -293,10 +365,15 @@ const Tasks = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+            <Button variant="destructive" onClick={() => 
+            {
+             setEditingTaskId(null)
+             setIsModalOpen(false)
+            }
+            }>
               Cancel
             </Button>
-            <Button onClick={handleSaveTask}>
+            <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={handleSaveTask}>
               {editingTaskId ? 'Update' : 'Add'}
             </Button>
           </DialogFooter>

@@ -17,20 +17,62 @@ import {
 import { Search, Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
 
 const Warehouses = () => {
-  const [warehouses, setWarehouses] = useState([
-    {
-      id: 1,
-      name: "Central Warehouse",
-      address: "123 Main Street, Dhaka",
-      contact: "+8801712345678",
-    },
-    {
-      id: 2,
-      name: "Branch Warehouse",
-      address: "45 Park Road, Chattogram",
-      contact: "+8801998765432",
-    },
-  ]);
+const [warehouses, setWarehouses] = useState([
+  {
+    id: 1,
+    name: "Central Warehouse",
+    address: "123 Main Street, Dhaka",
+    contact: "+8801712345678",
+  },
+  {
+    id: 2,
+    name: "Branch Warehouse",
+    address: "45 Park Road, Chattogram",
+    contact: "+8801998765432",
+  },
+  {
+    id: 3,
+    name: "North Hub",
+    address: "88 Airport Road, Sylhet",
+    contact: "+8801700112233",
+  },
+  {
+    id: 4,
+    name: "South Storage",
+    address: "12 Sea View Avenue, Cox’s Bazar",
+    contact: "+8801812345670",
+  },
+  {
+    id: 5,
+    name: "Khulna Depot",
+    address: "77 Rupsha Road, Khulna",
+    contact: "+8801711456789",
+  },
+  {
+    id: 6,
+    name: "Rajshahi Facility",
+    address: "15 Green Park, Rajshahi",
+    contact: "+8801912345671",
+  },
+  {
+    id: 7,
+    name: "Barishal Center",
+    address: "34 River Side, Barishal",
+    contact: "+8801712349876",
+  },
+  {
+    id: 8,
+    name: "Mymensingh Store",
+    address: "9 College Road, Mymensingh",
+    contact: "+8801712223344",
+  },
+  {
+    id: 9,
+    name: "Comilla Logistics",
+    address: "56 Market Street, Comilla",
+    contact: "+8801922334455",
+  },
+]);
 
   // 🔎 Search state
   const [searchTerm, setSearchTerm] = useState("");

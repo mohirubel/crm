@@ -18,6 +18,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, RefreshCcw, Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const INITIAL_FORM = {
   name: "",
@@ -28,14 +35,29 @@ const INITIAL_FORM = {
 };
 
 const Leads = () => {
-const [leads, setLeads] = useState([
-  { id: 1, name: "John Doe", contact: "john@example.com", status: "New" },
-  { id: 2, name: "Jane Smith", contact: "+880123456789", status: "Contacted" },
-  { id: 3, name: "Rahim Uddin", contact: "rahim@example.com", status: "Qualified" },
-  { id: 4, name: "Karim Ahmed", contact: "+8801712345678", status: "New" },
-  { id: 5, name: "Sumaiya Akter", contact: "sumaiya@example.com", status: "Contacted" },
-  { id: 6, name: "Imran Hossain", contact: "+8801998765432", status: "Lost" },
-]);
+  const [leads, setLeads] = useState([
+    { id: 1, name: "John Doe", contact: "john@example.com", status: "New" },
+    {
+      id: 2,
+      name: "Jane Smith",
+      contact: "+880123456789",
+      status: "Contacted",
+    },
+    {
+      id: 3,
+      name: "Rahim Uddin",
+      contact: "rahim@example.com",
+      status: "Qualified",
+    },
+    { id: 4, name: "Karim Ahmed", contact: "+8801712345678", status: "New" },
+    {
+      id: 5,
+      name: "Sumaiya Akter",
+      contact: "sumaiya@example.com",
+      status: "Contacted",
+    },
+    { id: 6, name: "Imran Hossain", contact: "+8801998765432", status: "Lost" },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
@@ -106,10 +128,12 @@ const [leads, setLeads] = useState([
         <div>
           <h2 className="font-bold uppercase">Leads</h2>
         </div>
-        <Button onClick={() => {
-          resetForm();
-          setIsModalOpen(true)
-        }}>
+        <Button
+          onClick={() => {
+            resetForm();
+            setIsModalOpen(true);
+          }}
+        >
           <Plus className="h-4 w-4 mr-1" /> Add Lead
         </Button>
       </div>
@@ -119,7 +143,7 @@ const [leads, setLeads] = useState([
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div className="relative">
-            <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
               <Input
                 id="search"
                 placeholder="Search by name or contact..."
@@ -129,26 +153,26 @@ const [leads, setLeads] = useState([
               />
             </div>
             <div>
-              <select
-                id="status"
-                className="border px-2 rounded w-full text-sm h-[27px]"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="All">All</option>
-                <option value="New">New</option>
-                <option value="Contacted">Contacted</option>
-                <option value="Qualified">Qualified</option>
-                <option value="Lost">Lost</option>
-              </select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All</SelectItem>
+                  <SelectItem value="New">New</SelectItem>
+                  <SelectItem value="Contacted">Contacted</SelectItem>
+                  <SelectItem value="Qualified">Qualified</SelectItem>
+                  <SelectItem value="Lost">Lost</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Button
-               className="bg-yellow-500 hover:bg-yellow-600"
+                className="bg-yellow-500 hover:bg-yellow-600"
                 variant="outline"
                 onClick={handleClearFilters}
               >
-               <RefreshCcw className="h-4 w-4" />  Clear Filters
+                <RefreshCcw className="h-4 w-4" /> Clear Filters
               </Button>
             </div>
           </div>
@@ -259,10 +283,13 @@ const [leads, setLeads] = useState([
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+            <Button variant="destructive" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSave}>
+            <Button
+              className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold"
+              onClick={handleSave}
+            >
               {selected ? "Save" : "Add"}
             </Button>
           </DialogFooter>

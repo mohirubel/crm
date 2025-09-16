@@ -23,10 +23,90 @@ const INITIAL_FORM = {
 };
 
 const JournalEntries = () => {
-  const [entries, setEntries] = useState([
-    { id: 1, entryNo: "JE-001", date: "2025-09-01", debit: "Cash", credit: "Sales", amount: 5000, narration: "Sales income" },
-    { id: 2, entryNo: "JE-002", date: "2025-09-05", debit: "Bank", credit: "Cash", amount: 2000, narration: "Deposit" },
-  ]);
+const [entries, setEntries] = useState([
+  { 
+    id: 1,
+    entryNo: "JE-001",
+    date: "2025-09-01",
+    debit: "Cash",
+    credit: "Sales",
+    amount: 5000,
+    narration: "Sales income",
+  },
+  { 
+    id: 2,
+    entryNo: "JE-002",
+    date: "2025-09-05",
+    debit: "Bank",
+    credit: "Cash",
+    amount: 2000,
+    narration: "Deposit",
+  },
+  {
+    id: 3,
+    entryNo: "JE-003",
+    date: "2025-09-07",
+    debit: "Rent Expense",
+    credit: "Cash",
+    amount: 1200,
+    narration: "Office rent payment",
+  },
+  {
+    id: 4,
+    entryNo: "JE-004",
+    date: "2025-09-10",
+    debit: "Accounts Receivable",
+    credit: "Sales",
+    amount: 3500,
+    narration: "Credit sales to client",
+  },
+  {
+    id: 5,
+    entryNo: "JE-005",
+    date: "2025-09-12",
+    debit: "Utilities Expense",
+    credit: "Bank",
+    amount: 800,
+    narration: "Electricity bill payment",
+  },
+  {
+    id: 6,
+    entryNo: "JE-006",
+    date: "2025-09-15",
+    debit: "Office Supplies",
+    credit: "Cash",
+    amount: 450,
+    narration: "Purchase of office supplies",
+  },
+  {
+    id: 7,
+    entryNo: "JE-007",
+    date: "2025-09-18",
+    debit: "Bank",
+    credit: "Accounts Receivable",
+    amount: 3000,
+    narration: "Customer payment received",
+  },
+  {
+    id: 8,
+    entryNo: "JE-008",
+    date: "2025-09-20",
+    debit: "Salary Expense",
+    credit: "Cash",
+    amount: 4000,
+    narration: "Monthly salary paid",
+  },
+  {
+    id: 9,
+    entryNo: "JE-009",
+    date: "2025-09-25",
+    debit: "Advertising Expense",
+    credit: "Bank",
+    amount: 1500,
+    narration: "Online marketing campaign",
+  },
+]);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -231,8 +311,8 @@ const JournalEntries = () => {
             <Input value={formData.narration} onChange={(e) => setFormData({ ...formData, narration: e.target.value })} />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
+            <Button variant="destructive" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
