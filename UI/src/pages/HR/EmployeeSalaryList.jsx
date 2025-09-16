@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Search, Eye, Edit, Trash2, X, DollarSign, Users, Calculator, Download, Calendar, Filter } from 'lucide-react';
+import { Plus, Search, Eye, Edit, Trash2, X, DollarSign, Users, Calculator, Download, Calendar, Filter, RefreshCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -404,7 +405,7 @@ const EmployeeSalaryList = () => {
         <div className="mb-0">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-xl font-bold text-gray-900 mb-2">Employee Salary Management</h1>
+              <h1 className="font-bold text-gray-900 mb-2">Employee Salary Management</h1>
               {/* <p className="text-gray-600">Manage employee salaries, bonuses, and deductions with monthly/yearly views</p> */}
             </div>
             {/* <button
@@ -418,15 +419,15 @@ const EmployeeSalaryList = () => {
         </div>
 
         {/* View Mode & Download Section */}
-        <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="bg-white rounded-lg shadow-sm mb-3">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-gray-500" />
                 <span className="text-sm font-medium text-gray-700">View Mode:</span>
               </div>
               <select
-                className="px-3 py-2 border border-gray-300 rounded-lg "
+                className="pl-1 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
                 value={viewMode}
                 onChange={(e) => {
                   setViewMode(e.target.value);
@@ -488,7 +489,7 @@ const EmployeeSalaryList = () => {
               </button> */}
               <button
                 onClick={downloadPDF}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+                className="bg-black text-white px-3 py-1.5 rounded-xl flex items-center gap-2 text-[12px] hover:bg-gray-800 transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Export PDF
@@ -498,8 +499,8 @@ const EmployeeSalaryList = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <div className="bg-white rounded-xl shadow-sm border p-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-3 h-[max-content]">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Employees</p>
@@ -511,7 +512,7 @@ const EmployeeSalaryList = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Basic Salary</p>
@@ -523,7 +524,7 @@ const EmployeeSalaryList = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Net Salary</p>
@@ -535,7 +536,7 @@ const EmployeeSalaryList = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Advance</p>
@@ -549,39 +550,41 @@ const EmployeeSalaryList = () => {
         </div>
 
         {/* Search & Filter Section */}
-        <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Search & Filter Salaries</h2>
-          <p className="text-gray-600 text-sm mb-4">Search by employee name or department</p>
-          
-          <div className="flex gap-4">
+        <div className="bg-white rounded-lg shadow-sm mb-3">
+         <div class="flex flex-col md:flex-row gap-4 p-4">
+          <div className="flex gap-4 py-2">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-              <div className="relative">
+              <div className="flex relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search employees..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl "
+                  className="w-full pl-10 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
+            <div className="flex items-end">
+                     <Button
+                       onClick={() => {
+                         setSearchTerm('');
+                        //  setFilterStatus('all');
+                        //  setFilterLeaveType('all');
+             
+                       }}
+                       className="bg-yellow-500 hover:bg-yellow-600"
+                     >
+                       <RefreshCcw className="h-4 w-4" />
+                       Clear Filters
+                     </Button>
+                   </div>
           </div>
-          
-          <div className="mt-4 text-sm text-gray-600">
-            Showing {filteredSalaries.length} of {salaries.length} salary records
-            {viewMode === 'monthly' && selectedMonth && ` for ${selectedMonth} ${selectedYear}`}
-            {viewMode === 'yearly' && selectedYear && ` for year ${selectedYear}`}
-          </div>
+         </div>
         </div>
 
         {/* Salary List */}
         <div className="bg-white rounded-xl shadow-sm border">
-          <div className="p-6 border-b">
-            <h2 className="text-lg font-semibold text-gray-900">Salary Records</h2>
-            <p className="text-gray-600 text-sm">View and manage employee salary information</p>
-          </div>
 
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
@@ -603,42 +606,42 @@ const EmployeeSalaryList = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredSalaries.map((salary) => (
                   <tr key={salary.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">#{salary.id}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{salary.employeeName}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm text-gray-900">{salary.department}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm text-gray-900">{salary.date}</div>
                       <div className="text-xs text-gray-500">{salary.month} {salary.year}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm text-gray-900">{salary.presentDays} days</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm font-medium text-green-600">{formatCurrency(salary.basicSalary)}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm font-medium text-red-600">{formatCurrency(salary.advanceLoan)}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm font-medium text-red-600">{formatCurrency(salary.deduction)}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm font-medium text-blue-600">{formatCurrency(salary.bonus)}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="text-sm font-bold text-gray-900">{formatCurrency(salary.netSalary)}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-[2px] whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleViewSalary(salary)}
-                          className="p-2 border rounded-md hover:bg-gray-100"
+                          className="p-1 border rounded-md hover:bg-gray-100"
                           title="View Details"
                         >
                           <Eye className="w-4 h-4 text-green-600" />
@@ -646,7 +649,7 @@ const EmployeeSalaryList = () => {
 
                         <button
                           onClick={() => handleEditClick(salary)}
-                          className="p-2 border rounded-md hover:bg-gray-100"
+                          className="p-1 border rounded-md hover:bg-gray-100"
                           title="Edit Salary"
                         >
                           <Edit className="w-4 h-4 text-blue-600" />
@@ -655,7 +658,7 @@ const EmployeeSalaryList = () => {
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <button
-                              className="p-2 border rounded-md hover:bg-gray-100"
+                              className="p-1 border rounded-md hover:bg-gray-100"
                               title="Delete Salary"
                             >
                               <Trash2 className="w-4 h-4 text-red-600" />

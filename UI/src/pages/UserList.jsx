@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, Plus, Eye, Edit3, Trash2, X, Save, UserPlus } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 
 const UserList = () => {
   const [users, setUsers] = useState([
@@ -120,15 +121,15 @@ const UserList = () => {
     <div className="min-h-screen">
       <div className="mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="flex items-center justify-between">
+        <div className="mb-[12px]">
+          <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-xl font-bold text-gray-800">User Management</h1>
+              <h1 className="font-bold tracking-tight uppercase">User Management</h1>
               {/* <p className="text-gray-600 mt-1">Manage team members and their information</p> */}
             </div>
             <button
               onClick={openAddModal}
-              className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-3 py-1.5 rounded-xl flex items-center gap-2 text-[12px] hover:bg-gray-800 transition-colors"
             >
               <Plus size={16} />
               Add New User
@@ -137,7 +138,8 @@ const UserList = () => {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <Card>
+         <CardContent>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
@@ -152,7 +154,7 @@ const UserList = () => {
               <tbody className="divide-y divide-gray-200">
                 {users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-[2px]">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
                           {user.avatar}
@@ -162,14 +164,14 @@ const UserList = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{user.email}</td>
-                    <td className="px-6 py-4 text-gray-600">{user.phone}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-[2px]">{user.email}</td>
+                    <td className="px-4 py-[2px]">{user.phone}</td>
+                    <td className="px-4 py-[2px]">
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-sm">
                         {user.position}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-[2px]">
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => openViewModal(user)}
@@ -199,13 +201,14 @@ const UserList = () => {
               </tbody>
             </table>
           </div>
-        </div>
+         </CardContent>
+        </Card>
 
         {/* Add User Modal */}
         {showAddModal && (
           <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-lg w-full max-w-md mx-4">
+              <div className="bg-gray-50 border-b p-6 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                   <UserPlus size={20} />
                   Add New User
@@ -217,6 +220,8 @@ const UserList = () => {
                   <X size={20} />
                 </button>
               </div>
+            <div className=" p-5">
+              
               
               <div className="space-y-4">
                 <input
@@ -250,23 +255,24 @@ const UserList = () => {
                   onChange={(e) => setNewUser({...newUser, position: e.target.value})}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-                
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleAddUser}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                  >
-                    <Save size={16} />
-                    Add User
-                  </button>
-                  <button
-                    onClick={() => setShowAddModal(false)}
-                    className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
               </div>
+              
+            </div>
+              <div className="flex justify-end gap-3 bg-gray-100 p-4 border-t mt-0">
+                <button
+                  onClick={handleAddUser}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                  <Save size={16} />
+                  Add User
+                </button>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+
             </div>
           </div>
         )}

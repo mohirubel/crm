@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Edit, Plus, Trash2, Save, X, Users, Shield, FileText, Settings, CreditCard, BarChart3, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 const RolesPermissions = () => {
@@ -178,25 +179,25 @@ const RolesPermissions = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto ">
         {/* Header */}
-        <div className="mb-0">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-3">
+        <div className="mb-[12px]">
+          <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Roles & Permissions</h1>
+              <h1 className="font-bold tracking-tight uppercase">Roles & Permissions</h1>
               {/* <p className="text-gray-600 mt-2">Manage user roles and their access permissions</p> */}
             </div>
             <button
               onClick={handleAddRole}
-              className="inline-flex items-center px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors duration-300"
+              className="bg-black text-white px-3 py-1.5 rounded-xl flex items-center gap-2 text-[12px] hover:bg-gray-800 transition-colors"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-4 h-4" />
               Add New Role
             </button>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-3 h-[max-content]">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Shield className="h-8 w-8 text-blue-600" />
@@ -207,7 +208,7 @@ const RolesPermissions = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Settings className="h-8 w-8 text-green-600" />
@@ -218,7 +219,7 @@ const RolesPermissions = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Users className="h-8 w-8 text-purple-600" />
@@ -234,11 +235,9 @@ const RolesPermissions = () => {
         </div>
 
         {/* Roles Table */}
-        <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <h2 className="text-lg font-semibold text-gray-900">Roles List</h2>
-          </div>
-
+      <Card>
+         <CardContent>
+          <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
           {/* Desktop Table */}
           <div className="hidden md:block">
             <div className="overflow-x-auto">
@@ -262,18 +261,18 @@ const RolesPermissions = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {roles.map((role) => (
                     <tr key={role.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-[2px] whitespace-nowrap">
                         <span className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">
                           #{role.id.toString().padStart(3, '0')}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-[2px] whitespace-nowrap">
                         <div className="flex items-center">
                           <Shield className="h-5 w-5 text-gray-400 mr-3" />
                           <span className="text-sm font-medium text-gray-900">{role.name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-[2px]">
                         <div className="flex flex-wrap gap-2">
                           {role.permissions.map((permission) => {
                             const moduleInfo = getModuleInfo(permission);
@@ -291,7 +290,7 @@ const RolesPermissions = () => {
                           })}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-4 py-[2px] whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
                           <Button 
                             variant="outline" 
@@ -424,14 +423,17 @@ const RolesPermissions = () => {
               </div>
             </div>
           )}
-        </div>
+          </div>
+        </CardContent>
+      </Card>
+        
 
         {/* Form Modal */}
         {showForm && (
           <div className="fixed inset-0 bg-black/40 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 xl:w-2/5 shadow-lg rounded-md bg-white">
+            <div className="relative top-20 mx-auto border w-11/12 md:w-3/4 lg:w-1/2 xl:w-2/5 shadow-lg rounded-md bg-white max-w-md">
               {/* Modal Header */}
-              <div className="flex justify-between items-center pb-4 border-b">
+              <div className="bg-gray-50 border-b p-6 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">
                   {editingRole ? 'Edit Role' : 'Add New Role'}
                 </h3>
@@ -445,7 +447,7 @@ const RolesPermissions = () => {
               </div>
 
               {/* Modal Body */}
-              <div className="py-4">
+              <div className="p-4">
                 {/* Role Name Field */}
                 <div className="mb-6">
                   <label htmlFor="roleName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -546,15 +548,7 @@ const RolesPermissions = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex justify-end space-x-3 pt-4 border-t">
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </button>
+              <div className="flex justify-end space-x-3 p-4 border-t bg-gray-50">
                 <button
                   type="button"
                   onClick={handleSubmit}
@@ -572,6 +566,14 @@ const RolesPermissions = () => {
                       {editingRole ? 'Update Role' : 'Create Role'}
                     </>
                   )}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  disabled={isSubmitting}
+                >
+                  Cancel
                 </button>
               </div>
             </div>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Plus, Search, Filter, Edit, Trash2, Eye, X, Check, Clock, AlertCircle } from 'lucide-react';
+import { Calendar, Plus, Search, Filter, Edit, Trash2, Eye, X, Check, Clock, AlertCircle, RefreshCcw } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const LeaveManagement = () => {
   const [selectedView, setSelectedView] = useState('list'); // 'list', 'form'
@@ -9,6 +11,8 @@ const LeaveManagement = () => {
   const [showViewModal, setShowViewModal] = useState(false);
   const [viewingLeave, setViewingLeave] = useState(null);
   const [editingLeave, setEditingLeave] = useState(null);
+
+  
 
   // Sample employees
   const employees = [
@@ -186,12 +190,13 @@ const LeaveManagement = () => {
   };
 
   const filteredLeaves = leaveApplications.filter(leave => {
-    const matchesSearch = leave.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const matchesSearch = leave.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          leave.empId.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          leave.leaveType.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesStatus = filterStatus === 'all' || leave.status === filterStatus;
-    const matchesLeaveType = filterLeaveType === 'all' || leave.leaveType === filterLeaveType;
+  const matchesStatus = filterStatus === 'all' || leave.status === filterStatus;
+  const matchesLeaveType = filterLeaveType === 'all' || leave.leaveType === filterLeaveType;
+
     
     return matchesSearch && matchesStatus && matchesLeaveType;
   });
@@ -221,7 +226,7 @@ const LeaveManagement = () => {
         <div className="mb-3">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Leave Management</h1>
+                <h1 className="font-bold text-gray-900">Leave Management</h1>
                 {/* <p className="text-gray-600">Manage employee leave applications and approvals</p> */}
               </div>
               <div className="flex items-center gap-3">
@@ -238,7 +243,7 @@ const LeaveManagement = () => {
                       status: 'Pending'
                     });
                   }}
-                  className={`px-4 py-2 text-sm font-medium rounded-md ${
+                  className={`px-3 py-1 text-[12px] font-medium rounded-md ${
                     selectedView === 'list' 
                       ? 'bg-gray-900 text-white' 
                       : 'text-gray-700 hover:text-gray-900'
@@ -259,10 +264,10 @@ const LeaveManagement = () => {
                       status: 'Pending'
                     });
                   }}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md ${
+                  className={`flex items-center px-3 py-1 text-[12px] font-medium rounded-md ${
                     selectedView === 'form' 
                       ? 'bg-gray-900 text-white' 
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-[#2eb4f7] text-white hover:bg-blue-700'
                   }`}
                 >
                   <Plus size={16} />
@@ -271,12 +276,12 @@ const LeaveManagement = () => {
               </div>
             </div>
           </div>
-        <div className="bg-white rounded-lg shadow-sm mb-6">
+        <div className="bg-white rounded-lg shadow-sm mb-3">
           {/* Stats */}
           <div className="grid grid-cols-4 gap-8 p-4">
             <div className="text-center">
-              <div className="text-xl font-bold text-gray-900">{leaveApplications.length}</div>
-              <div className="text-sm text-gray-600">Total Applications</div>
+              <div className="font-bold text-gray-900">{leaveApplications.length}</div>
+              <div className=" text-gray-600">Total Applications</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
@@ -299,14 +304,8 @@ const LeaveManagement = () => {
           </div>
         </div>
 
-        {selectedView === 'list' && (
-          <div className="bg-white rounded-lg shadow-sm">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-1">Leave Applications</h2>
-                  <p className="text-gray-600 text-sm">Manage and review employee leave requests</p>
-                </div>
+        <div className="bg-white rounded-lg shadow-sm mb-3">
+              <div className="flex flex-col md:flex-row gap-4 p-4">
                 <div className="flex gap-4 py-2">
                   <div className="flex relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -315,13 +314,13 @@ const LeaveManagement = () => {
                       placeholder="Search applications..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm "
+                      className="pl-10 pr-3 py-1 border border-gray-300 rounded-xl text-sm "
                     />
                   </div>
                   <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm "
+                    className="pl-1 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
                   >
                     <option value="all">All Status</option>
                     <option value="Pending">Pending</option>
@@ -331,18 +330,36 @@ const LeaveManagement = () => {
                   <select
                     value={filterLeaveType}
                     onChange={(e) => setFilterLeaveType(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm "
+                    className="pl-1 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
                   >
                     <option value="all">All Types</option>
                     {leaveTypes.map(type => (
                       <option key={type} value={type}>{type}</option>
                     ))}
                   </select>
+                  <div className="flex items-end">
+                     <Button
+                       onClick={() => {
+                         setSearchTerm('');
+                         setFilterStatus('all');
+                         setFilterLeaveType('all');
+             
+                       }}
+                       className="bg-yellow-500 hover:bg-yellow-600"
+                     >
+                       <RefreshCcw className="h-4 w-4" />
+                       Clear Filters
+                     </Button>
+                   </div>
                 </div>
               </div>
-            </div>
+        </div>
 
-            <div className="overflow-x-auto">
+        {selectedView === 'list' && (
+          <div className="bg-white rounded-lg shadow-sm">
+            <Card>
+              <CardContent>
+                <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 text-sm border">
                 <thead className="bg-gray-50">
                   <tr>
@@ -358,29 +375,29 @@ const LeaveManagement = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredLeaves.map((leave) => (
                     <tr key={leave.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-[2px] whitespace-nowrap">
                         <div>
                           <div className="text-sm font-medium text-gray-900">{leave.employeeName}</div>
                           <div className="text-sm text-gray-500">{leave.empId}</div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{leave.leaveType}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">{leave.leaveType}</td>
+                      <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">
                         {new Date(leave.startDate).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">
                         {new Date(leave.endDate).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
+                      <td className="px-4 py-[2px] whitespace-nowrap text-center text-sm text-gray-900">
                         {leave.days}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-4 py-[2px] whitespace-nowrap text-center">
                         <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md ${getStatusColor(leave.status)}`}>
                           {getStatusIcon(leave.status)}
                           {leave.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-4 py-2 whitespace-nowrap text-center">
                         <div className="flex justify-center gap-2">
                           <button
                             onClick={() => {
@@ -430,12 +447,14 @@ const LeaveManagement = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
-            <div className="px-6 py-3 border-t border-gray-200 text-sm text-gray-500">
-              Showing {filteredLeaves.length} of {leaveApplications.length} applications
-            </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
+        <div className="px-6 py-3 border-t border-gray-200 text-sm text-gray-500 bg-white rounded-lg shadow-sm mt-3">
+              Showing {filteredLeaves.length} of {leaveApplications.length} applications
+        </div>
 
         {selectedView === 'form' && (
           <div className="bg-white rounded-lg shadow-sm">

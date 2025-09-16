@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Search, Eye, Edit, Trash2, Calendar, Upload, X } from 'lucide-react';
+import { Plus, Search, Eye, Edit, Trash2, Calendar, Upload, Pencil, RefreshCcw, Check, ChevronsUpDown, X } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -170,12 +171,6 @@ const EmployeeList = () => {
     setShowEditForm(true);
   };
 
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.designation.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -266,6 +261,21 @@ const EmployeeList = () => {
     </div>
   );
 
+  const [departmentFilter, setDepartmentFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const filteredEmployees = employees.filter(employee => {
+  const matchesSearch =
+    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.designation.toLowerCase().includes(searchTerm.toLowerCase());
+
+  const matchesDepartment = departmentFilter ? employee.department === departmentFilter : true;
+  const matchesStatus = statusFilter ? employee.status === statusFilter : true;
+
+  return matchesSearch && matchesDepartment && matchesStatus;
+});
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="space-y-3">
@@ -277,7 +287,7 @@ const EmployeeList = () => {
             </div>
             <button
               onClick={() => setShowAddForm(true)}
-              className="bg-black text-white px-3 py-2 rounded-xl flex items-center gap-2 text-[12px] hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-3 py-1.5 rounded-xl flex items-center gap-2 text-[12px] hover:bg-gray-800 transition-colors"
             >
               <Plus className="h-4 w-4" />
               New Employee
@@ -286,25 +296,71 @@ const EmployeeList = () => {
         </div>
 
         {/* Search & Filter Section */}
-      <Card>
-        <CardContent>          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="flex-1">
-              {/* <label className="block text-sm font-medium text-gray-700 mb-2">Search</label> */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search employees..."
-                  className="w-full pl-10 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+<Card>
+  <CardContent>          
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-[max-content]">
+      {/* Search */}
+      <div className="flex-1">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search employees..."
+            className="w-full pl-10 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Department Filter */}
+      
+        <select
+          className="px-3 py-1 border border-gray-300 rounded-xl text-sm"
+          value={departmentFilter}
+          onChange={(e) => setDepartmentFilter(e.target.value)}
+        >
+          <option value="">All Departments</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Management">Management</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Sales">Sales</option>
+          <option value="HR">HR</option>
+          <option value="Finance">Finance</option>
+        </select>
+      
+
+      {/* Status Filter */}
+      
+        <select
+          className="px-3 py-1 border border-gray-300 rounded-xl text-sm"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      
+
+      {/* Clear Filters Button */}
+      <div className="flex items-end">
+        <Button
+          onClick={() => {
+            setSearchTerm('');
+            setDepartmentFilter('');
+            setStatusFilter('');
+          }}
+          className="bg-yellow-500 hover:bg-yellow-600"
+        >
+          <RefreshCcw className="h-4 w-4" />
+          Clear Filters
+        </Button>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
         
         {/* Employee List */}
         <Card>
@@ -407,7 +463,7 @@ const EmployeeList = () => {
         {showAddForm && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto">
-              <div className="bg-gray-50 border-b-2 border-gray-300 p-6 flex justify-between items-center">
+              <div className="bg-gray-50 border-b p-6 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">Add New Employee</h3>
                 <button 
                   onClick={() => setShowAddForm(false)}
@@ -527,7 +583,7 @@ const EmployeeList = () => {
                 />
               </div>
 
-              <div className="bg-gray-100 p-4 border-t-2 border-gray-300 text-right mt-0">
+              <div className="bg-gray-100 p-4 border-t text-right mt-0">
                 <button
                   onClick={handleAddEmployee}
                   className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors mr-2"

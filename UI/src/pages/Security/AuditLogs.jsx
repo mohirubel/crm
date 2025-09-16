@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Calendar, User, Activity, MapPin, Search, Filter, Download, Eye, Clock, Shield, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { Calendar, User, Activity, MapPin, Search, Filter, Download, Eye, Clock, Shield, AlertCircle, CheckCircle, XCircle, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from "@/components/ui/card";
 
 const AuditLogs = () => {
   // Sample audit logs data
@@ -199,18 +200,17 @@ const AuditLogs = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="mb-3">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Audit Logs</h1>
-              <p className="text-gray-600 mt-2">Monitor system activities and user actions</p>
+              <h1 className="font-bold text-gray-900">Audit Logs</h1>
             </div>
-            <div className="flex space-x-3">
-              <Button variant="outline" className="inline-flex items-center">
+            <div className="flex items-center gap-3">
+              <Button variant="outline" className="inline-flex items-center px-3 py-1 text-[12px] font-medium rounded-md bg-gray-900 text-white">
                 <Download className="w-4 h-4 mr-2" />
                 Export Logs
               </Button>
-              <Button variant="outline" className="inline-flex items-center">
+              <Button variant="outline" className="inline-flex items-center px-3 py-1 text-[12px] font-medium rounded-md bg-gray-900 text-white">
                 <Filter className="w-4 h-4 mr-2" />
                 Advanced Filter
               </Button>
@@ -219,8 +219,8 @@ const AuditLogs = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-3 h-[max-content]">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Activity className="h-8 w-8 text-blue-600" />
@@ -231,7 +231,7 @@ const AuditLogs = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <XCircle className="h-8 w-8 text-red-600" />
@@ -242,7 +242,7 @@ const AuditLogs = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <User className="h-8 w-8 text-green-600" />
@@ -253,7 +253,7 @@ const AuditLogs = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <Clock className="h-8 w-8 text-purple-600" />
@@ -267,252 +267,262 @@ const AuditLogs = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search logs..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none "
-              />
-            </div>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-3 items-center">
 
-            {/* Status Filter */}
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none "
-            >
-              <option value="all">All Status</option>
-              <option value="success">Success</option>
-              <option value="failed">Failed</option>
-              <option value="warning">Warning</option>
-              <option value="blocked">Blocked</option>
-            </select>
+    {/* Search */}
+    <div className="relative w-full md:w-auto">
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+      <input
+        type="text"
+        placeholder="Search applications..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="pl-10 pr-3 py-1 border border-gray-300 rounded-md text-sm w-full md:w-48"
+      />
+    </div>
 
-            {/* Action Type Filter */}
-            <select
-              value={actionTypeFilter}
-              onChange={(e) => setActionTypeFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none "
-            >
-              <option value="all">All Actions</option>
-              <option value="authentication">Authentication</option>
-              <option value="user_management">User Management</option>
-              <option value="role_management">Role Management</option>
-              <option value="security">Security</option>
-              <option value="data_management">Data Management</option>
-            </select>
+    {/* Status Filter */}
+    <select
+      value={statusFilter}
+      onChange={(e) => setStatusFilter(e.target.value)}
+      className="pl-2 pr-3 py-1 border border-gray-300 rounded-md text-sm w-full md:w-40"
+    >
+      <option value="all">All Status</option>
+      <option value="success">Success</option>
+      <option value="failed">Failed</option>
+      <option value="warning">Warning</option>
+      <option value="blocked">Blocked</option>
+    </select>
 
-            {/* Date Filter */}
-            <select
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none "
-            >
-              <option value="all">All Time</option>
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-            </select>
+    {/* Action Type Filter */}
+    <select
+      value={actionTypeFilter}
+      onChange={(e) => setActionTypeFilter(e.target.value)}
+      className="pl-2 pr-3 py-1 border border-gray-300 rounded-md text-sm w-full md:w-44"
+    >
+      <option value="all">All Actions</option>
+      <option value="authentication">Authentication</option>
+      <option value="user_management">User Management</option>
+      <option value="role_management">Role Management</option>
+      <option value="security">Security</option>
+      <option value="data_management">Data Management</option>
+    </select>
+
+    {/* Date Filter */}
+    <select
+      value={dateFilter}
+      onChange={(e) => setDateFilter(e.target.value)}
+      className="pl-2 pr-3 py-1 border border-gray-300 rounded-md text-sm w-full md:w-40"
+    >
+      <option value="all">All Time</option>
+      <option value="today">Today</option>
+      <option value="week">This Week</option>
+      <option value="month">This Month</option>
+    </select>
+
+    {/* Clear Button */}
+    <Button
+      onClick={() => {
+        setSearchTerm('');
+        setStatusFilter('all');
+        setActionTypeFilter('all');
+        setDateFilter('all');
+      }}
+      className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-1 h-8 flex items-center gap-2 rounded-md"
+    >
+      <RefreshCcw className="h-4 w-4" />
+      Clear Filters
+    </Button>
           </div>
         </div>
 
         {/* Audit Logs Table */}
-        <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-gray-900">Activity Log</h2>
-              <span className="text-sm text-gray-500">
-                Showing {filteredLogs.length} of {totalLogs} entries
-              </span>
-            </div>
-          </div>
-
-          {/* Desktop Table */}
-          <div className="hidden lg:block">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 text-sm">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left">
-                      Date & Time
-                    </th>
-                    <th className="px-4 py-2 text-left">
-                      User
-                    </th>
-                    <th className="px-4 py-2 text-left">
-                      Action
-                    </th>
-                    <th className="px-4 py-2 text-left">
-                      IP Address
-                    </th>
-                    <th className="px-4 py-2 text-left">
-                      Status
-                    </th>
-                    <th className="px-4 py-2 text-right">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredLogs.map((log) => {
-                    const actionInfo = getActionTypeInfo(log.actionType);
-                    const statusInfo = getStatusInfo(log.status);
-                    const ActionIcon = actionInfo.icon;
-                    const StatusIcon = statusInfo.icon;
-
-                    return (
-                      <tr key={log.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 text-gray-400 mr-2" />
-                            <div>
-                              <div className="text-sm font-medium text-gray-900">
-                                {formatDate(log.date)}
+            <Card>
+              <CardContent>
+                <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
+                  
+                  <div className="hidden lg:block">
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left">
+                              Date & Time
+                            </th>
+                            <th className="px-4 py-2 text-left">
+                              User
+                            </th>
+                            <th className="px-4 py-2 text-left">
+                              Action
+                            </th>
+                            <th className="px-4 py-2 text-left">
+                              IP Address
+                            </th>
+                            <th className="px-4 py-2 text-left">
+                              Status
+                            </th>
+                            <th className="px-4 py-2 text-left">
+                              Actions
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {filteredLogs.map((log) => {
+                            const actionInfo = getActionTypeInfo(log.actionType);
+                            const statusInfo = getStatusInfo(log.status);
+                            const ActionIcon = actionInfo.icon;
+                            const StatusIcon = statusInfo.icon;
+        
+                            return (
+                              <tr key={log.id} className="hover:bg-gray-50">
+                                <td className="px-4 py-[2px] whitespace-nowrap">
+                                  <div className="flex items-center">
+                                    <Calendar className="h-4 w-4 text-gray-400 mr-2" />
+                                    <div>
+                                      <div className="text-sm font-medium text-gray-900">
+                                        {formatDate(log.date)}
+                                      </div>
+                                      <div className="text-xs text-gray-500">
+                                        {getRelativeTime(log.date)}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-[2px] whitespace-nowrap">
+                                  <div className="flex items-center">
+                                    <User className="h-4 w-4 text-gray-400 mr-2" />
+                                    <div>
+                                      <div className="text-sm font-medium text-gray-900">{log.user}</div>
+                                      {log.userId && (
+                                        <div className="text-xs text-gray-500 font-mono">ID: {log.userId}</div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-[2px]">
+                                  <div className="flex items-start space-x-3">
+                                    <div className={`p-1 rounded ${actionInfo.bg}`}>
+                                      <ActionIcon className={`h-4 w-4 ${actionInfo.text.replace('text-', 'text-').replace('-800', '-600')}`} />
+                                    </div>
+                                    <div>
+                                      <div className="text-sm font-medium text-gray-900">{log.action}</div>
+                                      <div className="text-xs text-gray-500 max-w-xs">{log.description}</div>
+                                      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium mt-1 ${actionInfo.bg} ${actionInfo.text}`}>
+                                        {log.actionType.replace('_', ' ')}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-[2px] whitespace-nowrap">
+                                  <div className="flex items-center">
+                                    <MapPin className="h-4 w-4 text-gray-400 mr-2" />
+                                    <span className="text-sm font-mono text-gray-900">{log.ipAddress}</span>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-[2px] whitespace-nowrap">
+                                  <div className="flex items-center">
+                                    <StatusIcon className={`h-4 w-4 mr-2 ${statusInfo.color}`} />
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium capitalize ${statusInfo.bg} ${statusInfo.color}`}>
+                                      {log.status}
+                                    </span>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-[2px] whitespace-nowrap">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    className="text-blue-600 hover:text-blue-700"
+                                    title="View Details"
+                                    onClick={() => handleViewDetails(log)}
+                                  >
+                                    <Eye className="h-3 w-3" />
+                                  </Button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  
+        
+                  {/* Mobile/Tablet Cards */}
+                  <div className="lg:hidden divide-y divide-gray-200">
+                    {filteredLogs.map((log) => {
+                      const actionInfo = getActionTypeInfo(log.actionType);
+                      const statusInfo = getStatusInfo(log.status);
+                      const ActionIcon = actionInfo.icon;
+                      const StatusIcon = statusInfo.icon;
+        
+                      return (
+                        <div key={log.id} className="p-6">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <div className={`p-2 rounded-md ${actionInfo.bg}`}>
+                                <ActionIcon className={`h-4 w-4 ${actionInfo.text.replace('text-', 'text-').replace('-800', '-600')}`} />
                               </div>
-                              <div className="text-xs text-gray-500">
-                                {getRelativeTime(log.date)}
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-900">{log.action}</h3>
+                                <p className="text-xs text-gray-500">{log.user}</p>
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <User className="h-4 w-4 text-gray-400 mr-2" />
-                            <div>
-                              <div className="text-sm font-medium text-gray-900">{log.user}</div>
-                              {log.userId && (
-                                <div className="text-xs text-gray-500 font-mono">ID: {log.userId}</div>
-                              )}
+                            <div className="flex items-center space-x-2">
+                              <div className="flex items-center">
+                                <StatusIcon className={`h-4 w-4 mr-1 ${statusInfo.color}`} />
+                                <span className={`text-xs font-medium capitalize ${statusInfo.color}`}>
+                                  {log.status}
+                                </span>
+                              </div>
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                className="text-blue-600 hover:text-blue-700"
+                                onClick={() => handleViewDetails(log)}
+                              >
+                                <Eye className="h-3 w-3" />
+                              </Button>
                             </div>
                           </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-start space-x-3">
-                            <div className={`p-1 rounded ${actionInfo.bg}`}>
-                              <ActionIcon className={`h-4 w-4 ${actionInfo.text.replace('text-', 'text-').replace('-800', '-600')}`} />
+                          
+                          <p className="text-sm text-gray-600 mb-3">{log.description}</p>
+                          
+                          <div className="grid grid-cols-2 gap-4 text-xs">
+                            <div className="flex items-center text-gray-500">
+                              <Calendar className="h-3 w-3 mr-1" />
+                              {formatDate(log.date)}
                             </div>
-                            <div>
-                              <div className="text-sm font-medium text-gray-900">{log.action}</div>
-                              <div className="text-xs text-gray-500 max-w-xs">{log.description}</div>
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium mt-1 ${actionInfo.bg} ${actionInfo.text}`}>
-                                {log.actionType.replace('_', ' ')}
-                              </span>
+                            <div className="flex items-center text-gray-500">
+                              <MapPin className="h-3 w-3 mr-1" />
+                              {log.ipAddress}
                             </div>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 text-gray-400 mr-2" />
-                            <span className="text-sm font-mono text-gray-900">{log.ipAddress}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <StatusIcon className={`h-4 w-4 mr-2 ${statusInfo.color}`} />
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium capitalize ${statusInfo.bg} ${statusInfo.color}`}>
-                              {log.status}
+                          
+                          <div className="mt-3">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${actionInfo.bg} ${actionInfo.text}`}>
+                              {log.actionType.replace('_', ' ')}
                             </span>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="text-blue-600 hover:text-blue-700"
-                            title="View Details"
-                            onClick={() => handleViewDetails(log)}
-                          >
-                            <Eye className="h-3 w-3" />
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Mobile/Tablet Cards */}
-          <div className="lg:hidden divide-y divide-gray-200">
-            {filteredLogs.map((log) => {
-              const actionInfo = getActionTypeInfo(log.actionType);
-              const statusInfo = getStatusInfo(log.status);
-              const ActionIcon = actionInfo.icon;
-              const StatusIcon = statusInfo.icon;
-
-              return (
-                <div key={log.id} className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-md ${actionInfo.bg}`}>
-                        <ActionIcon className={`h-4 w-4 ${actionInfo.text.replace('text-', 'text-').replace('-800', '-600')}`} />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-900">{log.action}</h3>
-                        <p className="text-xs text-gray-500">{log.user}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="flex items-center">
-                        <StatusIcon className={`h-4 w-4 mr-1 ${statusInfo.color}`} />
-                        <span className={`text-xs font-medium capitalize ${statusInfo.color}`}>
-                          {log.status}
-                        </span>
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="text-blue-600 hover:text-blue-700"
-                        onClick={() => handleViewDetails(log)}
-                      >
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                    </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  
-                  <p className="text-sm text-gray-600 mb-3">{log.description}</p>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-xs">
-                    <div className="flex items-center text-gray-500">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      {formatDate(log.date)}
+        
+                  {filteredLogs.length === 0 && (
+                    <div className="text-center py-12">
+                      <Activity className="mx-auto h-12 w-12 text-gray-400" />
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">No audit logs found</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {searchTerm || statusFilter !== 'all' || actionTypeFilter !== 'all' 
+                          ? 'Try adjusting your search or filters.' 
+                          : 'System activities will appear here.'}
+                      </p>
                     </div>
-                    <div className="flex items-center text-gray-500">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      {log.ipAddress}
-                    </div>
-                  </div>
-                  
-                  <div className="mt-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${actionInfo.bg} ${actionInfo.text}`}>
-                      {log.actionType.replace('_', ' ')}
-                    </span>
-                  </div>
+                  )}
                 </div>
-              );
-            })}
-          </div>
-
-          {filteredLogs.length === 0 && (
-            <div className="text-center py-12">
-              <Activity className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No audit logs found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                {searchTerm || statusFilter !== 'all' || actionTypeFilter !== 'all' 
-                  ? 'Try adjusting your search or filters.' 
-                  : 'System activities will appear here.'}
-              </p>
-            </div>
-          )}
-        </div>
-
+              </CardContent>
+            </Card>
         {/* Pagination */}
         {/* {filteredLogs.length > 0 && (
           <div className="mt-6 flex items-center justify-between">

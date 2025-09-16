@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Users, Clock, CheckCircle, XCircle, Search, Download, Eye, Filter } from 'lucide-react';
+import { Calendar, Users, Clock, CheckCircle, XCircle, Search, Download, Eye, Filter, RefreshCcw } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const EmployeeAttendance = () => {
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
@@ -351,7 +352,7 @@ const EmployeeAttendance = () => {
           
 
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-8 p-5">
+          <div className="grid grid-cols-4 gap-8 p-4">
             <div className="text-center">
               <div className="text-xl font-bold text-gray-900">{stats.total}</div>
               <div className="text-sm text-gray-600">Total Employees</div>
@@ -372,11 +373,7 @@ const EmployeeAttendance = () => {
         </div>
         
           <div className="bg-white rounded-lg shadow-sm mb-3">
-              <div className="flex flex-col md:flex-row gap-4 p-5">
-                <div className="flex-1">
-                  <h2 className="font-bold text-gray-900">Mark Attendance</h2>
-                  <p className="text-gray-600 text-sm">Mark attendance for {new Date(currentDate).toLocaleDateString()}</p>
-                </div>
+              <div className="flex flex-col md:flex-row gap-4 p-4">
                 <div className="flex gap-4 py-2">
                   <div className="flex relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -397,6 +394,19 @@ const EmployeeAttendance = () => {
                     <option value="present">Present</option>
                     <option value="absent">Absent</option>
                   </select>
+                  <div className="flex items-end">
+                                       <Button
+                                         onClick={() => {
+                                           setSearchTerm('');
+                                           setFilterStatus('all');
+                               
+                                         }}
+                                         className="bg-yellow-500 hover:bg-yellow-600"
+                                       >
+                                         <RefreshCcw className="h-4 w-4" />
+                                         Clear Filters
+                                       </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -671,10 +681,10 @@ const EmployeeAttendance = () => {
                 <table className="min-w-full divide-y divide-gray-200 text-sm border text-sm">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Dept</th>
+                      <th className="px-4 py-2 text-left text-sm tracking-wider">Employee</th>
+                      <th className="px-4 py-2 text-left text-sm  tracking-wider">Dept</th>
                       {Object.keys(getYearlyAttendance()).map(month => (
-                        <th key={month} className="px-3 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th key={month} className="px-4 py-2 text-center text-sm uppercase tracking-wider">
                           {month.slice(0, 3)}
                         </th>
                       ))}
@@ -685,18 +695,18 @@ const EmployeeAttendance = () => {
                       const yearlyData = getYearlyAttendance();
                       return (
                         <tr key={employee.id}>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-4 py-[2px] whitespace-nowrap">
                             <div>
                               <div className="text-sm font-medium text-gray-900">{employee.name}</div>
                               <div className="text-sm text-gray-500">{employee.employeeId}</div>
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{employee.department.split(' ')[0]}</td>
+                          <td className="px-4 py-[2px] whitespace-nowrap text-sm text-gray-900">{employee.department.split(' ')[0]}</td>
                           {Object.values(yearlyData).map((monthData, index) => {
                             const empData = monthData.find(emp => emp.id === employee.id);
                             const percentage = empData ? empData.percentage : 0;
                             return (
-                              <td key={index} className="px-3 py-3 whitespace-nowrap text-center">
+                              <td key={index} className="px-4 py-[2px] whitespace-nowrap text-center">
                                 <span className={`inline-flex px-1.5 py-0.5 text-sm font-medium rounded ${
                                   percentage >= 90 ? 'bg-green-100 text-green-800' :
                                   percentage >= 75 ? 'bg-yellow-100 text-yellow-800' :
