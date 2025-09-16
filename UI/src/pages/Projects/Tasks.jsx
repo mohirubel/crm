@@ -12,7 +12,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import { Plus, Edit, Trash } from 'lucide-react';
+import { Plus, Edit, Trash2, RefreshCcw } from 'lucide-react';
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([
@@ -117,12 +117,11 @@ const Tasks = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold">Tasks</h2>
-          <p className="text-muted-foreground">Track project tasks and assignments</p>
+          <h2 className="text-xl font-semibold uppercase">Tasks</h2>
         </div>
         <Button onClick={() => {
           setNewTask({
@@ -141,13 +140,8 @@ const Tasks = () => {
 
       {/* Filters */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter Tasks</CardTitle>
-          <CardDescription>Filter by task name, project, assignee, or status</CardDescription>
-        </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <Label>Search</Label>
             <Input
               placeholder="Search tasks..."
               value={searchTerm}
@@ -155,7 +149,6 @@ const Tasks = () => {
             />
           </div>
           <div>
-            <Label>Status</Label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="All Status" />
@@ -169,8 +162,8 @@ const Tasks = () => {
             </Select>
           </div>
           <div className="flex items-end">
-            <Button variant="outline" onClick={resetFilters} className="w-full">
-              Clear Filters
+            <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={resetFilters}>
+             <RefreshCcw className="h-4 w-4" /> Clear Filters
             </Button>
           </div>
         </CardContent>
@@ -178,12 +171,9 @@ const Tasks = () => {
 
       {/* Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Task List</CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-2 text-left">ID</th>
@@ -217,7 +207,7 @@ const Tasks = () => {
                         variant="destructive"
                         onClick={() => handleDelete(t.id)}
                       >
-                        <Trash className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </td>
                   </tr>

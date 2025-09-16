@@ -66,14 +66,14 @@ export const menuConfig = [
     color: "bg-white text-black-800",
     section: "  "
   },
-  {
-    id: 'products',
-    name: 'Products',
-    icon: PackageCheckIcon,
-    component: 'Products',
-    color: "bg-white text-black-800",
-    section: "  "
-  },
+  // {
+  //   id: 'products',
+  //   name: 'Products',
+  //   icon: PackageCheckIcon,
+  //   component: 'Products',
+  //   color: "bg-white text-black-800",
+  //   section: "  "
+  // },
   {
     id: 'leads',
     name: 'CRM',

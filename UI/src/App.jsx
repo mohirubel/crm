@@ -58,6 +58,7 @@ import AuditLogs from "./pages/Security/AuditLogs";
 import InventoryReports from "./pages/Reports/InventoryReports";
 import HRReports from "./pages/Reports/HRReports";
 import FinanceReports from "./pages/Reports/FinanceReports";
+import EmployeeSalaryList from "./pages/HR/EmployeeSalaryList";
 
 function App() {
   // State management (still kept here)
@@ -172,7 +173,7 @@ function App() {
             <Route path="/employee-list" element={<EmployeeList />} />
             <Route path="/Attendance" element={<EmployeeAttendance />} />
             <Route path="/LeaveManagement" element={<LeaveManagement />} />
-            
+            <Route path="/EmployeeSalaryList" element={<EmployeeSalaryList />} />
             <Route path="/products" element={<Products products={products} setProducts={setProducts} />} />
 
             {/* Purchase */}

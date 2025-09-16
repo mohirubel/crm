@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, Package, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, Search, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   supplier: "",
@@ -35,26 +35,63 @@ const INITIAL_FORM = {
 };
 
 const PurchaseOrders = () => {
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      poNo: "PO-001",
-      supplier: "ABC Supplies Ltd.",
-      date: "2025-09-02",
-      status: "Completed",
-      total: 4000,
-      items: [{ item: "Raw Material A", qty: 10, price: 300 }],
-    },
-    {
-      id: 2,
-      poNo: "PO-002",
-      supplier: "XYZ Traders",
-      date: "2025-09-05",
-      status: "Pending",
-      total: 2500,
-      items: [{ item: "Packaging Box", qty: 50, price: 50 }],
-    },
-  ]);
+ const [orders, setOrders] = useState([
+  {
+    id: 1,
+    poNo: "PO-001",
+    supplier: "ABC Supplies Ltd.",
+    date: "2025-09-02",
+    status: "Completed",
+    total: 4000,
+    items: [{ item: "Raw Material A", qty: 10, price: 300 }],
+  },
+  {
+    id: 2,
+    poNo: "PO-002",
+    supplier: "XYZ Traders",
+    date: "2025-09-05",
+    status: "Pending",
+    total: 2500,
+    items: [{ item: "Packaging Box", qty: 50, price: 50 }],
+  },
+  {
+    id: 3,
+    poNo: "PO-003",
+    supplier: "Global Importers",
+    date: "2025-09-06",
+    status: "Completed",
+    total: 6000,
+    items: [{ item: "Printer Ink", qty: 30, price: 200 }],
+  },
+  {
+    id: 4,
+    poNo: "PO-004",
+    supplier: "Delta Distributors",
+    date: "2025-09-07",
+    status: "Pending",
+    total: 7200,
+    items: [{ item: "Office Chairs", qty: 12, price: 600 }],
+  },
+  {
+    id: 5,
+    poNo: "PO-005",
+    supplier: "Sunrise Enterprises",
+    date: "2025-09-08",
+    status: "Completed",
+    total: 15000,
+    items: [{ item: "Laptops", qty: 5, price: 3000 }],
+  },
+  {
+    id: 6,
+    poNo: "PO-006",
+    supplier: "Prime Wholesalers",
+    date: "2025-09-09",
+    status: "Pending",
+    total: 3600,
+    items: [{ item: "Monitors", qty: 6, price: 600 }],
+  },
+]);
+
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -191,26 +228,19 @@ const PurchaseOrders = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Purchase Orders</h2>
-          <p className="text-muted-foreground">Manage supplier purchase orders</p>
+          <h2 className="text-xl font-semibold tracking-tight uppercase">Purchase Orders</h2>
         </div>
-        <Button variant="outline" onClick={handleOpenAddModal}>
+        <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Order</span>
         </Button>
       </div>
-      
+
       {/* 🔍 Search & Filter */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter Orders</CardTitle>
-          <CardDescription>
-            Search by PO number, supplier, or date
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
@@ -240,8 +270,8 @@ const PurchaseOrders = () => {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Filters
+              <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={clearFilters}>
+               <RefreshCcw className="h-4 w-4" /> Clear Filters
               </Button>
             </div>
           </div>
@@ -250,44 +280,28 @@ const PurchaseOrders = () => {
 
       {/* Orders Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Orders</CardTitle>
-          <CardDescription>All supplier purchase orders</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    PO No
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Supplier
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Total
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Actions
-                  </th>
+                  <th className="px-4 py-2 text-left">PO No</th>
+                  <th className="px-4 py-2 text-left">Supplier</th>
+                  <th className="px-4 py-2 text-left">Date</th>
+                  <th className="px-4 py-2 text-left">Status</th>
+                  <th className="px-4 py-2 text-left">Total</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredOrders.map((order) => (
                   <tr key={order.id}>
-                    <td className="px-6 py-4">{order.poNo}</td>
-                    <td className="px-6 py-4">{order.supplier}</td>
-                    <td className="px-6 py-4">{order.date}</td>
-                    <td className="px-6 py-4">{order.status}</td>
-                    <td className="px-6 py-4">${order.total}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">{order.poNo}</td>
+                    <td className="px-4 py-2">{order.supplier}</td>
+                    <td className="px-4 py-2">{order.date}</td>
+                    <td className="px-4 py-2">{order.status}</td>
+                    <td className="px-4 py-2">${order.total}</td>
+                    <td className="px-4 py-2">
                       <div className="flex space-x-2">
                         <Button
                           size="sm"
@@ -370,13 +384,17 @@ const PurchaseOrders = () => {
                   <Input
                     placeholder="Item"
                     value={it.item}
-                    onChange={(e) => handleItemChange(idx, "item", e.target.value)}
+                    onChange={(e) =>
+                      handleItemChange(idx, "item", e.target.value)
+                    }
                   />
                   <Input
                     type="number"
                     placeholder="Qty"
                     value={it.qty}
-                    onChange={(e) => handleItemChange(idx, "qty", e.target.value)}
+                    onChange={(e) =>
+                      handleItemChange(idx, "qty", e.target.value)
+                    }
                   />
                   <Input
                     type="number"
@@ -427,7 +445,9 @@ const PurchaseOrders = () => {
             >
               Cancel
             </Button>
-            <Button onClick={isEditModalOpen ? handleEditOrder : handleAddOrder}>
+            <Button
+              onClick={isEditModalOpen ? handleEditOrder : handleAddOrder}
+            >
               {isEditModalOpen ? "Save Changes" : "Add Order"}
             </Button>
           </DialogFooter>
@@ -445,7 +465,10 @@ const PurchaseOrders = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteOrder}>

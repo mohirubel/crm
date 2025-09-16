@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   customer: "",
@@ -19,10 +19,15 @@ const INITIAL_FORM = {
 };
 
 const Opportunities = () => {
-  const [opps, setOpps] = useState([
-    { id: 1, customer: "ABC Ltd", value: 20000, stage: "Prospecting" },
-    { id: 2, customer: "XYZ Corp", value: 50000, stage: "Negotiation" },
-  ]);
+const [opps, setOpps] = useState([
+  { id: 1, customer: "ABC Ltd", value: 20000, stage: "Prospecting" },
+  { id: 2, customer: "XYZ Corp", value: 50000, stage: "Negotiation" },
+  { id: 3, customer: "Global Traders", value: 35000, stage: "Proposal" },
+  { id: 4, customer: "Delta Enterprises", value: 45000, stage: "Qualified" },
+  { id: 5, customer: "Sunrise Solutions", value: 60000, stage: "Closed Won" },
+  { id: 6, customer: "Prime Industries", value: 40000, stage: "Closed Lost" },
+]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
@@ -77,11 +82,10 @@ const Opportunities = () => {
   }, [opps, searchQuery, stageFilter]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold">Opportunities</h2>
-          <p className="text-muted-foreground">Track business opportunities</p>
+          <h2 className="text-xl font-semibold uppercase">Opportunities</h2>
         </div>
         <Button onClick={() => {
           resetForm();
@@ -93,14 +97,9 @@ const Opportunities = () => {
 
       {/* 🔍 Search & Filter Section */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter</CardTitle>
-          <CardDescription>Find opportunities quickly</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <Label htmlFor="search">Search</Label>
               <Input
                 id="search"
                 placeholder="Search by Opp ID, Customer, or Value..."
@@ -109,7 +108,6 @@ const Opportunities = () => {
               />
             </div>
             <div>
-              <Label htmlFor="stage">Filter by Stage</Label>
               <select
                 id="stage"
                 className="border p-2 rounded w-full"
@@ -128,13 +126,14 @@ const Opportunities = () => {
             {/* Clear Filters button */}
           <div className="flex justify-start items-end">
             <Button
+              className="bg-yellow-500 hover:bg-yellow-600"
               variant="outline"
               onClick={() => {
                 setSearchQuery("");
                 setStageFilter("All");
               }}
             >
-              Clear Filters
+            <RefreshCcw className="h-4 w-4" />  Clear Filters
             </Button>
           </div>
           </div>
@@ -145,10 +144,6 @@ const Opportunities = () => {
 
       {/* 📋 Opportunities Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Opportunities List</CardTitle>
-          <CardDescription>All business opportunities</CardDescription>
-        </CardHeader>
         <CardContent>
           <table className="w-full border text-sm">
             <thead className="bg-gray-100">

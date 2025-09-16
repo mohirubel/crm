@@ -24,7 +24,8 @@ const EmployeeList = () => {
       designation: "Software Engineer",
       joiningDate: "2023-01-15",
       salary: "$75,000",
-      status: "Active"
+      status: "Active",
+      cv: ""
     },
     {
       id: 2,
@@ -36,7 +37,8 @@ const EmployeeList = () => {
       designation: "Project Manager",
       joiningDate: "2022-11-08",
       salary: "$80,000",
-      status: "Active"
+      status: "Active",
+      cv: ""
     },
     {
       id: 3,
@@ -48,7 +50,8 @@ const EmployeeList = () => {
       designation: "Marketing Specialist",
       joiningDate: "2023-06-12",
       salary: "$55,000",
-      status: "Active"
+      status: "Active",
+      cv: ""
     },
     {
       id: 4,
@@ -60,11 +63,13 @@ const EmployeeList = () => {
       designation: "DevOps Engineer",
       joiningDate: "2023-02-28",
       salary: "$85,000",
-      status: "Inactive"
+      status: "Inactive",
+      cv: ""
     }
   ]);
-const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-const [employeeToDelete, setEmployeeToDelete] = useState(null);
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -79,7 +84,8 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
     joiningDate: '',
     salary: '',
     status: 'Active',
-    image: ''
+    image: '',
+    cv: ''
   });
 
   const handleImageUpload = (file, isEdit = false) => {
@@ -96,6 +102,38 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
     }
   };
 
+  const handleCVUpload = (file, isEdit = false) => {
+    if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const cvData = {
+          name: file.name,
+          data: e.target.result,
+          size: file.size
+        };
+        if (isEdit && selectedEmployee) {
+          setSelectedEmployee({...selectedEmployee, cv: cvData});
+        } else {
+          setNewEmployee({...newEmployee, cv: cvData});
+        }
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('Please upload a PDF file only.');
+    }
+  };
+
+  const handleCVDownload = (cvData) => {
+    if (cvData && cvData.data) {
+      const link = document.createElement('a');
+      link.href = cvData.data;
+      link.download = cvData.name;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   const handleAddEmployee = () => {
     if (newEmployee.name && newEmployee.email && newEmployee.phone && newEmployee.department && newEmployee.designation && newEmployee.joiningDate && newEmployee.salary) {
       const employee = {
@@ -104,7 +142,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
         image: newEmployee.image || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
       };
       setEmployees([...employees, employee]);
-      setNewEmployee({ name: '', email: '', phone: '', department: '', designation: '', joiningDate: '', salary: '', status: 'Active', image: '' });
+      setNewEmployee({ name: '', email: '', phone: '', department: '', designation: '', joiningDate: '', salary: '', status: 'Active', image: '', cv: '' });
       setShowAddForm(false);
     }
   };
@@ -146,13 +184,52 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
   };
 
   const getStatusBadge = (status) => {
-    const baseClasses = "px-2 py-1 text-xs font-medium rounded-full";
+    const baseClasses = "px-2 py-1 text-sm font-medium rounded-md";
     if (status === 'Active') {
       return `${baseClasses} bg-green-100 text-green-800`;
     } else {
       return `${baseClasses} bg-red-100 text-red-800`;
     }
   };
+
+  const CVUploadSection = ({ currentCV, onCVUpload, label = "Upload CV" }) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <div className="flex items-center space-x-4">
+        {currentCV && (
+          <div 
+            className="flex items-center space-x-2 p-2 bg-blue-50 border border-blue-200 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
+            onClick={() => handleCVDownload(currentCV)}
+          >
+            <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
+              <span className="text-white text-sm font-bold">PDF</span>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-blue-800">{currentCV.name}</p>
+              <p className="text-sm text-blue-600">{(currentCV.size / 1024).toFixed(1)} KB • Click to download</p>
+            </div>
+          </div>
+        )}
+        <div className="flex-1">
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={(e) => onCVUpload(e.target.files[0])}
+            className="hidden"
+            id="cv-upload"
+          />
+          <label
+            htmlFor="cv-upload"
+            className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Choose CV (PDF)
+          </label>
+          <p className="text-sm text-gray-500 mt-1">PDF files only, up to 5MB</p>
+        </div>
+      </div>
+    </div>
+  );
 
   const ImageUploadSection = ({ currentImage, onImageUpload, label = "Employee Photo" }) => (
     <div>
@@ -182,7 +259,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
             <Upload className="w-4 h-4 mr-2" />
             Choose Photo
           </label>
-          <p className="text-xs text-gray-500 mt-1">JPG, PNG, GIF up to 5MB</p>
+          <p className="text-sm text-gray-500 mt-1">JPG, PNG, GIF up to 5MB</p>
         </div>
       </div>
     </div>
@@ -192,11 +269,10 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-0">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Employees</h1>
-              <p className="text-gray-600">Manage your employee records and information</p>
+              <h1 className="text-xl font-bold text-gray-900 mb-2">Employees</h1>
             </div>
             <button
               onClick={() => setShowAddForm(true)}
@@ -236,22 +312,22 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
 
         {/* Employee List */}
         <div className="bg-white rounded-xl shadow-sm border">
-          <div className="p-6 border-b">
+          {/* <div className="p-6 border-b">
             <h2 className="text-lg font-semibold text-gray-900">Employee List</h2>
             <p className="text-gray-600 text-sm">View and manage your employee records</p>
-          </div>
+          </div> */}
 
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-2 text-left">Photo</th>
+                  <th className="px-4 py-2 text-left">Employee ID</th>
+                  <th className="px-4 py-2 text-left">Name</th>
+                  <th className="px-4 py-2 text-left">Department</th>
+                  <th className="px-4 py-2 text-left">Designation</th>
+                  <th className="px-4 py-2 text-left">Status</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -336,7 +412,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
         {/* Add Employee Modal */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[85vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Add New Employee</h3>
                 <button 
@@ -345,19 +421,14 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 >
                   <X className="w-5 h-5" />
                 </button>
-              </div>
-              
-              <div className="space-y-4">
-                <ImageUploadSection 
-                  currentImage={newEmployee.image}
-                  onImageUpload={(file) => handleImageUpload(file, false)}
-                />
+              </div>            
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.name}
                     onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -368,7 +439,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.email}
                     onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
                     placeholder="Enter email address"
@@ -379,7 +450,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.phone}
                     onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})}
                     placeholder="Enter phone number"
@@ -389,7 +460,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.department}
                     onChange={(e) => setNewEmployee({...newEmployee, department: e.target.value})}
                   >
@@ -407,7 +478,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.designation}
                     onChange={(e) => setNewEmployee({...newEmployee, designation: e.target.value})}
                     placeholder="Enter designation"
@@ -418,7 +489,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.joiningDate}
                     onChange={(e) => setNewEmployee({...newEmployee, joiningDate: e.target.value})}
                   />
@@ -428,7 +499,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.salary}
                     onChange={(e) => setNewEmployee({...newEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -438,7 +509,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={newEmployee.status}
                     onChange={(e) => setNewEmployee({...newEmployee, status: e.target.value})}
                   >
@@ -448,10 +519,22 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <ImageUploadSection 
+                  currentImage={newEmployee.image}
+                  onImageUpload={(file) => handleImageUpload(file, false)}
+                />
+
+                <CVUploadSection 
+                  currentCV={newEmployee.cv}
+                  onCVUpload={(file) => handleCVUpload(file, false)}
+                />
+              </div>
+
+              <div className="text-right mt-6">
                 <button
                   onClick={handleAddEmployee}
-                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors"
+                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors mr-2"
                 >
                   Add Employee
                 </button>
@@ -469,7 +552,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
         {/* Edit Employee Modal */}
         {showEditForm && selectedEmployee && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[85vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Edit Employee</h3>
                 <button 
@@ -480,17 +563,24 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 </button>
               </div>
               
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <ImageUploadSection 
                   currentImage={selectedEmployee.image}
                   onImageUpload={(file) => handleImageUpload(file, true)}
                 />
 
+                <CVUploadSection 
+                  currentCV={selectedEmployee.cv}
+                  onCVUpload={(file) => handleCVUpload(file, true)}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.name}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, name: e.target.value})}
                     placeholder="Enter employee name"
@@ -501,7 +591,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.email}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, email: e.target.value})}
                     placeholder="Enter email address"
@@ -512,7 +602,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.phone}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, phone: e.target.value})}
                     placeholder="Enter phone number"
@@ -522,7 +612,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.department}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, department: e.target.value})}
                   >
@@ -540,7 +630,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.designation}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, designation: e.target.value})}
                     placeholder="Enter designation"
@@ -551,7 +641,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Joining Date</label>
                   <input
                     type="date"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.joiningDate}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, joiningDate: e.target.value})}
                   />
@@ -561,7 +651,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <label className="block text-sm font-medium text-gray-700 mb-1">Salary</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.salary}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, salary: e.target.value})}
                     placeholder="e.g., $75,000"
@@ -571,7 +661,7 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-xl "
+                    className="w-full px-3 py-1 border border-gray-300 rounded-xl "
                     value={selectedEmployee.status}
                     onChange={(e) => setSelectedEmployee({...selectedEmployee, status: e.target.value})}
                   >
@@ -581,10 +671,10 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-6">
+              <div className="text-right mt-6">
                 <button
                   onClick={handleEditEmployee}
-                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors"
+                  className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors mr-2"
                 >
                   Save Changes
                 </button>
@@ -651,6 +741,18 @@ const [employeeToDelete, setEmployeeToDelete] = useState(null);
                   <span className="text-sm font-medium text-gray-500">Salary:</span>
                   <span className="text-sm text-gray-900 font-medium">{selectedEmployee.salary}</span>
                 </div>
+                {selectedEmployee.cv && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-gray-500">CV:</span>
+                    <button
+                      onClick={() => handleCVDownload(selectedEmployee.cv)}
+                      className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                    >
+                      <span>📄 {selectedEmployee.cv.name}</span>
+                      <span className="text-sm">(Download)</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="mt-6">

@@ -196,13 +196,13 @@ const AuditLogs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6">
+    <div className="min-h-screen bg-gray-50">
       <div className="mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Audit Logs</h1>
+              <h1 className="text-xl font-bold text-gray-900">Audit Logs</h1>
               <p className="text-gray-600 mt-2">Monitor system activities and user actions</p>
             </div>
             <div className="flex space-x-3">
@@ -336,25 +336,25 @@ const AuditLogs = () => {
           {/* Desktop Table */}
           <div className="hidden lg:block">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full divide-y divide-gray-200 text-sm">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       Date & Time
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       User
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       Action
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       IP Address
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-left">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2 text-right">
                       Actions
                     </th>
                   </tr>
@@ -400,7 +400,7 @@ const AuditLogs = () => {
                             <div>
                               <div className="text-sm font-medium text-gray-900">{log.action}</div>
                               <div className="text-xs text-gray-500 max-w-xs">{log.description}</div>
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-1 ${actionInfo.bg} ${actionInfo.text}`}>
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium mt-1 ${actionInfo.bg} ${actionInfo.text}`}>
                                 {log.actionType.replace('_', ' ')}
                               </span>
                             </div>
@@ -415,7 +415,7 @@ const AuditLogs = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <StatusIcon className={`h-4 w-4 mr-2 ${statusInfo.color}`} />
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${statusInfo.bg} ${statusInfo.color}`}>
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium capitalize ${statusInfo.bg} ${statusInfo.color}`}>
                               {log.status}
                             </span>
                           </div>
@@ -451,7 +451,7 @@ const AuditLogs = () => {
                 <div key={log.id} className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-full ${actionInfo.bg}`}>
+                      <div className={`p-2 rounded-md ${actionInfo.bg}`}>
                         <ActionIcon className={`h-4 w-4 ${actionInfo.text.replace('text-', 'text-').replace('-800', '-600')}`} />
                       </div>
                       <div>
@@ -491,7 +491,7 @@ const AuditLogs = () => {
                   </div>
                   
                   <div className="mt-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${actionInfo.bg} ${actionInfo.text}`}>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${actionInfo.bg} ${actionInfo.text}`}>
                       {log.actionType.replace('_', ' ')}
                     </span>
                   </div>
@@ -514,7 +514,7 @@ const AuditLogs = () => {
         </div>
 
         {/* Pagination */}
-        {filteredLogs.length > 0 && (
+        {/* {filteredLogs.length > 0 && (
           <div className="mt-6 flex items-center justify-between">
             <div className="flex-1 flex justify-between sm:hidden">
               <Button variant="outline">Previous</Button>
@@ -538,7 +538,7 @@ const AuditLogs = () => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         
         {/* Details Modal */}
         {isModalOpen && selectedLog && (
@@ -604,7 +604,7 @@ const AuditLogs = () => {
                                 <div className={`p-1 rounded mr-2 ${actionInfo.bg}`}>
                                   <ActionIcon className={`h-3 w-3 ${actionInfo.text.replace('text-', 'text-').replace('-800', '-600')}`} />
                                 </div>
-                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${actionInfo.bg} ${actionInfo.text}`}>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${actionInfo.bg} ${actionInfo.text}`}>
                                   {selectedLog.actionType.replace('_', ' ')}
                                 </span>
                               </>
@@ -622,7 +622,7 @@ const AuditLogs = () => {
                             return (
                               <>
                                 <StatusIcon className={`h-4 w-4 mr-2 ${statusInfo.color}`} />
-                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${statusInfo.bg} ${statusInfo.color}`}>
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium capitalize ${statusInfo.bg} ${statusInfo.color}`}>
                                   {selectedLog.status}
                                 </span>
                               </>

@@ -222,8 +222,8 @@ const LeaveManagement = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Leave Management</h1>
-                <p className="text-gray-600">Manage employee leave applications and approvals</p>
+                <h1 className="text-xl font-bold text-gray-900">Leave Management</h1>
+                {/* <p className="text-gray-600">Manage employee leave applications and approvals</p> */}
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -274,9 +274,9 @@ const LeaveManagement = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-8 p-6">
+          <div className="grid grid-cols-4 gap-8 p-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">{leaveApplications.length}</div>
+              <div className="text-xl font-bold text-gray-900">{leaveApplications.length}</div>
               <div className="text-sm text-gray-600">Total Applications</div>
             </div>
             <div className="text-center">
@@ -344,16 +344,16 @@ const LeaveManagement = () => {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="min-w-full divide-y divide-gray-200 text-sm border">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leave Type</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">From</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">To</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Days</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-4 py-2 text-left">Employee</th>
+                    <th className="px-4 py-2 text-left">Leave Type</th>
+                    <th className="px-4 py-2 text-left">From</th>
+                    <th className="px-4 py-2 text-left">To</th>
+                    <th className="px-4 py-2 text-center ">Days</th>
+                    <th className="px-4 py-2 text-center ">Status</th>
+                    <th className="px-4 py-2 text-center ">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -376,7 +376,7 @@ const LeaveManagement = () => {
                         {leave.days}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(leave.status)}`}>
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md ${getStatusColor(leave.status)}`}>
                           {getStatusIcon(leave.status)}
                           {leave.status}
                         </span>

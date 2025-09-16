@@ -12,7 +12,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import { Plus, Edit, Trash } from 'lucide-react';
+import { Plus, Edit, Trash2, RefreshCcw } from 'lucide-react';
 
 const Projects = () => {
   const [projects, setProjects] = useState([
@@ -114,12 +114,11 @@ const Projects = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold">Projects</h2>
-          <p className="text-muted-foreground">Manage and track your projects</p>
+          <h2 className="text-xl font-semibold uppercase">Projects</h2>
         </div>
         <Button onClick={() => {
           setNewProject({
@@ -138,13 +137,8 @@ const Projects = () => {
 
       {/* Filters */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter Projects</CardTitle>
-          <CardDescription>Filter by name, client or status</CardDescription>
-        </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <Label>Search</Label>
             <Input
               placeholder="Search projects..."
               value={searchTerm}
@@ -152,7 +146,6 @@ const Projects = () => {
             />
           </div>
           <div>
-            <Label>Status</Label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="All Status" />
@@ -166,8 +159,8 @@ const Projects = () => {
             </Select>
           </div>
           <div className="flex items-end">
-            <Button variant="outline" onClick={resetFilters} className="w-full">
-              Clear Filters
+            <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={resetFilters}>
+             <RefreshCcw className="h-4 w-4" /> Clear Filters
             </Button>
           </div>
         </CardContent>
@@ -175,12 +168,9 @@ const Projects = () => {
 
       {/* Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Project List</CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-2 text-left">ID</th>
@@ -216,7 +206,7 @@ const Projects = () => {
                         variant="destructive"
                         onClick={() => handleDelete(p.id)}
                       >
-                        <Trash className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </td>
                   </tr>

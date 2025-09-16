@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Building2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Building2, Search, RefreshCcw } from "lucide-react";
 
 const INITIAL_FORM = {
   name: "",
@@ -28,24 +28,57 @@ const INITIAL_FORM = {
 };
 
 const Suppliers = () => {
-  const [suppliers, setSuppliers] = useState([
-    {
-      id: 1,
-      name: "ABC Supplies Ltd.",
-      phone: "01711111111",
-      email: "abc@supplies.com",
-      address: "Dhaka, Bangladesh",
-      paymentTerms: "Net 30",
-    },
-    {
-      id: 2,
-      name: "XYZ Traders",
-      phone: "01822222222",
-      email: "xyz@traders.com",
-      address: "Chittagong, Bangladesh",
-      paymentTerms: "Advance",
-    },
-  ]);
+const [suppliers, setSuppliers] = useState([
+  {
+    id: 1,
+    name: "ABC Supplies Ltd.",
+    phone: "01711111111",
+    email: "abc@supplies.com",
+    address: "Dhaka, Bangladesh",
+    paymentTerms: "Net 30",
+  },
+  {
+    id: 2,
+    name: "XYZ Traders",
+    phone: "01822222222",
+    email: "xyz@traders.com",
+    address: "Chittagong, Bangladesh",
+    paymentTerms: "Advance",
+  },
+  {
+    id: 3,
+    name: "Global Importers",
+    phone: "01933333333",
+    email: "contact@globalimporters.com",
+    address: "Khulna, Bangladesh",
+    paymentTerms: "Net 15",
+  },
+  {
+    id: 4,
+    name: "Delta Distributors",
+    phone: "01644444444",
+    email: "info@deltadistributors.com",
+    address: "Sylhet, Bangladesh",
+    paymentTerms: "Net 45",
+  },
+  {
+    id: 5,
+    name: "Sunrise Enterprises",
+    phone: "01555555555",
+    email: "sales@sunrise.com",
+    address: "Rajshahi, Bangladesh",
+    paymentTerms: "Cash on Delivery",
+  },
+  {
+    id: 6,
+    name: "Prime Wholesalers",
+    phone: "01766666666",
+    email: "prime@wholesalers.com",
+    address: "Barisal, Bangladesh",
+    paymentTerms: "Net 60",
+  },
+]);
+
 
   // 🔎 Search state
   const [searchTerm, setSearchTerm] = useState("");
@@ -141,30 +174,22 @@ const Suppliers = () => {
   }, [suppliers, searchTerm]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Suppliers</h2>
-          <p className="text-muted-foreground">Manage supplier information</p>
+          <h2 className="text-xl font-semibold tracking-tight uppercase">Suppliers</h2>
         </div>
-        <Button variant="outline" onClick={handleOpenAddModal}>
+        <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Supplier</span>
         </Button>
       </div>
 
       {/* 🔎 Search & Filter */}
       <Card>
-        <CardHeader>
-          <CardTitle>Search Suppliers</CardTitle>
-          <CardDescription>
-            Search by name, phone, email, or address
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <Label htmlFor="search">Search</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -177,8 +202,8 @@ const Suppliers = () => {
               </div>
             </div>
             <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Search
+              <Button className="bg-yellow-500 hover:bg-yellow-600" variant="outline" onClick={clearFilters}>
+                <RefreshCcw className="h-4 w-4" /> Clear Search
               </Button>
             </div>
           </div>
@@ -187,40 +212,26 @@ const Suppliers = () => {
 
       {/* Suppliers Table */}
       <Card>
-        <CardHeader>
-          <CardTitle>Suppliers</CardTitle>
-          <CardDescription>All registered suppliers</CardDescription>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Supplier ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Phone
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium">
-                    Actions
-                  </th>
+                  <th className="px-4 py-2 text-left">Supplier ID</th>
+                  <th className="px-4 py-2 text-left">Name</th>
+                  <th className="px-4 py-2 text-left">Phone</th>
+                  <th className="px-4 py-2 text-left">Email</th>
+                  <th className="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredSuppliers.map((supplier) => (
                   <tr key={supplier.id}>
-                    <td className="px-6 py-4">{supplier.id}</td>
-                    <td className="px-6 py-4">{supplier.name}</td>
-                    <td className="px-6 py-4">{supplier.phone}</td>
-                    <td className="px-6 py-4">{supplier.email}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-2">{supplier.id}</td>
+                    <td className="px-4 py-2">{supplier.name}</td>
+                    <td className="px-4 py-2">{supplier.phone}</td>
+                    <td className="px-4 py-2">{supplier.email}</td>
+                    <td className="px-4 py-2">
                       <div className="flex space-x-2">
                         <Button
                           size="sm"
@@ -251,7 +262,7 @@ const Suppliers = () => {
         </CardContent>
       </Card>
 
-            {/* Add/Edit Modal */}
+      {/* Add/Edit Modal */}
       <Dialog
         open={isAddModalOpen || isEditModalOpen}
         onOpenChange={(val) => {
@@ -345,7 +356,10 @@ const Suppliers = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteSupplier}>

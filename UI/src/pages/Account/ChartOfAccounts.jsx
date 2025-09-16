@@ -141,24 +141,24 @@ const ChartOfAccounts = () => {
           <CardDescription>Manage your accounts</CardDescription>
         </CardHeader>
         <CardContent>
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 text-sm border">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium">Code</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Type</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Parent</th>
-                <th className="px-6 py-3 text-left text-xs font-medium">Actions</th>
+                <th className="px-4 py-2 text-left">Code</th>
+                <th className="px-4 py-2 text-left">Name</th>
+                <th className="px-4 py-2 text-left">Type</th>
+                <th className="px-4 py-2 text-left">Parent</th>
+                <th className="px-4 py-2 text-left">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredAccounts.map((acc) => (
                 <tr key={acc.id}>
-                  <td className="px-6 py-4">{acc.code}</td>
-                  <td className="px-6 py-4">{acc.name}</td>
-                  <td className="px-6 py-4">{acc.type}</td>
-                  <td className="px-6 py-4">{acc.parent}</td>
-                  <td className="px-6 py-4 flex gap-2">
+                  <td className="px-4 py-2">{acc.code}</td>
+                  <td className="px-4 py-2">{acc.name}</td>
+                  <td className="px-4 py-2">{acc.type}</td>
+                  <td className="px-4 py-2">{acc.parent}</td>
+                  <td className="px-4 py-2 flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => { setSelected(acc); setFormData(acc); setIsModalOpen(true); }}>
                       <Pencil className="h-4 w-4" />
                     </Button>

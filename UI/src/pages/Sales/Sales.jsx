@@ -479,7 +479,7 @@ const Sales = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <Label htmlFor="search">Search</Label>
               <div className="relative">
@@ -526,6 +526,7 @@ const Sales = () => {
               <Input 
                 type="date" 
                 value={dateFilter}
+                className="w-auto"
                 onChange={(e) => setDateFilter(e.target.value)}
               />
             </div>
