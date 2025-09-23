@@ -10,6 +10,7 @@ using CRM.Common.Models;
 using CRM.Service.Implementations;
 using CRM.Service.Interfaces;
 using CRM.Data.Repositories;
+using CRM.Services.Implementations;
 namespace CRM.Web
 {
     public class Startup
@@ -65,13 +66,13 @@ namespace CRM.Web
             //services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountReportRepository, AccountReportRepository>();
-            //services.AddScoped<IGenericRepository<T>, DapperRepository<T>>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
 
 
             // Register Services
-            //services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IAccountService, AccountService>();
-          
+            services.AddScoped<IAdminService, AdminService>();
+
 
             // Register Swagger services
             services.AddSwaggerGen(c =>
@@ -81,30 +82,30 @@ namespace CRM.Web
                     Title = "My API",
                     Version = "v1",
                     Description = @"
-A simple example ASP.NET Core Web API
+                                A simple example ASP.NET Core Web API
 
-<div  style='display: flex; flex-wrap: wrap;'>
-   <h1> Download Json File </h1>
-    <div  style='flex: 1; padding-right: 10px;'>
-        <table style='width: 100%; border-collapse: collapse;'>
-            <tr>
-                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Name</th>
-                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Download</th>
-            </tr>
-            <tr>
-                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>Account</td>
-                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>
-                    <a href='#' >Download</a>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div style='flex: 1; padding-left: 10px;'>
-        <table style='width: 100%; border-collapse: collapse;'>
-        </table>
-    </div>
-</div>
-",
+                                <div  style='display: flex; flex-wrap: wrap;'>
+                                   <h1> Download Json File </h1>
+                                    <div  style='flex: 1; padding-right: 10px;'>
+                                        <table style='width: 100%; border-collapse: collapse;'>
+                                            <tr>
+                                                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Name</th>
+                                                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Download</th>
+                                            </tr>
+                                            <tr>
+                                                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>Account</td>
+                                                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>
+                                                    <a href='#' >Download</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div style='flex: 1; padding-left: 10px;'>
+                                        <table style='width: 100%; border-collapse: collapse;'>
+                                        </table>
+                                    </div>
+                                </div>
+                                ",
 
 
 
@@ -143,27 +144,35 @@ A simple example ASP.NET Core Web API
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
+            //app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = string.Empty; // To serve Swagger UI at application's root (http://localhost:<port>/)
+            //// specifying the Swagger JSON endpoint.
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            //    c.RoutePrefix = string.Empty; // To serve Swagger UI at application's root (http://localhost:<port>/)
 
-                // Include the custom JavaScript file
-               // c.InjectJavascript("/js/swagger-custom.js");
+            //});
 
-            });
             app.UseCors("AllowSpecificOrigin"); // Enable the CORS policy
 
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //    endpoints.MapRazorPages();   // Razor Pages enable
+            //    endpoints.MapDefaultControllerRoute(); // MVC default route
+            //});
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
+
         }
 
-        
+
     }
 }

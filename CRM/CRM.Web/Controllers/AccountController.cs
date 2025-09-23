@@ -20,6 +20,8 @@ namespace CRM.Web.Controllers
         }
 
         #region Account Type
+
+
         [HttpGet("types")]
         public async Task<IActionResult> GetAllType()
         {

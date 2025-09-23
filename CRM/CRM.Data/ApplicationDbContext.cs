@@ -51,6 +51,51 @@ namespace CRM.Data
             modelBuilder.Entity<Account>().ToTable("Accounts", "Account");
             modelBuilder.Entity<Transaction>().ToTable("Transactions", "Account");
             modelBuilder.Entity<TransactionDetail>().ToTable("TransactionDetails", "Account");
+
+            modelBuilder.Entity<IdentityUser>(b =>
+            {
+                b.HasKey(u => u.Id);
+                b.HasIndex(u => u.NormalizedUserName).HasDatabaseName("UserNameIndex").IsUnique();
+                b.HasIndex(u => u.NormalizedEmail).HasDatabaseName("EmailIndex");
+                b.ToTable("AspNetUsers", "Account");
+            });
+
+            modelBuilder.Entity<IdentityRole>(b =>
+            {
+                b.HasKey(r => r.Id);
+                b.HasIndex(r => r.NormalizedName).HasDatabaseName("RoleNameIndex").IsUnique();
+                b.ToTable("AspNetRoles", "Account");
+            });
+
+            modelBuilder.Entity<IdentityUserRole<string>>(b =>
+            {
+                b.HasKey(r => new { r.UserId, r.RoleId });
+                b.ToTable("AspNetUserRoles", "Account");
+            });
+
+            modelBuilder.Entity<IdentityUserClaim<string>>(b =>
+            {
+                b.HasKey(uc => uc.Id);
+                b.ToTable("AspNetUserClaims", "Account");
+            });
+
+            modelBuilder.Entity<IdentityUserLogin<string>>(b =>
+            {
+                b.HasKey(l => new { l.LoginProvider, l.ProviderKey });
+                b.ToTable("AspNetUserLogins", "Account");
+            });
+
+            modelBuilder.Entity<IdentityRoleClaim<string>>(b =>
+            {
+                b.HasKey(rc => rc.Id);
+                b.ToTable("AspNetRoleClaims", "Account");
+            });
+
+            modelBuilder.Entity<IdentityUserToken<string>>(b =>
+            {
+                b.HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
+                b.ToTable("AspNetUserTokens", "Account");
+            });
         }
     }
 }
