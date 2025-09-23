@@ -1,69 +1,73 @@
 ﻿using CRM.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using CRM.Web;
+using Serilog;
+using Microsoft.AspNetCore.Hosting;
 
-//var builder = WebApplication.CreateBuilder(args);
-
-//// Add services to the container.
-//builder.Services.AddControllersWithViews();
-
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//if (!app.Environment.IsDevelopment())
-//{
-//    app.UseExceptionHandler("/Home/Error");
-//    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-//    app.UseHsts();
-//}
-
-//app.UseHttpsRedirection();
-//app.UseRouting();
-
-//app.UseAuthorization();
-
-//app.MapStaticAssets();
-
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}")
-//    .WithStaticAssets();
-
-
-//app.Run();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database connect
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
-// Identity add
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-    options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.File(
+        path: "App_Data/Log/log-.txt",
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}",
+        rollingInterval: RollingInterval.Day,
+        restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error
+    )
+    .CreateLogger();
 
-builder.Services.AddControllersWithViews();
+builder.Host.UseSerilog();
+
+// Add services to the container.
+builder.Services.AddControllers();
+
+// Register Swagger services
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddLogging(config => {
+    config.AddConsole();
+    config.AddDebug();
+});
+
+
+var startup = new Startup(builder.Configuration);
+startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
+
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-
 app.UseRouting();
 
-app.UseAuthentication(); // Identity Middleware
+app.UseCors("AllowSpecificOrigin");
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages(); // Identity UI এর জন্য দরকার
+startup.Configure(app, app.Environment);
+
+app.MapControllers();
 
 app.Run();
+
+
