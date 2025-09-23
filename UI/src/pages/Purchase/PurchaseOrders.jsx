@@ -232,7 +232,7 @@ const PurchaseOrders = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight uppercase">Purchase Orders</h2>
+          <h2 className="font-bold tracking-tight uppercase">Purchase Orders</h2>
         </div>
         <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Order</span>
@@ -244,12 +244,11 @@ const PurchaseOrders = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <Label htmlFor="search">Search</Label>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
-                  placeholder="Search orders..."
+                  placeholder="Search orders"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -257,7 +256,6 @@ const PurchaseOrders = () => {
               </div>
             </div>
             <div>
-              <Label>Status</Label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Status" />
@@ -290,19 +288,19 @@ const PurchaseOrders = () => {
                   <th className="px-4 py-2 text-left">Date</th>
                   <th className="px-4 py-2 text-left">Status</th>
                   <th className="px-4 py-2 text-left">Total</th>
-                  <th className="px-4 py-2 text-left">Actions</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredOrders.map((order) => (
                   <tr key={order.id}>
-                    <td className="px-4 py-2">{order.poNo}</td>
-                    <td className="px-4 py-2">{order.supplier}</td>
-                    <td className="px-4 py-2">{order.date}</td>
-                    <td className="px-4 py-2">{order.status}</td>
-                    <td className="px-4 py-2">${order.total}</td>
-                    <td className="px-4 py-2">
-                      <div className="flex space-x-2">
+                    <td className="px-4 py-0.5">{order.poNo}</td>
+                    <td className="px-4 py-0.5">{order.supplier}</td>
+                    <td className="px-4 py-0.5">{order.date}</td>
+                    <td className="px-4 py-0.5">{order.status}</td>
+                    <td className="px-4 py-0.5">${order.total}</td>
+                    <td className="px-4 py-0.5">
+                      <div className="flex justify-center space-x-2">
                         <Button
                           size="sm"
                           variant="outline"
@@ -359,7 +357,7 @@ const PurchaseOrders = () => {
                 : "Enter details to create a new purchase order."}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6">
             <div>
               <Label>Supplier</Label>
               <Input
@@ -425,7 +423,7 @@ const PurchaseOrders = () => {
             <div>
               <Label>Status</Label>
               <select
-                className="border rounded p-2 w-full"
+                className="border rounded px-2 w-full text-sm h-[27px]"
                 value={formData.status}
                 onChange={(e) => handleInputChange("status", e.target.value)}
               >

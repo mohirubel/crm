@@ -245,7 +245,7 @@ const Invoices = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight uppercase">Invoices</h2>
+          <h2 className="font-bold tracking-tight uppercase">Invoices</h2>
         </div>
         <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" />
@@ -259,7 +259,7 @@ const Invoices = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
                   placeholder="Search invoices..."
@@ -284,7 +284,7 @@ const Invoices = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
-                <tr>
+                <tr className="text-[14px]">
                   <th className="px-4 py-2 text-left">
                     Invoice No
                   </th>
@@ -300,7 +300,7 @@ const Invoices = () => {
                   <th className="px-4 py-2 text-left">
                     Status
                   </th>
-                  <th className="px-4 py-2 text-left">
+                  <th className="px-4 py-2 text-center">
                     Actions
                   </th>
                 </tr>
@@ -308,13 +308,13 @@ const Invoices = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredInvoices.map((inv) => (
                   <tr key={inv.id}>
-                    <td className="px-4 py-2">{inv.invoiceNo}</td>
-                    <td className="px-4 py-2">{inv.customer}</td>
-                    <td className="px-4 py-2">{inv.date}</td>
-                    <td className="px-4 py-2">${inv.amount}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-0.5">{inv.invoiceNo}</td>
+                    <td className="px-4 py-0.5">{inv.customer}</td>
+                    <td className="px-4 py-0.5">{inv.date}</td>
+                    <td className="px-4 py-0.5">${inv.amount}</td>
+                    <td className="px-4 py-0.5">
                       <span
-                        className={`px-2 py-1 rounded text-xs ${
+                        className={`px-2 py-0.5 rounded text-xs ${
                           inv.status === "Paid"
                             ? "bg-green-100 text-green-600"
                             : "bg-yellow-100 text-yellow-600"
@@ -323,8 +323,8 @@ const Invoices = () => {
                         {inv.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex space-x-2">
+                    <td className="px-6 py-0.5">
+                      <div className="flex justify-center space-x-2">
                         <Button
                           size="sm"
                           variant="outline"
@@ -378,7 +378,7 @@ const Invoices = () => {
         </DialogHeader>
 
         {/* Two column grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 p-6">
           <div>
             <Label>Customer</Label>
             <Input
@@ -436,7 +436,7 @@ const Invoices = () => {
           <div className="md:col-span-2">
             <Label>Status</Label>
             <select
-              className="border rounded p-2 w-full mb-2"
+              className="border rounded px-2 w-full mb-2 text-sm h-[27px]"
               value={formData.status}
               onChange={(e) => handleInputChange("status", e.target.value)}
             >
@@ -488,7 +488,7 @@ const Invoices = () => {
 
         <DialogFooter>
           <Button
-            variant="outline"
+            variant="destructive"
             onClick={() => {
               setIsAddModalOpen(false);
               setIsEditModalOpen(false);
@@ -497,7 +497,7 @@ const Invoices = () => {
           >
             Cancel
           </Button>
-          <Button onClick={isEditModalOpen ? handleEditInvoice : handleAddInvoice}>
+          <Button className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold" onClick={isEditModalOpen ? handleEditInvoice : handleAddInvoice}>
             {isEditModalOpen ? "Save Changes" : "Add Invoice"}
           </Button>
         </DialogFooter>

@@ -178,7 +178,7 @@ const [suppliers, setSuppliers] = useState([
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight uppercase">Suppliers</h2>
+          <h2 className="font-bold tracking-tight uppercase">Suppliers</h2>
         </div>
         <Button onClick={handleOpenAddModal}>
           <Plus className="h-4 w-4" /> <span>Add Supplier</span>
@@ -191,10 +191,10 @@ const [suppliers, setSuppliers] = useState([
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
                   id="search"
-                  placeholder="Search suppliers..."
+                  placeholder="Search suppliers"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -216,23 +216,23 @@ const [suppliers, setSuppliers] = useState([
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
-                <tr>
+                <tr className="text-[14px]">
                   <th className="px-4 py-2 text-left">Supplier ID</th>
                   <th className="px-4 py-2 text-left">Name</th>
                   <th className="px-4 py-2 text-left">Phone</th>
                   <th className="px-4 py-2 text-left">Email</th>
-                  <th className="px-4 py-2 text-left">Actions</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredSuppliers.map((supplier) => (
                   <tr key={supplier.id}>
-                    <td className="px-4 py-2">{supplier.id}</td>
-                    <td className="px-4 py-2">{supplier.name}</td>
-                    <td className="px-4 py-2">{supplier.phone}</td>
-                    <td className="px-4 py-2">{supplier.email}</td>
-                    <td className="px-4 py-2">
-                      <div className="flex space-x-2">
+                    <td className="px-4 py-0.5">{supplier.id}</td>
+                    <td className="px-4 py-0.5">{supplier.name}</td>
+                    <td className="px-4 py-0.5">{supplier.phone}</td>
+                    <td className="px-4 py-0.5">{supplier.email}</td>
+                    <td className="px-4 py-0.5">
+                      <div className="flex justify-center space-x-2">
                         <Button
                           size="sm"
                           variant="outline"
@@ -284,7 +284,7 @@ const [suppliers, setSuppliers] = useState([
                 : "Enter details to register a new supplier."}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 p-6">
             <div>
               <Label>Name</Label>
               <Input
@@ -327,7 +327,7 @@ const [suppliers, setSuppliers] = useState([
           </div>
           <DialogFooter>
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={() => {
                 setIsAddModalOpen(false);
                 setIsEditModalOpen(false);
@@ -337,6 +337,7 @@ const [suppliers, setSuppliers] = useState([
               Cancel
             </Button>
             <Button
+             className="bg-[#2eb4f7] hover:bg-[#2eb4f7] text-primary font-semibold"
               onClick={isEditModalOpen ? handleEditSupplier : handleAddSupplier}
             >
               {isEditModalOpen ? "Save Changes" : "Add Supplier"}

@@ -1,212 +1,129 @@
-import React, { useState, useMemo } from "react";
-import {
-  Card, CardContent, CardDescription, CardHeader, CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog, DialogContent, DialogDescription, DialogFooter,
-  DialogHeader, DialogTitle,
-} from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-} from "@/components/ui/select";
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
-const INITIAL_FORM = {
-  code: "",
-  name: "",
-  type: "Asset",
-  parent: "",
-};
+const initialData = [
+  { id: 1, type: "Asset", head: "Current Assets", name: "Cash", balance: 15000 },
+  { id: 2, type: "Asset", head: "Current Assets", name: "Accounts Receivable", balance: 8500 },
+  { id: 3, type: "Asset", head: "Current Assets", name: "Inventory", balance: 12000 },
+  { id: 4, type: "Asset", head: "Current Assets", name: "Prepaid Expenses", balance: 2000 },
+  { id: 5, type: "Asset", head: "Non-Current Assets", name: "Property, Plant & Equipment", balance: 60000 },
+  { id: 6, type: "Liability", head: "Current Liabilities", name: "Accounts Payable", balance: 7000 },
+  { id: 7, type: "Liability", head: "Current Liabilities", name: "Salaries Payable", balance: 3000 },
+  { id: 8, type: "Liability", head: "Non-Current Liabilities", name: "Long-Term Loans", balance: 20000 },
+  { id: 9, type: "Equity", head: "Equity", name: "Owner's Capital", balance: 50000 },
+  { id: 10, type: "Revenue", head: "Sales Revenue", name: "Domestic Sales", balance: 40000 },
+  { id: 11, type: "Expense", head: "Operating Expenses", name: "Salaries & Wages", balance: 20000 },
+  { id: 12, type: "Expense", head: "Operating Expenses", name: "Rent Expense", balance: 5000 },
+  { id: 13, type: "Revenue", head: "Other Income", name: "Dividend income", balance: 34000 },
+];
 
-const ChartOfAccounts = () => {
-  const [accounts, setAccounts] = useState([
-    { id: 1, code: "1001", name: "Cash", type: "Asset", parent: "" },
-    { id: 2, code: "2001", name: "Accounts Payable", type: "Liability", parent: "" },
-    { id: 3, code: "3001", name: "Sales Revenue", type: "Income", parent: "" },
-    { id: 4, code: "4001", name: "Rent Expense", type: "Expense", parent: "" },
-  ]);
+export default function ChartOfAccountsNested() {
+  // Group by type -> head -> accounts
+  const grouped = initialData.reduce((acc, item) => {
+    if (!acc[item.type]) acc[item.type] = {};
+    if (!acc[item.type][item.head]) acc[item.type][item.head] = [];
+    acc[item.type][item.head].push(item);
+    return acc;
+  }, {});
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const [formData, setFormData] = useState(INITIAL_FORM);
+  const typeKeys = Object.keys(grouped);
 
-  // 🔍 Search & Filter states
-  const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
+  // ✅ First type open by default, others closed
+  const [openTypes, setOpenTypes] = useState(
+    typeKeys.length ? { [typeKeys[0]]: true } : {}
+  );
+  const [openHeads, setOpenHeads] = useState({});
 
-  // Filtered accounts list
-  const filteredAccounts = useMemo(() => {
-    return accounts.filter((acc) => {
-      const matchesSearch =
-        searchTerm === "" ||
-        acc.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        acc.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const toggleType = (type) =>
+    setOpenTypes((p) => ({ ...p, [type]: !p[type] }));
 
-      const matchesType =
-        typeFilter === "all" || acc.type.toLowerCase() === typeFilter.toLowerCase();
-
-      return matchesSearch && matchesType;
+  const toggleHead = (type, head) =>
+    setOpenHeads((p) => {
+      const key = `${type}||${head}`;
+      return { ...p, [key]: !p[key] };
     });
-  }, [accounts, searchTerm, typeFilter]);
-
-  const resetForm = () => { setFormData(INITIAL_FORM); setSelected(null); };
-
-  const handleSave = () => {
-    if (!formData.code || !formData.name) return;
-    if (selected) {
-      setAccounts((prev) =>
-        prev.map((a) => (a.id === selected.id ? { ...a, ...formData } : a))
-      );
-    } else {
-      const newId = accounts.length + 1;
-      setAccounts((prev) => [...prev, { id: newId, ...formData }]);
-    }
-    setIsModalOpen(false);
-    resetForm();
-  };
-
-  const handleDelete = (acc) => {
-    setAccounts((prev) => prev.filter((a) => a.id !== acc.id));
-  };
-
-  const clearFilters = () => {
-    setSearchTerm("");
-    setTypeFilter("all");
-  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Chart of Accounts</h2>
-        <Button onClick={() => { resetForm(); setIsModalOpen(true); }}>
-          <Plus className="h-4 w-4" /> Add Account
-        </Button>
-      </div>
+    <div className="space-y-4">
+      <h2 className="font-bold uppercase">Chart of Accounts</h2>
 
-      {/* 🔍 Search & Filter */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Search & Filter Accounts</CardTitle>
-          <CardDescription>Search by code, name, or filter by type</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search */}
-            <div>
-              <Label htmlFor="search">Search</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  id="search"
-                  placeholder="Search accounts..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-
-            {/* Filter by Type */}
-            <div>
-              <Label>Type</Label>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Types" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="Asset">Asset</SelectItem>
-                  <SelectItem value="Liability">Liability</SelectItem>
-                  <SelectItem value="Expense">Expense</SelectItem>
-                  <SelectItem value="Income">Income</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Clear Filters */}
-            <div className="flex items-end">
-              <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Accounts Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Accounts</CardTitle>
-          <CardDescription>Manage your accounts</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <table className="min-w-full divide-y divide-gray-200 text-sm border">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-2 text-left">Code</th>
-                <th className="px-4 py-2 text-left">Name</th>
-                <th className="px-4 py-2 text-left">Type</th>
-                <th className="px-4 py-2 text-left">Parent</th>
-                <th className="px-4 py-2 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredAccounts.map((acc) => (
-                <tr key={acc.id}>
-                  <td className="px-4 py-2">{acc.code}</td>
-                  <td className="px-4 py-2">{acc.name}</td>
-                  <td className="px-4 py-2">{acc.type}</td>
-                  <td className="px-4 py-2">{acc.parent}</td>
-                  <td className="px-4 py-2 flex gap-2">
-                    <Button size="sm" variant="outline" onClick={() => { setSelected(acc); setFormData(acc); setIsModalOpen(true); }}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(acc)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
-
-      {/* Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{selected ? "Edit Account" : "Add Account"}</DialogTitle>
-            <DialogDescription>Fill in account details</DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <Label>Code</Label>
-            <Input value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} />
-            <Label>Name</Label>
-            <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-            <Label>Type</Label>
-            <select
-              className="border rounded p-2"
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+      {typeKeys.map((type) => (
+        <Card className="p-0" key={type}>
+          <CardContent className="p-0">
+            {/* Type header */}
+            <button
+              onClick={() => toggleType(type)}
+              className="w-full text-[14px] flex justify-between items-center px-4 py-2.5 bg-gray-100 hover:bg-gray-200 cursor-pointer"
             >
-              <option value="Asset">Asset</option>
-              <option value="Liability">Liability</option>
-              <option value="Expense">Expense</option>
-              <option value="Income">Income</option>
-            </select>
-            <Label>Parent Account</Label>
-            <Input value={formData.parent} onChange={(e) => setFormData({ ...formData, parent: e.target.value })} />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave}>{selected ? "Save" : "Add"}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              <span className="font-semibold text-gray-800">{type}</span>
+              {openTypes[type] ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronRight className="h-5 w-5" />
+              )}
+            </button>
+
+            {/* Show heads only if this type is open */}
+            {openTypes[type] && (
+              <div>
+                {Object.entries(grouped[type]).map(([head, accounts]) => {
+                  const headKey = `${type}||${head}`;
+                  const subtotal = accounts.reduce(
+                    (s, a) => s + (a.balance || 0),
+                    0
+                  );
+
+                  return (
+                    <div key={headKey} className="border-t">
+                      {/* Head row */}
+                      <div className="flex items-center justify-between px-4 py-2 bg-white">
+                        <button
+                          onClick={() => toggleHead(type, head)}
+                          className="flex text-[14px] items-center gap-2 cursor-pointer"
+                        >
+                          {openHeads[headKey] ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                          <span className="font-medium">{head}</span>
+                        </button>
+
+                        <div className="text-sm text-gray-600">
+                          Subtotal: {subtotal.toLocaleString()}
+                        </div>
+                      </div>
+
+                      {/* Accounts table */}
+                      {openHeads[headKey] && (
+                        <table className="min-w-full text-sm">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-4 py-2 text-left">Account Name</th>
+                              <th className="px-4 py-2 text-right">Balance</th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {accounts.map((acc) => (
+                              <tr key={acc.id}>
+                                <td className="px-4 py-2">{acc.name}</td>
+                                <td className="px-4 py-2 text-right">
+                                  {Number(acc.balance).toLocaleString()}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
-};
-
-export default ChartOfAccounts;
+}

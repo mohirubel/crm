@@ -104,7 +104,7 @@ const StockMovements = () => {
     <div className="space-y-3">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-semibold tracking-tight uppercase">
+        <h2 className="font-bold tracking-tight uppercase">
           Stock Transactions
         </h2>
         {/* <p className="text-muted-foreground">
@@ -179,9 +179,9 @@ const StockMovements = () => {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search movements..."
+                  placeholder="Search transactions"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -214,14 +214,15 @@ const StockMovements = () => {
               </SelectContent>
             </Select>
             <div className="relative">
-              <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Calendar className="absolute left-3 top-1.5 h-4 w-4 text-gray-400" />
               <Input
                 type="date"
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
-                className="pl-10"
+                className="pl-10 w-auto"
               />
             </div>
+            <div className="flex items-end">
             <Button
               variant="outline"
               className="bg-yellow-500 hover:bg-yellow-600"
@@ -230,6 +231,7 @@ const StockMovements = () => {
               <RefreshCcw className="h-4 w-4" />
               Clear Filter
             </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -240,7 +242,7 @@ const StockMovements = () => {
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
-                <tr>
+                <tr className="text-[14px]">
                   <th className="px-4 py-2 text-left">Product</th>
                   <th className="px-4 py-2 text-left">Type</th>
                   <th className="px-4 py-2 text-left">Quantity</th>
@@ -254,9 +256,9 @@ const StockMovements = () => {
               <tbody className="divide-y divide-gray-200 bg-white">
                 {filteredStockMovements.map((m) => (
                   <tr key={m.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-2 font-medium">{m.productName}</td>
-                    <td className="px-4 py-2">{getMovementBadge(m.type)}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-0.5 font-medium">{m.productName}</td>
+                    <td className="px-4 py-0.5">{getMovementBadge(m.type)}</td>
+                    <td className="px-4 py-0.5">
                       <div className="flex items-center space-x-1">
                         {getMovementIcon(m.type)}
                         <span
@@ -269,13 +271,13 @@ const StockMovements = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-2 text-gray-500">{m.reason}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-0.5 text-gray-500">{m.reason}</td>
+                    <td className="px-4 py-0.5">
                       <Badge variant="outline">{m.reference}</Badge>
                     </td>
-                    <td className="px-4 py-2 text-gray-500">{m.supplier}</td>
-                    <td className="px-4 py-2 text-gray-500">{m.date}</td>
-                    <td className="px-4 py-2 text-gray-500">{m.time}</td>
+                    <td className="px-4 py-0.5 text-gray-500">{m.supplier}</td>
+                    <td className="px-4 py-0.5 text-gray-500">{m.date}</td>
+                    <td className="px-4 py-0.5 text-gray-500">{m.time}</td>
                   </tr>
                 ))}
               </tbody>

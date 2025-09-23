@@ -59,6 +59,7 @@ import InventoryReports from "./pages/Reports/InventoryReports";
 import HRReports from "./pages/Reports/HRReports";
 import FinanceReports from "./pages/Reports/FinanceReports";
 import EmployeeSalaryList from "./pages/HR/EmployeeSalaryList";
+import AccountTypes from "./pages/Account/AccountTypes";
 
 function App() {
   // State management (still kept here)
@@ -184,6 +185,7 @@ function App() {
 
             {/* Account */}
             <Route path="/chart-of-accounts" element={<ChartOfAccounts />} />
+            <Route path="/account-types" element={<AccountTypes />} />
             <Route path="/journal-entries" element={<JournalEntries />} />
             <Route path="/payments-receipts" element={<PaymentsReceipts />} />
             <Route path="/account-reports" element={<AccountReports />} />

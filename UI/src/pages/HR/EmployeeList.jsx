@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Search, Eye, Edit, Trash2, Calendar, Upload, X } from 'lucide-react';
+import { Plus, Search, Eye, Edit, Trash2, Calendar, Upload, Pencil, RefreshCcw, Check, ChevronsUpDown, X } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -169,12 +171,6 @@ const EmployeeList = () => {
     setShowEditForm(true);
   };
 
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    employee.designation.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -265,58 +261,110 @@ const EmployeeList = () => {
     </div>
   );
 
+  const [departmentFilter, setDepartmentFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const filteredEmployees = employees.filter(employee => {
+  const matchesSearch =
+    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.designation.toLowerCase().includes(searchTerm.toLowerCase());
+
+  const matchesDepartment = departmentFilter ? employee.department === departmentFilter : true;
+  const matchesStatus = statusFilter ? employee.status === statusFilter : true;
+
+  return matchesSearch && matchesDepartment && matchesStatus;
+});
+
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto">
+      <div className="space-y-3">
         {/* Header */}
-        <div className="mb-0">
-          <div className="flex justify-between items-start">
+        <div className="mb-[12px]">
+          <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-xl font-bold text-gray-900 mb-2">Employees</h1>
+              <h1 className="font-bold tracking-tight uppercase">Employees</h1>
             </div>
             <button
               onClick={() => setShowAddForm(true)}
-              className="bg-black text-white px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-gray-800 transition-colors"
+              className="bg-black text-white px-3 py-1.5 rounded-xl flex items-center gap-2 text-[12px] hover:bg-gray-800 transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="h-4 w-4" />
               New Employee
             </button>
           </div>
         </div>
 
         {/* Search & Filter Section */}
-        <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Search & Filter Employees</h2>
-          <p className="text-gray-600 text-sm mb-4">Search by employee name, department or designation</p>
-          
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search employees..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl "
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-4 text-sm text-gray-600">
-            Showing {filteredEmployees.length} of {employees.length} employees
-          </div>
+<Card>
+  <CardContent>          
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-[max-content]">
+      {/* Search */}
+      <div className="flex-1">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search employees..."
+            className="w-full pl-10 pr-3 py-1 border border-gray-300 rounded-xl text-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
+      </div>
 
+      {/* Department Filter */}
+      
+        <select
+          className="px-3 py-1 border border-gray-300 rounded-xl text-sm"
+          value={departmentFilter}
+          onChange={(e) => setDepartmentFilter(e.target.value)}
+        >
+          <option value="">All Departments</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Management">Management</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Sales">Sales</option>
+          <option value="HR">HR</option>
+          <option value="Finance">Finance</option>
+        </select>
+      
+
+      {/* Status Filter */}
+      
+        <select
+          className="px-3 py-1 border border-gray-300 rounded-xl text-sm"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      
+
+      {/* Clear Filters Button */}
+      <div className="flex items-end">
+        <Button
+          onClick={() => {
+            setSearchTerm('');
+            setDepartmentFilter('');
+            setStatusFilter('');
+          }}
+          className="bg-yellow-500 hover:bg-yellow-600"
+        >
+          <RefreshCcw className="h-4 w-4" />
+          Clear Filters
+        </Button>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+        
         {/* Employee List */}
-        <div className="bg-white rounded-xl shadow-sm border">
-          {/* <div className="p-6 border-b">
-            <h2 className="text-lg font-semibold text-gray-900">Employee List</h2>
-            <p className="text-gray-600 text-sm">View and manage your employee records</p>
-          </div> */}
-
+        <Card>
+        <CardContent>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 text-sm border">
               <thead className="bg-gray-50">
@@ -333,29 +381,29 @@ const EmployeeList = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredEmployees.map((employee) => (
                   <tr key={employee.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-1 whitespace-nowrap">
+                    <td className="px-4 py-[2px]">
                       <img
                         src={employee.image}
                         alt={employee.name}
                         className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                       />
                     </td>
-                    <td className="px-6 py-1 whitespace-nowrap">
+                    <td className="px-4 py-[2px]">
                       <div className="text-sm font-medium text-gray-900">#{employee.id}</div>
                     </td>
-                    <td className="px-6 py-1 whitespace-nowrap">
+                    <td className="px-4 py-[2px]">
                       <div className="text-sm font-medium text-gray-900">{employee.name}</div>
                     </td>
-                    <td className="px-6 py-1 whitespace-nowrap">
+                    <td className="px-4 py-[2px]">
                       <div className="text-sm text-gray-900">{employee.department}</div>
                     </td>
-                    <td className="px-6 py-1 whitespace-nowrap">
+                    <td className="px-4 py-[2px]">
                       <div className="text-sm text-gray-900">{employee.designation}</div>
                     </td>
-                    <td className="px-6 py-1 whitespace-nowrap">
+                    <td className="px-4 py-[2px]">
                       <span className={getStatusBadge(employee.status)}>{employee.status}</span>
                     </td>
-                    <td className="px-6 py-1 whitespace-nowrap">
+                    <td className="px-4 py-[2px]">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleViewEmployee(employee)}
@@ -407,13 +455,15 @@ const EmployeeList = () => {
               </tbody>
             </table>
           </div>
-        </div>
+          </CardContent>
+        </Card>
+        
 
         {/* Add Employee Modal */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black/25 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[85vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-4">
+            <div className="bg-white rounded-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto">
+              <div className="bg-gray-50 border-b p-6 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">Add New Employee</h3>
                 <button 
                   onClick={() => setShowAddForm(false)}
@@ -423,6 +473,7 @@ const EmployeeList = () => {
                 </button>
               </div>            
 
+              <div className='p-6'>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -518,8 +569,9 @@ const EmployeeList = () => {
                   </select>
                 </div>
               </div>
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-0 pt-0 pr-6 pb-6 pl-6">
                 <ImageUploadSection 
                   currentImage={newEmployee.image}
                   onImageUpload={(file) => handleImageUpload(file, false)}
@@ -531,7 +583,7 @@ const EmployeeList = () => {
                 />
               </div>
 
-              <div className="text-right mt-6">
+              <div className="bg-gray-100 p-4 border-t text-right mt-0">
                 <button
                   onClick={handleAddEmployee}
                   className="flex-1 bg-black text-white py-2 px-4 rounded-xl hover:bg-gray-800 transition-colors mr-2"
