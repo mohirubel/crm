@@ -182,6 +182,7 @@ const Leads = () => {
       {/* 📋 Leads Table */}
       <Card>
         <CardContent>
+        <div className="overflow-x-auto">
           <table className="w-full border text-sm">
             <thead className="bg-gray-100">
               <tr className="text-[14px]">
@@ -229,6 +230,7 @@ const Leads = () => {
               )}
             </tbody>
           </table>
+          </div>
         </CardContent>
       </Card>
 

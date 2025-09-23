@@ -255,6 +255,7 @@ const [entries, setEntries] = useState([
       {/* 📑 Entries Table */}
       <Card>
         <CardContent>
+        <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 text-sm border">
             <thead className="bg-gray-50">
               <tr className="text-[14px]">
@@ -288,6 +289,7 @@ const [entries, setEntries] = useState([
               ))}
             </tbody>
           </table>
+        </div>
         </CardContent>
       </Card>
 

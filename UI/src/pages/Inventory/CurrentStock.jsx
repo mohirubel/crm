@@ -308,7 +308,7 @@ const CurrentStock = () => {
 
   return (
     <div className="space-y-3">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-wrap gap-2">
         <div>
           <h2 className="font-bold tracking-tight uppercase">
             Products

@@ -232,7 +232,7 @@ const Layout = () => {
     setOpenTopMenus({});
     navigate(path);
   };
-
+  
   // Render top menu
   const renderTopMenuItem = (menuKey) => {
     const menu = menuStructure[menuKey];
@@ -241,10 +241,10 @@ const Layout = () => {
     const hasDropdown = !!menu.submenus;
 
     return (
-      <div className="relative" key={menuKey}>
+      <div className="relative " key={menuKey}>
         <button
           onClick={() => handleTopMenuClick(menuKey, menu)}
-          className={`px-2 2xl:scroll-px-2.5 py-2 cursor-pointer rounded-md text-sm font-medium flex items-center ${
+          className={`px-2 py-2 cursor-pointer rounded-md text-sm font-medium flex items-center ${
             isActivePath(menu.path)
               ? "bg-blue-100 text-blue-700"
               : "text-gray-700 hover:bg-gray-100"
@@ -381,7 +381,7 @@ const Layout = () => {
               <div className="bg-blue-600 p-1.5 rounded-lg">
                 <Grid2x2 className="h-6 w-6 text-white" />
               </div>
-              <h1 className="ml-3 text-xl font-bold text-gray-900 capitalize">
+              <h1 className="ml-3 text-xl min-w-24 font-bold text-gray-900 capitalize">
                 {currentMenuKey}
               </h1>
             </div>

@@ -173,12 +173,13 @@ export default function AccountTypes() {
       {/* List */}
       <Card>
         <CardContent>
+        <div className="overflow-x-auto">
           <table className="min-w-full text-sm divide-y divide-gray-200 border">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-2 text-left">Name</th>
                 <th className="px-4 py-2 text-left">Description</th>
-                <th className="px-4 py-2 text-left">Actions</th>
+                <th className="px-4 py-2 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -186,7 +187,7 @@ export default function AccountTypes() {
                 <tr key={t.id}>
                   <td className="px-4 py-1">{t.name}</td>
                   <td className="px-4 py-1">{t.description}</td>
-                  <td className="px-4 py-1 flex gap-2 flex-wrap">
+                  <td className="px-4 py-1 flex justify-center gap-2">
                     <Button
                       size="sm"
                       variant="outline"
@@ -227,6 +228,7 @@ export default function AccountTypes() {
               )}
             </tbody>
           </table>
+          </div>
         </CardContent>
       </Card>
 
