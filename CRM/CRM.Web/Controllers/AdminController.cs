@@ -8,9 +8,9 @@ using System.Text.RegularExpressions;
 
 namespace CRM.Api.Controllers
 {
-    //[ApiController]
-    //[Route("api/[controller]")]
-    public class AdminController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
         private readonly ILogger<AdminRepository> _logger;
@@ -20,10 +20,10 @@ namespace CRM.Api.Controllers
             _logger = logger;
         }
 
-        public IActionResult Register()
-        {
-            return View();
-        }
+        //public IActionResult Register()
+        //{
+        //    return View();
+        //}
 
 
         [HttpPost("Create")]

@@ -54,8 +54,6 @@ namespace CRM.Web
     //.AddNewtonsoftJson(options =>
     //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-
-
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -74,6 +72,7 @@ namespace CRM.Web
             services.AddScoped<IAdminService, AdminService>();
 
 
+
             // Register Swagger services
             services.AddSwaggerGen(c =>
             {
@@ -82,30 +81,30 @@ namespace CRM.Web
                     Title = "My API",
                     Version = "v1",
                     Description = @"
-                                A simple example ASP.NET Core Web API
+A simple example ASP.NET Core Web API
 
-                                <div  style='display: flex; flex-wrap: wrap;'>
-                                   <h1> Download Json File </h1>
-                                    <div  style='flex: 1; padding-right: 10px;'>
-                                        <table style='width: 100%; border-collapse: collapse;'>
-                                            <tr>
-                                                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Name</th>
-                                                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Download</th>
-                                            </tr>
-                                            <tr>
-                                                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>Account</td>
-                                                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>
-                                                    <a href='#' >Download</a>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div style='flex: 1; padding-left: 10px;'>
-                                        <table style='width: 100%; border-collapse: collapse;'>
-                                        </table>
-                                    </div>
-                                </div>
-                                ",
+<div  style='display: flex; flex-wrap: wrap;'>
+   <h1> Download Json File </h1>
+    <div  style='flex: 1; padding-right: 10px;'>
+        <table style='width: 100%; border-collapse: collapse;'>
+            <tr>
+                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Name</th>
+                <th style='text-align: left; padding: 8px; border-bottom: 2px solid #000;'>Download</th>
+            </tr>
+            <tr>
+                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>Account</td>
+                <td style='padding: 8px; border-bottom: 1px solid #ddd;'>
+                    <a href='#' >Download</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style='flex: 1; padding-left: 10px;'>
+        <table style='width: 100%; border-collapse: collapse;'>
+        </table>
+    </div>
+</div>
+",
 
 
 
@@ -144,35 +143,27 @@ namespace CRM.Web
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            //app.UseSwagger();
+            app.UseSwagger();
 
-            //// specifying the Swagger JSON endpoint.
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            //    c.RoutePrefix = string.Empty; // To serve Swagger UI at application's root (http://localhost:<port>/)
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty; // To serve Swagger UI at application's root (http://localhost:<port>/)
 
-            //});
+                // Include the custom JavaScript file
+               // c.InjectJavascript("/js/swagger-custom.js");
 
+            });
             app.UseCors("AllowSpecificOrigin"); // Enable the CORS policy
 
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //    endpoints.MapRazorPages();   // Razor Pages enable
-            //    endpoints.MapDefaultControllerRoute(); // MVC default route
-            //});
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
-
         }
 
-
+        
     }
 }
