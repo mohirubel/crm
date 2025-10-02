@@ -55,13 +55,22 @@ namespace CRM.Data.Repositories
             }
         }
 
-        public async Task<Guid> RegisterAsyncMembership(User model, string roleName, string email)
+        public async Task<Guid> RegisterAsyncMembership(User model, string roleName, string email = "")
         {
             var application = await _context.Applications.OrderBy(a => a.ApplicationId).FirstOrDefaultAsync();
             if (application == null)
             {
-                return Guid.Empty;
-                
+                application = new Application
+                {
+                    ApplicationId = Guid.NewGuid(),
+                    ApplicationName = "CRMApp",   
+                    LoweredApplicationName = "CRMapp",
+                    Description = "Default Application created automatically."
+                };
+
+                await _context.Applications.AddAsync(application);
+                await _context.SaveChangesAsync();
+               
             }
 
             Guid applicationId = application.ApplicationId;
@@ -103,7 +112,7 @@ namespace CRM.Data.Repositories
                     using (var createUserCommand = new SqlCommand("aspnet_Membership_CreateUser", connection))
                     {
                         createUserCommand.CommandType = CommandType.StoredProcedure;
-                        createUserCommand.Parameters.AddWithValue("@ApplicationName", applicationId);
+                        createUserCommand.Parameters.AddWithValue("@ApplicationName", application.ApplicationName);
                         createUserCommand.Parameters.AddWithValue("@UserName", model.UserName);
                         createUserCommand.Parameters.AddWithValue("@Password", model.Password);
                         createUserCommand.Parameters.AddWithValue("@PasswordSalt", model.PasswordSalt);
@@ -165,7 +174,42 @@ namespace CRM.Data.Repositories
             }
         }
 
+        public async Task<List<UsersInRole>> GetUserInRolesByUserId(Guid id)
+        {
+            var result = await (from ur in _context.UsersInRoles
+                                    join r in _context.Roles
+                                   on ur.RoleId equals r.RoleId
+                                   where ur.UserId == id
+                                   select new UsersInRole
+                                   {
+                                       UserId = ur.UserId,
+                                       RoleId = ur.RoleId,
+                                       RoleName = r.RoleName
+                                   }).ToListAsync();
 
+     
+            return result;
+        }
+         public async Task<Guid> CreateContactAsync(Contact contact)
+        {
+            if (contact == null)
+                throw new ArgumentNullException(nameof(contact));
+
+            // ContactId 
+            contact.ContactId = Guid.NewGuid();
+
+            // CreateDate
+            if (contact.CreateDate == default)
+                contact.CreateDate = DateTime.UtcNow;
+
+            // DbContext 
+            _context.Contacts.Add(contact);
+
+            // Save Changes
+            await _context.SaveChangesAsync();
+
+            return contact.ContactId;
+        }
 
         public async Task<IdentityResult> RegisterAsync(User model)
         {
@@ -235,6 +279,8 @@ namespace CRM.Data.Repositories
                 // Name = user.UserName,
                 // Map other fields from your custom table if needed
             };
+
+           
         }
 
         public async Task<IdentityResult> UpdateUserAsync(Membership model)
@@ -577,7 +623,7 @@ namespace CRM.Data.Repositories
             return passwordBuilder.ToString();
         }
 
-       
+     
     }
 }
 

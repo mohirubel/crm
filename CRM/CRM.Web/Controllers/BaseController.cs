@@ -3,15 +3,13 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CRM.Web.Controllers
 {
-    [ApiController]
-    public abstract class BaseController : ControllerBase, IActionFilter
+    public abstract class BaseController : Controller
     {
-       
-        public void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             var path = context.HttpContext.Request.Path.Value?.ToLower();
 
-            
+            // Login path exempted
             if (path != null && path.Contains("/login"))
                 return;
 
@@ -25,11 +23,12 @@ namespace CRM.Web.Controllers
                     Message = "Please login first."
                 });
             }
+            base.OnActionExecuting(context);
         }
 
-       
-        public void OnActionExecuted(ActionExecutedContext context)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
+            base.OnActionExecuted(context);
         }
     }
 }

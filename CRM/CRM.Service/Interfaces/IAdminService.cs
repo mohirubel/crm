@@ -22,6 +22,10 @@ namespace CRM.Service.Interfaces
         Task<bool> UpdateUserNameAsync(User user);
         Task<bool> CheckUserNameExistAsync(User user);
         Task<(bool IsSuccess, Guid UserId, string RoleName, string UserName)> ValidateUser(string userName, string password);
+
+        Task<List<UsersInRole>> GetUserInRolesByUserId(Guid id);
+        Task<Guid> CreateContactAsync(Contact contact);
+
     }
-   
+
 }

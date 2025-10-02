@@ -1,4 +1,5 @@
-﻿using CRM.Common.Models;
+﻿using Azure.Core;
+using CRM.Common.Models;
 using CRM.Data.Repositories;
 using CRM.Service.Interfaces;
 using CRM.Web.Controllers;
@@ -6,11 +7,9 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
-namespace CRM.Api.Controllers
+namespace CRM.Web.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AdminController : ControllerBase
+    public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;
         private readonly ILogger<AdminRepository> _logger;
@@ -20,11 +19,38 @@ namespace CRM.Api.Controllers
             _logger = logger;
         }
 
-        //public IActionResult Register()
-        //{
-        //    return View();
-        //}
+        #region Utility
 
+       /// <summary>
+        /// Check if the current user (from session) is Admin
+        /// </summary>
+        /// <returns>True if Admin, otherwise false</returns>
+        private async Task<bool> CheckIsAdmin()
+        {
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            var sesRoleName = HttpContext.Session.GetString("RoleName");
+
+            // Session check
+            if (string.IsNullOrEmpty(userIdStr) || string.IsNullOrEmpty(sesRoleName))
+                return false;
+
+            // Quick check using session RoleName
+            if (!sesRoleName.Equals(RoleName.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            Guid userId = Guid.Parse(userIdStr);
+
+            // Fetch actual roles from DB
+            var userRoleMap = await _adminService.GetUserInRolesByUserId(userId);
+
+            // Check if any role is Admin
+            return userRoleMap.Any(r => r.RoleName.Equals(RoleName.Admin.ToString(), StringComparison.OrdinalIgnoreCase));
+        }
+
+
+        #endregion
+
+        #region Method
 
         [HttpPost("Create")]
         public async Task<ActionResult> Create([FromBody] User user)
@@ -42,20 +68,45 @@ namespace CRM.Api.Controllers
                 return StatusCode(500, new { Message = ex.Message, Success = false });
             }
         }
-      
-        [HttpPost("Register")]
-        public async Task<ActionResult> Register([FromBody] User user)
-        {
-                try
-                {
 
-                if (user == null || string.IsNullOrWhiteSpace(user.UserName))
+        public async Task<IActionResult> Register()
+        
+        {
+            if (!await CheckIsAdmin())
+            {
+                return Unauthorized("You do not have permission to access this page.");
+            }
+
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> Register([FromBody] Contact contact)
+        {
+            try
+            {
+
+                if (contact == null || string.IsNullOrWhiteSpace(contact.UserName))
                 {
                     return BadRequest(new { Success = false, Message = "User value required! " });
                 }
 
+                if (!await CheckIsAdmin())
+                {
+                    return Unauthorized(new { Success = false, Message= "You do not have permission to access this page." });
+                }
+                User user = new User()
+                {
+                    UserName = contact.UserName,
+                    LoweredUserName = contact.UserName.ToLower(),
+                    RoleName = contact.RoleName,
+                    Email = contact.Email,
+                    Password = contact.Password,
 
-                user.LoweredUserName = user.UserName.ToLower();
+                };
+
+               
 
                 bool IsExisted = await _adminService.CheckUserNameExistAsync(user);
                 if (IsExisted)
@@ -71,12 +122,10 @@ namespace CRM.Api.Controllers
                 else if (IsPhoneNumber(user.UserName))
                     user.Email = "";
                 else
-                {
-                    _logger.LogError("An error occurred while registering a User.");
-                    return StatusCode(500, "Please Enter Valid UserName");
-                }
-                if(user.RoleName==null)
-                    return StatusCode(500, "Please Give Role Name");
+                    user.Email = (contact.Email != null ? contact.Email : "");
+                 
+                if (user.RoleName==null)
+                    return StatusCode(500, new { Success = false, Message = "Please Give Role Name" } );
 
                 string roleName = string.Empty;
                 switch (user.RoleName.ToLower())
@@ -104,17 +153,22 @@ namespace CRM.Api.Controllers
 
                 if (userId == Guid.Empty)
                 {
-                    return StatusCode(500, "Register Unsuccessful");
+                    return StatusCode(500, "Register Unsuccessful!");
                 }
+
+                contact.UserId = userId;
+
+                Guid contactId = await _adminService.CreateContactAsync(contact);
+
                 return Ok(new { id = userId, Success = true, Message = "Successfully Register" });
             }
-                catch (Exception ex)
-               {
+            catch (Exception ex)
+            {
 
-                   _logger.LogError(ex, "An error occurred while adding a user.");
-                    return StatusCode(500, new { Message = ex.Message, Success = false });
-                }
+                _logger.LogError(ex, "An error occurred while adding a user.");
+                return StatusCode(500, new { Message = ex.Message, Success = false });
             }
+         }
 
 
 
@@ -225,6 +279,7 @@ namespace CRM.Api.Controllers
         //}
 
 
+        #endregion
     }
 
 }

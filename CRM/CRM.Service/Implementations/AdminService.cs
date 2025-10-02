@@ -65,12 +65,20 @@ namespace CRM.Services.Implementations
         {
             return await (_adminRepository.DeleteUserAsync(userId));
         }
-
+        
        public async Task<(bool IsSuccess, Guid UserId, string RoleName, string UserName)> ValidateUser(string userName, string password)
         {
             return await _adminRepository.ValidateUser(userName, password);
         }
+        public async Task<List<UsersInRole>> GetUserInRolesByUserId(Guid id)
+        {
+            return await(_adminRepository.GetUserInRolesByUserId(id));
+        }
+         public async Task<Guid> CreateContactAsync(Contact contact)
+        {
+            return await(_adminRepository.CreateContactAsync(contact));
+        }
 
-      
-    }
+
+}
 }

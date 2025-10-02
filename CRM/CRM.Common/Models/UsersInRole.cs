@@ -11,11 +11,12 @@ namespace CRM.Common.Models
     [Table("aspnet_UsersInRoles", Schema = "security")]
     public class UsersInRole
     {
-     
         public Guid UserId { get; set; }
         public Guid RoleId { get; set; }
 
         [NotMapped]
         public Guid? ApplicationId { get; set; }
+        [NotMapped]
+        public string RoleName { get; set; }
     }
 }

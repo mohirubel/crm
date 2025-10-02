@@ -30,6 +30,7 @@ namespace CRM.Data
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<TransactionDetail> TransactionDetails { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -57,45 +58,69 @@ namespace CRM.Data
                 b.HasKey(u => u.Id);
                 b.HasIndex(u => u.NormalizedUserName).HasDatabaseName("UserNameIndex").IsUnique();
                 b.HasIndex(u => u.NormalizedEmail).HasDatabaseName("EmailIndex");
-                b.ToTable("AspNetUsers", "Account");
+                b.ToTable("AspNetUsers", "security");
             });
 
             modelBuilder.Entity<IdentityRole>(b =>
             {
                 b.HasKey(r => r.Id);
                 b.HasIndex(r => r.NormalizedName).HasDatabaseName("RoleNameIndex").IsUnique();
-                b.ToTable("AspNetRoles", "Account");
+                b.ToTable("AspNetRoles", "security");
             });
 
-            modelBuilder.Entity<IdentityUserRole<string>>(b =>
+            //modelBuilder.Entity<IdentityUserRole<string>>(b =>
+            //{
+            //    b.HasKey(r => new { r.UserId, r.RoleId });
+            //    b.ToTable("AspNetUserRoles", "security");
+            //});
+
+            modelBuilder.Entity<UsersInRole>(entity =>
             {
-                b.HasKey(r => new { r.UserId, r.RoleId });
-                b.ToTable("AspNetUserRoles", "Account");
+                entity.HasKey(e => new { e.UserId, e.RoleId }); // composite PK
+                entity.ToTable("aspnet_UsersInRoles", "security");
+
+                // Optional: if you want to define relationships
+                entity.HasOne<User>()
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId);
+
+                entity.HasOne<Role>()
+                      .WithMany()
+                      .HasForeignKey(e => e.RoleId);
             });
+
 
             modelBuilder.Entity<IdentityUserClaim<string>>(b =>
             {
                 b.HasKey(uc => uc.Id);
-                b.ToTable("AspNetUserClaims", "Account");
+                b.ToTable("AspNetUserClaims", "security");
             });
 
             modelBuilder.Entity<IdentityUserLogin<string>>(b =>
             {
                 b.HasKey(l => new { l.LoginProvider, l.ProviderKey });
-                b.ToTable("AspNetUserLogins", "Account");
+                b.ToTable("AspNetUserLogins", "security");
             });
 
             modelBuilder.Entity<IdentityRoleClaim<string>>(b =>
             {
                 b.HasKey(rc => rc.Id);
-                b.ToTable("AspNetRoleClaims", "Account");
+                b.ToTable("AspNetRoleClaims", "security");
             });
 
             modelBuilder.Entity<IdentityUserToken<string>>(b =>
             {
                 b.HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
-                b.ToTable("AspNetUserTokens", "Account");
+                b.ToTable("AspNetUserTokens", "security");
             });
+
+            modelBuilder.Entity<AccountHead>(entity =>
+            {
+                entity.HasKey(e => e.HeadID);
+                entity.ToTable("AccountHeads", "Account");
+            });
+
+
         }
     }
 }

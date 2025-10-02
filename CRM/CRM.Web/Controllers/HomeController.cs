@@ -20,7 +20,8 @@ namespace CRM.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Login");
+           
         }
         public IActionResult Login()
         {
@@ -28,7 +29,7 @@ namespace CRM.Web.Controllers
         }
 
 
-        [HttpPost("Login")]
+        [HttpPost]
         public async Task<ActionResult> Login([FromBody] User request)
         {
             if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))

@@ -30,15 +30,17 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// Add services to the container.
-builder.Services.AddControllers();
 
-// Register Swagger services
-builder.Services.AddSwaggerGen();
+// MVC + Razor support
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
-builder.Services.AddLogging(config => {
-    config.AddConsole();
-    config.AddDebug();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // session timeout
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 
@@ -47,34 +49,26 @@ startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    //  app.UseDeveloperExceptionPage();
-    // app.UseStaticFiles(); // Ensure static files are served
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    //app.UseSwaggerUI(c =>
-    //{
-    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    //    c.RoutePrefix = string.Empty; // To serve Swagger UI at application's root (http://localhost:<port>/)
-    //    c.InjectJavascript("/js/swagger-custom.js");
-    //});
-
-}
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseSession();
 app.UseRouting();
 
 app.UseCors("AllowSpecificOrigin");
-app.UseDefaultFiles();
-app.UseStaticFiles();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 startup.Configure(app, app.Environment);
 
-app.MapControllers();
+// MVC default route
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Login}/{id?}"
+);
+
 
 app.Run();
 

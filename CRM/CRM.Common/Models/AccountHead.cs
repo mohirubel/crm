@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CRM.Common.Models
 {
+    [Table("AccountHeads", Schema = "Account")]
     public class AccountHead
     {
+        [Key]
         public int HeadID { get; set; }
         public string HeadName { get; set; }
         public string Description { get; set; }

@@ -1,5 +1,155 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
+    Layout = null;
 }
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ERP Login</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div class="w-full max-w-md bg-white shadow-lg rounded-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="text-center p-6">
+            <div class="mb-4 flex justify-center">
+                <div class="rounded-full bg-blue-600 p-3">
+                    <i data-lucide="shopping-cart" class="h-8 w-8 text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">ERP Management</h1>
+            <p class="text-gray-600">Sign in to access your dashboard</p>
+        </div>
+
+        <!-- Form -->
+        <div class="p-6">
+            <form id="loginForm" class="space-y-4">
+                <!-- Error Alert -->
+                <div id="loginSuccess"
+                     class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded-md text-sm mb-2 text-center"></div>
+                <div id="loginError"
+                     class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md text-sm mb-2 text-center"></div>
+
+                <!-- Email -->
+                <div class="space-y-2">
+                    <label for="userName" class="block text-sm font-medium">User Name</label>
+                    <div class="relative">
+                        <i data-lucide="mail"
+                           class="absolute top-2.5 left-3 h-4 w-4 text-gray-400"></i>
+                        <input id="userName"
+                               type="text"
+                               placeholder="User Name"
+                               class="pl-10 h-9 w-full rounded-md border border-gray-300 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               required />
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-2">
+                    <label for="password" class="block text-sm font-medium">Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock"
+                           class="absolute top-2.5 left-3 h-4 w-4 text-gray-400"></i>
+                        <input id="password"
+                               type="password"
+                               placeholder="Enter your password"
+                               class="pl-10 h-9 w-full rounded-md border border-gray-300 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               required />
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <button type="submit"
+                        id="loginBtn"
+                        class="h-9 w-full text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Demo credentials -->
+            <!-- <div class="mt-6 text-center text-sm text-gray-600">
+              <p>Demo Credentials:</p>
+              <p>Email: admin@inventory.com</p>
+              <p>Password: admin123</p>
+            </div> -->
+        </div>
+
+        <!-- Register Link -->
+        <div class="p-4 text-center text-sm text-gray-600">
+            <p>Don't have an account?</p>
+            <button class="text-blue-600 underline"
+                    onclick="window.location.href='register.html'">
+                Register
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const form = document.getElementById("loginForm");
+        const loginError = document.getElementById("loginError");
+        const loginSuccess = document.getElementById("loginSuccess");
+        const loginBtn = document.getElementById("loginBtn");
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const userName = document.getElementById("userName").value.trim();
+          const password = document.getElementById("password").value.trim();
+
+          // Reset alerts
+          loginError.classList.add("hidden");
+          loginSuccess.classList.add("hidden");
+          loginBtn.textContent = "Signing in...";
+          loginBtn.disabled = true;
+
+          try {
+            const response = await fetch("/Home/Login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                UserName: userName,
+                Password: password,
+              }),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message || "Login failed");
+            }
+
+            const data = await response.json();
+
+            // Save user in localStorage (like React)
+            localStorage.setItem("user", JSON.stringify(data.user || data));
+
+            // Show success alert
+            loginSuccess.textContent = "Login successful!";
+            loginSuccess.classList.remove("hidden");
+            loginBtn.textContent = "Sign In";
+            loginBtn.disabled = false;
+            form.reset();
+
+            // Redirect on success
+            //   window.location.href = "index.html";
+
+          } catch (err) {
+            loginError.textContent = err.message || "Something went wrong.";
+            loginError.classList.remove("hidden");
+            loginBtn.textContent = "Sign In";
+            loginBtn.disabled = false;
+          }
+        });
+    </script>
+</body>
+</html>

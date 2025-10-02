@@ -6,9 +6,8 @@ using NuGet.Protocol.Core.Types;
 
 namespace CRM.Web.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+
+    public class AccountController : Controller
     {
 
         private readonly IAccountService _accountService;
